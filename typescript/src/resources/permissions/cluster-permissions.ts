@@ -2,26 +2,26 @@ import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
 
-interface Permission {
+interface ClusterPermission {
     permission_level: string
 }
 
-export interface UserPermission extends Permission {
+export interface ClusterPermissionUser extends ClusterPermission {
     user_name: string
 }
 
-export interface GroupPermission extends Permission {
+export interface ClusterPermissionGroup extends ClusterPermission {
     group_name: string
 }
 
-export interface ServicePrincipalPermission extends Permission {
+export interface ClusterPermissionServicePrincipal extends ClusterPermission {
     service_principal: string
 }
 
 export interface ClusterPermissionsProperties {
     workspaceUrl: string
     clusterId: string
-    accessControlList: Array<UserPermission | GroupPermission | ServicePrincipalPermission>
+    accessControlList: Array<ClusterPermissionUser | ClusterPermissionGroup | ClusterPermissionServicePrincipal>
 }
 
 export interface ClusterPermissionsProps extends ClusterPermissionsProperties {

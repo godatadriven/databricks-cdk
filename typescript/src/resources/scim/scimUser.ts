@@ -2,17 +2,17 @@ import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
 
-export interface UserProperties {
+export interface ScimUserProperties {
     workspaceUrl: string
     userName: string
 }
 
-export interface UserProps extends UserProperties {
+export interface ScimUserProps extends ScimUserProperties {
     readonly serviceToken: string
 }
 
-export class User extends CustomResource {
-    constructor(scope: Construct, id: string, props: UserProps) {
+export class ScimUser extends CustomResource {
+    constructor(scope: Construct, id: string, props: ScimUserProps) {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {

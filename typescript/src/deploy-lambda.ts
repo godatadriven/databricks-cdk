@@ -13,7 +13,7 @@ import {DbfsFile, DbfsFileProperties} from "./resources/dbfs/dbfs-file";
 import {SecretScope, SecretScopeProperties} from "./resources/secrets/secret-scope";
 import {Job, JobProperties} from "./resources/jobs/job";
 import {Group, GroupProperties} from "./resources/groups/group";
-import {User, UserProperties} from "./resources/scim/user";
+import {ScimUser, ScimUserProperties} from "./resources/scim/scimUser";
 import {randomUUID} from "crypto";
 import {Construct} from "constructs";
 import * as os from "os";
@@ -70,8 +70,8 @@ abstract class IDatabricksDeployLambda extends Construct {
         });
     }
 
-    public createUser(scope: Construct, id: string, props: UserProperties): User {
-        return new User(scope, id, {
+    public createUser(scope: Construct, id: string, props: ScimUserProperties): ScimUser {
+        return new ScimUser(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });

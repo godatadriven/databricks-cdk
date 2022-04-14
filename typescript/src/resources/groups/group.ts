@@ -2,11 +2,11 @@ import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
 
-export interface UserMember {
+export interface GroupUserMember {
     user_name: string
 }
 
-export interface GroupMember {
+export interface GroupGroupMember {
     group_name: string
 }
 
@@ -14,7 +14,7 @@ export interface GroupMember {
 export interface GroupProperties {
     workspaceUrl: string
     groupName: string
-    members: Array<UserMember | GroupMember>
+    members: Array<GroupUserMember | GroupGroupMember>
 }
 
 export interface GroupProps extends GroupProperties {

@@ -1,12 +1,12 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
-export interface AutoScale {
+export interface ClusterAutoScale {
     min_workers: number
     max_workers: number
 }
 
-export interface AwsAttributes {
+export interface ClusterAwsAttributes {
     first_on_demand?: number
     availability?: string
     zone_id: string
@@ -19,11 +19,11 @@ export interface AwsAttributes {
     ebs_volume_throughput?: number
 }
 
-export interface StorageInfo {
+export interface ClusterStorageInfo {
     destination: string
 }
 
-export interface StorageInfoS3 extends StorageInfo{
+export interface ClusterStorageInfoS3 extends ClusterStorageInfo{
     region: string
     endpoint?: string
     enable_encryption?: boolean
@@ -32,42 +32,42 @@ export interface StorageInfoS3 extends StorageInfo{
     canned_acl?: string
 }
 
-export interface InitScriptInfoDbfs {
-    dbfs: StorageInfo
+export interface ClusterInitScriptInfoDbfs {
+    dbfs: ClusterStorageInfo
 }
 
-export interface InitScriptInfoFile {
-    file: StorageInfo
+export interface ClusterInitScriptInfoFile {
+    file: ClusterStorageInfo
 }
 
-export interface InitScriptInfoS3 {
-    s3: StorageInfoS3
+export interface ClusterInitScriptInfoS3 {
+    s3: ClusterStorageInfoS3
 }
 
-export interface DockerBasicAuth {
+export interface ClusterDockerBasicAuth {
     username: string
     password: string
 }
 
-export interface DockerImage {
+export interface ClusterDockerImage {
     url: string
-    basic_auth?: DockerBasicAuth
+    basic_auth?: ClusterDockerBasicAuth
 }
 
 export interface DatabricksCluster {
     num_workers?: number
-    autoscale?: AutoScale
+    autoscale?: ClusterAutoScale
     cluster_name: string
     spark_version: string
-    docker_image?: DockerImage
+    docker_image?: ClusterDockerImage
     spark_conf?: Record<string, string>
-    aws_attributes: AwsAttributes
+    aws_attributes: ClusterAwsAttributes
     node_type_id?: string
     driver_node_type_id?: string
     ssh_public_keys?: Array<string>
     custom_tags?: Record<string, unknown>
     cluster_log_conf?: string
-    init_scripts?: Array<InitScriptInfoDbfs | InitScriptInfoFile | InitScriptInfoS3>
+    init_scripts?: Array<ClusterInitScriptInfoDbfs | ClusterInitScriptInfoFile | ClusterInitScriptInfoS3>
     spark_env_vars?: Record<string, unknown>
     autotermination_minutes?: number
     enable_elastic_disk?: boolean

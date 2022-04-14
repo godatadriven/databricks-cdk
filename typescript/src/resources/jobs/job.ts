@@ -1,12 +1,12 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
-export interface AutoScale {
+export interface JobClusterAutoScale {
     min_workers: number
     max_workers: number
 }
 
-export interface AwsAttributes {
+export interface JobClusterAwsAttributes {
     first_on_demand?: number
     availability?: string
     zone_id: string
@@ -19,11 +19,11 @@ export interface AwsAttributes {
     ebs_volume_throughput?: number
 }
 
-export interface StorageInfo {
+export interface JobClusterStorageInfo {
     destination: string
 }
 
-export interface StorageInfoS3 extends StorageInfo{
+export interface JobClusterStorageInfoS3 extends JobClusterStorageInfo{
     region: string
     endpoint?: string
     enable_encryption?: boolean
@@ -32,41 +32,41 @@ export interface StorageInfoS3 extends StorageInfo{
     canned_acl?: string
 }
 
-export interface InitScriptInfoDbfs {
-    dbfs: StorageInfo
+export interface JobClusterInitScriptInfoDbfs {
+    dbfs: JobClusterStorageInfo
 }
 
-export interface InitScriptInfoFile {
-    file: StorageInfo
+export interface JobClusterInitScriptInfoFile {
+    file: JobClusterStorageInfo
 }
 
-export interface InitScriptInfoS3 {
-    s3: StorageInfoS3
+export interface JobClusterInitScriptInfoS3 {
+    s3: JobClusterStorageInfoS3
 }
 
-export interface DockerBasicAuth {
+export interface JobClusterDockerBasicAuth {
     username: string
     password: string
 }
 
-export interface DockerImage {
+export interface JobClusterDockerImage {
     url: string
-    basic_auth?: DockerBasicAuth
+    basic_auth?: JobClusterDockerBasicAuth
 }
 
-export interface NewCluster {
+export interface JobNewCluster {
     num_workers?: number
-    autoscale?: AutoScale
+    autoscale?: JobClusterAutoScale
     spark_version: string
     spark_conf?: Record<string, string>
-    aws_attributes: AwsAttributes
+    aws_attributes: JobClusterAwsAttributes
     node_type_id?: string
     driver_node_type_id?: string
     ssh_public_keys?: Array<string>
     custom_tags?: Record<string, unknown>
     cluster_log_conf?: string
-    init_scripts?: Array<InitScriptInfoDbfs | InitScriptInfoFile | InitScriptInfoS3>
-    docker_image?: DockerImage
+    init_scripts?: Array<JobClusterInitScriptInfoDbfs | JobClusterInitScriptInfoFile | JobClusterInitScriptInfoS3>
+    docker_image?: JobClusterDockerImage
     spark_env_vars?: Record<string, unknown>
     autotermination_minutes?: number
     enable_elastic_disk?: boolean
@@ -76,39 +76,39 @@ export interface NewCluster {
 
 export interface JobCluster {
     job_cluster_key: string
-    new_cluster: NewCluster
+    new_cluster: JobNewCluster
 }
 
-export interface NotebookTask {
+export interface JobNotebookTask {
     notebook_path: string
     base_parameters?: Record<string, unknown>
 }
 
-export interface SparkJarTask {
+export interface JobSparkJarTask {
     main_class_name: string
     parameters?: Array<string>
 }
 
-export interface SparkPythonTask {
+export interface JobSparkPythonTask {
     python_file: string
     parameters?: Array<string>
 }
 
-export interface SparkSubmitTask {
+export interface JobSparkSubmitTask {
     parameters: Array<string>
 }
 
-export interface PipelineTask {
+export interface JobPipelineTask {
     pipeline_id: string
 }
 
-export interface PythonWheelTask {
+export interface JobPythonWheelTask {
     package_name: string
     entry_point?: string
     parameters?: Array<string>
 }
 
-export interface Library {
+export interface JobTaskLibrary {
     jar?: string
     egg?: string
     whl?: string
@@ -129,15 +129,15 @@ export interface JobTaskSettings {
     description?: string
     depends_on?: Array<string>
     existing_cluster_id?: string
-    new_cluster?: NewCluster
+    new_cluster?: JobNewCluster
     job_cluster_key?: string
-    notebook_task?: NotebookTask
-    spark_jar_task?: SparkJarTask
-    spark_python_task?: SparkPythonTask
-    spark_submit_task?: SparkSubmitTask
-    pipeline_task?: PipelineTask
-    python_wheel_task?: PythonWheelTask
-    libraries? : Array<Library>
+    notebook_task?: JobNotebookTask
+    spark_jar_task?: JobSparkJarTask
+    spark_python_task?: JobSparkPythonTask
+    spark_submit_task?: JobSparkSubmitTask
+    pipeline_task?: JobPipelineTask
+    python_wheel_task?: JobPythonWheelTask
+    libraries? : Array<JobTaskLibrary>
     email_notifications?: JobEmailNotifications
     timeout_seconds?: number
     max_retries?: number
@@ -145,18 +145,18 @@ export interface JobTaskSettings {
     retry_on_timeout?: boolean
 }
 
-export interface CronSchedule {
+export interface JobCronSchedule {
     quartz_cron_expression?: string
     timezone_id?: string
     pause_status?: string
 }
 
-export interface AccessControlRequestForUser {
+export interface JobAccessControlRequestForUser {
     user_name: string
     permission_level: string
 }
 
-export interface AccessControlRequestForGroup {
+export interface JobAccessControlRequestForGroup {
     group_name: string
     permission_level: string
 }
@@ -167,10 +167,10 @@ export interface JobSettings {
     job_clusters?: Array<JobCluster>
     email_notifications?: JobEmailNotifications
     timeout_seconds?: number
-    schedule?: CronSchedule
+    schedule?: JobCronSchedule
     max_concurrent_runs?: number
     format?: string
-    access_control_list?: Array<AccessControlRequestForUser | AccessControlRequestForGroup>
+    access_control_list?: Array<JobAccessControlRequestForUser | JobAccessControlRequestForGroup>
 }
 
 export interface JobProperties {
