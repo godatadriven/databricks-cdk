@@ -2,17 +2,17 @@ import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
 
-export interface CredentialsProperties {
+export interface AccountCredentialsProperties {
     readonly credentialsName: string
     readonly roleArn: string
 }
 
-export interface CredentialsProps extends CredentialsProperties {
+export interface AccountCredentialsProps extends AccountCredentialsProperties {
     readonly serviceToken: string
 }
 
-export class Credentials extends CustomResource {
-    constructor(scope: Construct, id: string, props: CredentialsProps) {
+export class AccountCredentials extends CustomResource {
+    constructor(scope: Construct, id: string, props: AccountCredentialsProps) {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {

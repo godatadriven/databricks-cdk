@@ -2,19 +2,19 @@ import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
 
-export interface NetworkProperties {
+export interface AccountNetworkProperties {
     readonly networkName: string
     readonly vpcId: string
     readonly subnet_ids: Array<string>
     readonly security_group_ids: Array<string>
 }
 
-export interface NetworkProps extends NetworkProperties {
+export interface AccountNetworkProps extends AccountNetworkProperties {
     readonly serviceToken: string
 }
 
-export class Network extends CustomResource {
-    constructor(scope: Construct, id: string, props: NetworkProps) {
+export class AccountNetwork extends CustomResource {
+    constructor(scope: Construct, id: string, props: AccountNetworkProps) {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {

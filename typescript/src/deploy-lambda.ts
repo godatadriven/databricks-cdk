@@ -2,9 +2,9 @@ import {Duration, CfnOutput} from "aws-cdk-lib";
 import {aws_lambda, aws_ssm, aws_logs, aws_iam} from "aws-cdk-lib";
 import path from "path";
 import * as fs from "fs";
-import {Credentials, CredentialsProperties} from "./resources/account/credentials";
-import {StorageConfig, StorageConfigProperties} from "./resources/account/storage-config";
-import {Network, NetworkProperties} from "./resources/account/network";
+import {AccountCredentials, AccountCredentialsProperties} from "./resources/account/accountCredentials";
+import {AccountStorageConfig, AccountStorageConfigProperties} from "./resources/account/account-storage-config";
+import {AccountNetwork, AccountNetworkProperties} from "./resources/account/accountNetwork";
 import {Workspace, WorkspaceProperties} from "./resources/account/workspace";
 import {InstanceProfile, InstanceProfileProperties} from "./resources/instance-profiles/instance-profile";
 import {Cluster, ClusterProperties} from "./resources/clusters/cluster";
@@ -28,22 +28,22 @@ interface CustomDeployLambdaProps {
 abstract class IDatabricksDeployLambda extends Construct {
     serviceToken: string = ""
 
-    public createCredential(scope: Construct, id: string, props: CredentialsProperties): Credentials {
-        return new Credentials(scope, id, {
+    public createCredential(scope: Construct, id: string, props: AccountCredentialsProperties): AccountCredentials {
+        return new AccountCredentials(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
     }
 
-    public createStorageConfig(scope: Construct, id: string, props: StorageConfigProperties): StorageConfig {
-        return new StorageConfig(scope, id, {
+    public createStorageConfig(scope: Construct, id: string, props: AccountStorageConfigProperties): AccountStorageConfig {
+        return new AccountStorageConfig(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
     }
 
-    public createNetwork(scope: Construct, id: string, props: NetworkProperties): Network {
-        return new Network(scope, id, {
+    public createNetwork(scope: Construct, id: string, props: AccountNetworkProperties): AccountNetwork {
+        return new AccountNetwork(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
@@ -176,11 +176,6 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
             logRetention: aws_logs.RetentionDays.THREE_MONTHS,
         });
         this.serviceToken = this.lambda.functionArn;
-
-        new CfnOutput(this, "OutputLambdaArn", {
-            exportName: "databricks-deploy-lambda-arn",
-            value: this.lambda.functionArn
-        });
     }
 
     public static fromServiceToken(scope: Construct, id: string, serviceToken: string): IDatabricksDeployLambda {

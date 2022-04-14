@@ -2,17 +2,17 @@ import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
 
-export interface StorageConfigProperties {
+export interface AccountStorageConfigProperties {
     readonly storageConfigName: string
     readonly bucketName: string
 }
 
-export interface StorageConfigProps extends StorageConfigProperties {
+export interface AccountStorageConfigProps extends AccountStorageConfigProperties {
     readonly serviceToken: string
 }
 
-export class StorageConfig extends CustomResource {
-    constructor(scope: Construct, id: string, props: StorageConfigProps) {
+export class AccountStorageConfig extends CustomResource {
+    constructor(scope: Construct, id: string, props: AccountStorageConfigProps) {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
