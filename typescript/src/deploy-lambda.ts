@@ -2,18 +2,18 @@ import {Duration, CfnOutput} from "aws-cdk-lib";
 import {aws_lambda, aws_ssm, aws_logs, aws_iam} from "aws-cdk-lib";
 import path from "path";
 import * as fs from "fs";
-import {Credentials, CredentialsProperties} from "../resources/account/credentials";
-import {StorageConfig, StorageConfigProperties} from "../resources/account/storage-config";
-import {Network, NetworkProperties} from "../resources/account/network";
-import {Workspace, WorkspaceProperties} from "../resources/account/workspace";
-import {InstanceProfile, InstanceProfileProperties} from "../resources/instance-profiles/instance-profile";
-import {Cluster, ClusterProperties} from "../resources/clusters/cluster";
-import {ClusterPermissions, ClusterPermissionsProperties} from "../resources/permissions/cluster-permissions";
-import {DbfsFile, DbfsFileProperties} from "../resources/dbfs/dbfs-file";
-import {SecretScope, SecretScopeProperties} from "../resources/secrets/secret-scope";
-import {Job, JobProperties} from "../resources/jobs/job";
-import {Group, GroupProperties} from "../resources/groups/group";
-import {User, UserProperties} from "../resources/scim/user";
+import {Credentials, CredentialsProperties} from "./resources/account/credentials";
+import {StorageConfig, StorageConfigProperties} from "./resources/account/storage-config";
+import {Network, NetworkProperties} from "./resources/account/network";
+import {Workspace, WorkspaceProperties} from "./resources/account/workspace";
+import {InstanceProfile, InstanceProfileProperties} from "./resources/instance-profiles/instance-profile";
+import {Cluster, ClusterProperties} from "./resources/clusters/cluster";
+import {ClusterPermissions, ClusterPermissionsProperties} from "./resources/permissions/cluster-permissions";
+import {DbfsFile, DbfsFileProperties} from "./resources/dbfs/dbfs-file";
+import {SecretScope, SecretScopeProperties} from "./resources/secrets/secret-scope";
+import {Job, JobProperties} from "./resources/jobs/job";
+import {Group, GroupProperties} from "./resources/groups/group";
+import {User, UserProperties} from "./resources/scim/user";
 import {randomUUID} from "crypto";
 import {Construct} from "constructs";
 import * as os from "os";
@@ -26,7 +26,7 @@ interface CustomDeployLambdaProps {
 }
 
 abstract class IDatabricksDeployLambda extends Construct {
-    protected serviceToken: string
+    serviceToken: string = ""
 
     public createCredential(scope: Construct, id: string, props: CredentialsProperties): Credentials {
         return new Credentials(scope, id, {
