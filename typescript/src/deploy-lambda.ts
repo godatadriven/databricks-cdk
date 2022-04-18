@@ -1,4 +1,4 @@
-import {Duration, CfnOutput} from "aws-cdk-lib";
+import {Duration} from "aws-cdk-lib";
 import {aws_lambda, aws_ssm, aws_logs, aws_iam} from "aws-cdk-lib";
 import path from "path";
 import * as fs from "fs";
@@ -25,7 +25,7 @@ interface CustomDeployLambdaProps {
     readonly lambdaVersion?: string
 }
 
-abstract class IDatabricksDeployLambda extends Construct {
+export abstract class IDatabricksDeployLambda extends Construct {
     serviceToken: string = ""
 
     public createCredential(scope: Construct, id: string, props: AccountCredentialsProperties): AccountCredentials {
@@ -113,7 +113,7 @@ abstract class IDatabricksDeployLambda extends Construct {
     }
 }
 
-class DatabricksDeployLambdaImport extends IDatabricksDeployLambda {
+export class DatabricksDeployLambdaImport extends IDatabricksDeployLambda {
     constructor(scope: Construct, id: string, serviceToken: string) {
         super(scope, id);
         this.serviceToken = serviceToken;

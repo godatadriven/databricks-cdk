@@ -71,7 +71,7 @@ class JobCluster(BaseModel):
 
 class NotebookTask(BaseModel):
     notebook_path: str
-    base_parameters: dict
+    base_parameters: dict = {}
 
 
 class SparkJarTask(BaseModel):
