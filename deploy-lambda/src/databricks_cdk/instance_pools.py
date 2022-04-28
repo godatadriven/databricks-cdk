@@ -37,7 +37,7 @@ class InstancePoolProperties(BaseModel):
     enable_elastic_disk: bool = False
     disk_spec: Optional[dict] = None
     preloaded_spark_versions: List[str]
-    preloader_docker_images: List[DockerImage] = []
+    preloaded_docker_images: List[DockerImage] = []
 
 
 class InstancePoolResponse(CnfResponse):
