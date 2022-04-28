@@ -25,8 +25,7 @@ class InstancePoolAwsAttributes(BaseModel):
     zone_id: str
 
 
-class InstancePoolProperties(BaseModel):
-    workspace_url: str
+class InstancePool(BaseModel):
     instance_pool_name: str
     min_idle_instances: Optional[int] = None
     max_capacity: Optional[int] = None
@@ -38,6 +37,12 @@ class InstancePoolProperties(BaseModel):
     disk_spec: Optional[dict] = None
     preloaded_spark_versions: List[str]
     preloaded_docker_images: List[DockerImage] = []
+
+
+class InstancePoolProperties(BaseModel):
+    action: str = "instance-pool"
+    workspace_url: str
+    instance_pool: InstancePool
 
 
 class InstancePoolResponse(CnfResponse):
@@ -69,22 +74,23 @@ def create_or_update_instance_pool(properties: InstancePoolProperties, physical_
     """Create or update instance pool at Databricks"""
     url = get_instance_pools_url(properties.workspace_url)
     current: Optional[dict] = None
+    instance_pool_properties = properties.instance_pool
 
     if physical_resource_id is not None:
         current = get_instance_pool_by_id(physical_resource_id, properties.workspace_url)
 
     if current is None:
-        create_response = post_request(f"{url}/create", body=json.loads(properties.json()))
+        create_response = post_request(f"{url}/create", body=instance_pool_properties.dict())
         instance_pool_id = create_response.get("instance_pool_id")
         return InstancePoolResponse(instance_pool_id=instance_pool_id, physical_resource_id=instance_pool_id)
     else:
         instance_pool_id = current.get("instance_pool_id")
         instance_pool_edit = InstancePoolEdit(
             instance_pool_id=instance_pool_id,
-            instance_pool_name=properties.instance_pool_name,
-            min_idle_instances=properties.min_idle_instances,
-            max_capacity=properties.max_capacity,
-            idle_instance_autotermination_minutes=properties.idle_instance_autotermination_minutes,
+            instance_pool_name=instance_pool_properties.instance_pool_name,
+            min_idle_instances=instance_pool_properties.min_idle_instances,
+            max_capacity=instance_pool_properties.max_capacity,
+            idle_instance_autotermination_minutes=instance_pool_properties.idle_instance_autotermination_minutes,
         )
 
         post_request(f"{url}/edit", body=instance_pool_edit.dict())
