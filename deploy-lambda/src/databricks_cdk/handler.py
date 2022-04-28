@@ -70,6 +70,7 @@ from databricks_cdk.workspace import (
     create_or_update_workspaces,
     delete_workspaces,
 )
+from databricks_cdk.instance_pools import InstancePoolProperties, create_or_update_instance_pool, delete_instance_pool
 
 logger = logging.getLogger(__name__)
 
@@ -112,6 +113,10 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_secret(SecretProperties(**event.ResourceProperties))
     elif action == "job":
         return create_or_update_job(JobProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "instance-pool":
+        return create_or_update_instance_pool(
+            InstancePoolProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -147,6 +152,8 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_secret(SecretProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "job":
         return delete_job(JobProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "instance-pool":
+        return delete_instance_pool(InstancePoolProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
