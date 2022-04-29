@@ -13,6 +13,7 @@ from databricks_cdk.cluster_permissions import (
 from databricks_cdk.credentials import CredentialsProperties, create_or_update_credentials, delete_credentials
 from databricks_cdk.dbfs_file import DbfsFileProperties, create_or_update_dbfs_file, delete_dbfs_file
 from databricks_cdk.group import GroupProperties, create_or_update_group, delete_group
+from databricks_cdk.instance_pools import InstancePoolProperties, create_or_update_instance_pool, delete_instance_pool
 from databricks_cdk.instance_profile import (
     InstanceProfileProperties,
     create_or_update_instance_profile,
@@ -29,16 +30,7 @@ from databricks_cdk.storage_config import (
 )
 from databricks_cdk.user import UserProperties, create_or_update_user, delete_user
 from databricks_cdk.utils import CnfResponse
-<<<<<<< HEAD
-from databricks_cdk.workspace import (
-    WorkspaceProperties,
-    create_or_update_workspaces,
-    delete_workspaces,
-)
-from databricks_cdk.instance_pools import InstancePoolProperties, create_or_update_instance_pool, delete_instance_pool
-=======
 from databricks_cdk.workspace import WorkspaceProperties, create_or_update_workspaces, delete_workspaces
->>>>>>> ee0af83d94ea6c3619d343b76c3d56cc8bac9213
 
 logger = logging.getLogger(__name__)
 
