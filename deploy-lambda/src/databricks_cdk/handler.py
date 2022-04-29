@@ -4,72 +4,32 @@ from typing import Optional
 import cfnresponse
 from pydantic import BaseModel
 
-from databricks_cdk.cluster import (
-    ClusterProperties,
-    create_or_update_cluster,
-    delete_cluster,
-)
+from databricks_cdk.cluster import ClusterProperties, create_or_update_cluster, delete_cluster
 from databricks_cdk.cluster_permissions import (
     ClusterPermissionsProperties,
     create_or_update_cluster_permissions,
     delete_cluster_permissions,
 )
-from databricks_cdk.credentials import (
-    CredentialsProperties,
-    create_or_update_credentials,
-    delete_credentials,
-)
-from databricks_cdk.dbfs_file import (
-    DbfsFileProperties,
-    create_or_update_dbfs_file,
-    delete_dbfs_file,
-)
-from databricks_cdk.group import (
-    GroupProperties,
-    create_or_update_group,
-    delete_group,
-)
+from databricks_cdk.credentials import CredentialsProperties, create_or_update_credentials, delete_credentials
+from databricks_cdk.dbfs_file import DbfsFileProperties, create_or_update_dbfs_file, delete_dbfs_file
+from databricks_cdk.group import GroupProperties, create_or_update_group, delete_group
 from databricks_cdk.instance_profile import (
     InstanceProfileProperties,
     create_or_update_instance_profile,
     delete_instance_profile,
 )
-from databricks_cdk.job import (
-    JobProperties,
-    create_or_update_job,
-    delete_job,
-)
-from databricks_cdk.networks import (
-    NetworksProperties,
-    create_or_update_networks,
-    delete_networks,
-)
-from databricks_cdk.secret import (
-    SecretProperties,
-    create_or_update_secret,
-    delete_secret,
-)
-from databricks_cdk.secret_scope import (
-    SecretScopeProperties,
-    create_or_update_secret_scope,
-    delete_secret_scope,
-)
+from databricks_cdk.job import JobProperties, create_or_update_job, delete_job
+from databricks_cdk.networks import NetworksProperties, create_or_update_networks, delete_networks
+from databricks_cdk.secret import SecretProperties, create_or_update_secret, delete_secret
+from databricks_cdk.secret_scope import SecretScopeProperties, create_or_update_secret_scope, delete_secret_scope
 from databricks_cdk.storage_config import (
     StorageConfigProperties,
     create_or_update_storage_configuration,
     delete_storage_configuration,
 )
-from databricks_cdk.user import (
-    UserProperties,
-    create_or_update_user,
-    delete_user,
-)
+from databricks_cdk.user import UserProperties, create_or_update_user, delete_user
 from databricks_cdk.utils import CnfResponse
-from databricks_cdk.workspace import (
-    WorkspaceProperties,
-    create_or_update_workspaces,
-    delete_workspaces,
-)
+from databricks_cdk.workspace import WorkspaceProperties, create_or_update_workspaces, delete_workspaces
 
 logger = logging.getLogger(__name__)
 
