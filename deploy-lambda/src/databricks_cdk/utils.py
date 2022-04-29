@@ -65,7 +65,6 @@ def post_request(
     # extracting data in json format
     data = resp.json()
 
-    logger.debug("Successful POST call!!")
     return data
 
 
@@ -85,7 +84,6 @@ def put_request(
     # extracting data in json format
     data = resp.json()
 
-    logger.debug("Successful POST call!!")
     return data
 
 
@@ -102,7 +100,6 @@ def patch_request(url: str, body: dict) -> dict:
     # extracting data in json format
     data = resp.json()
 
-    logger.debug("Successful PATCH call!!")
     return data
 
 
@@ -139,5 +136,4 @@ def delete_request(url: str) -> Optional[dict]:
     # extracting data in json format
     data = resp.json()
 
-    logger.debug("Successful DELETE call!!")
     return data

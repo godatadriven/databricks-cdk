@@ -4,12 +4,7 @@ from typing import Dict, List, Optional
 import requests
 from pydantic import BaseModel
 
-from databricks_cdk.utils import (
-    CnfResponse,
-    get_auth,
-    get_request,
-    post_request,
-)
+from databricks_cdk.utils import CnfResponse, get_auth, get_request, post_request
 
 logger = logging.getLogger(__name__)
 
