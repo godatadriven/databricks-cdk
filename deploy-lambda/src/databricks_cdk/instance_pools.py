@@ -28,7 +28,7 @@ class InstancePool(BaseModel):
     instance_pool_name: str
     min_idle_instances: Optional[int] = None
     max_capacity: Optional[int] = None
-    aws_attributes: Optional[InstancePoolAwsAttributes]
+    aws_attributes: Optional[InstancePoolAwsAttributes] = None
     node_type_id: str
     custom_tags: Optional[dict] = None
     idle_instance_autotermination_minutes: Optional[int] = 60

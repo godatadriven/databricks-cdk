@@ -55,6 +55,9 @@ omit = ["tests/*",".venv/*"]
 max-line-length = 180
 extend-exclude = ["deploy", ".venv"]
 extend-ignore = "E203"
+per-file-ignores = """
+        tests/test_imports.py: F401
+    """
 
 [tool.isort]
 profile = "black"
