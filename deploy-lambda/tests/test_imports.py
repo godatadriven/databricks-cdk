@@ -1,3 +1,4 @@
+# flake8: noqa 401
 def test_cluster():
     from databricks_cdk import cluster
 
@@ -56,3 +57,7 @@ def test_utils():
 
 def test_workspace():
     from databricks_cdk import workspace
+
+
+def test_instance_pools():
+    from databricks_cdk import instance_pools

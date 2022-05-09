@@ -13,6 +13,7 @@ from databricks_cdk.cluster_permissions import (
 from databricks_cdk.credentials import CredentialsProperties, create_or_update_credentials, delete_credentials
 from databricks_cdk.dbfs_file import DbfsFileProperties, create_or_update_dbfs_file, delete_dbfs_file
 from databricks_cdk.group import GroupProperties, create_or_update_group, delete_group
+from databricks_cdk.instance_pools import InstancePoolProperties, create_or_update_instance_pool, delete_instance_pool
 from databricks_cdk.instance_profile import (
     InstanceProfileProperties,
     create_or_update_instance_profile,
@@ -72,6 +73,10 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_secret(SecretProperties(**event.ResourceProperties))
     elif action == "job":
         return create_or_update_job(JobProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "instance-pool":
+        return create_or_update_instance_pool(
+            InstancePoolProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -107,6 +112,8 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_secret(SecretProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "job":
         return delete_job(JobProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "instance-pool":
+        return delete_instance_pool(InstancePoolProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
