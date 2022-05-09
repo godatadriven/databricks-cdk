@@ -1,2 +1,2 @@
-export * from "./secret"
-export * from "./secret-scope"
+export * from "./secret";
+export * from "./secret-scope";
