@@ -20,7 +20,7 @@
         "url": "https://github.com/godatadriven/databricks-cdk"
     },
     "scripts": {
-        "lint": "eslint --max-warnings 0 'lib/**/*.ts'",
+        "lint": "eslint --max-warnings 0 'src/**/*.ts'",
         "preinstall": "mkdir -p ./node_modules && touch ./node_modules/.metadata_never_index"
     },
     "devDependencies": {
