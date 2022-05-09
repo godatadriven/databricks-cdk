@@ -140,13 +140,13 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
 
         const dockerImageCode = aws_lambda.DockerImageCode.fromImageAsset(
             dockerTempDir, {
-                file: "Dockerfile",
-                buildArgs: {
-                    version: lambdaVersion,
-                    randomHash: randomHash,
-                }
+            file: "Dockerfile",
+            buildArgs: {
+                version: lambdaVersion,
+                randomHash: randomHash,
             }
-        );
+        }
+        )
 
         this.lambdaRole = new aws_iam.Role(this, "Role", {
             assumedBy: new aws_iam.ServicePrincipal("lambda.amazonaws.com"),
