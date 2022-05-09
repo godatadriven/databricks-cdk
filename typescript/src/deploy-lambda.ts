@@ -26,7 +26,7 @@ interface CustomDeployLambdaProps {
 }
 
 export abstract class IDatabricksDeployLambda extends Construct {
-    serviceToken: string = ""
+    serviceToken = ""
 
     public createCredential(scope: Construct, id: string, props: AccountCredentialsProperties): AccountCredentials {
         return new AccountCredentials(scope, id, {

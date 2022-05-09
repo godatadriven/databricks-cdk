@@ -1,1 +1,1 @@
-export * from "./instance-profile"
+export * from "./instance-profile";

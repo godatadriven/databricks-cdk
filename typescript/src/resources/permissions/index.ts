@@ -1,1 +1,1 @@
-export * from "./cluster-permissions"
+export * from "./cluster-permissions";

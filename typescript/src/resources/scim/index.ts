@@ -1,1 +1,1 @@
-export * from "./scimUser"
+export * from "./scimUser";
