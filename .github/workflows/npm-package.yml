@@ -1,0 +1,21 @@
+name: Npm package
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        working-directory: typescript
+        run: |
+          npm install
+      - name: Run eslint
+        working-directory: typescript
+        run: |
+          npm run lint
