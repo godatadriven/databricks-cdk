@@ -48,7 +48,7 @@ class Cluster(BaseModel):
     driver_node_type_id: Optional[str] = None
     ssh_public_keys: List[str] = []
     custom_tags: Optional[dict] = None
-    cluster_log_conf: Optional[str] = None
+    cluster_log_conf: Optional[dict] = None
     init_scripts: List[dict] = []
     docker_image: Optional[DockerImage] = None
     spark_env_vars: Dict[str, str] = {}

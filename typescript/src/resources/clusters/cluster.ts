@@ -23,7 +23,7 @@ export interface ClusterStorageInfo {
     destination: string
 }
 
-export interface ClusterStorageInfoS3 extends ClusterStorageInfo{
+export interface ClusterStorageInfoS3 extends ClusterStorageInfo {
     region: string
     endpoint?: string
     enable_encryption?: boolean
@@ -44,6 +44,13 @@ export interface ClusterInitScriptInfoS3 {
     s3: ClusterStorageInfoS3
 }
 
+export interface ClusterLogConfDbfs {
+    dbfs: ClusterStorageInfo
+}
+
+export interface ClusterLogConfS3 {
+    s3: ClusterStorageInfoS3
+}
 export interface ClusterDockerBasicAuth {
     username: string
     password: string
@@ -66,7 +73,7 @@ export interface DatabricksCluster {
     driver_node_type_id?: string
     ssh_public_keys?: Array<string>
     custom_tags?: Record<string, unknown>
-    cluster_log_conf?: string
+    cluster_log_conf?: ClusterLogConfDbfs | ClusterLogConfS3
     init_scripts?: Array<ClusterInitScriptInfoDbfs | ClusterInitScriptInfoFile | ClusterInitScriptInfoS3>
     spark_env_vars?: Record<string, unknown>
     autotermination_minutes?: number
