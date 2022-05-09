@@ -12,7 +12,10 @@ cd typescript
 NEW_VERSION=$(npm version "${BUMP_LEVEL}")
 git add package.json package-lock.json
 echo "new version: ${NEW_VERSION}"
+rm -r dist
+npx tsc
 cd ../deploy-lambda
+
 poetry version "${NEW_VERSION}"
 poetry update
 git add pyproject.toml poetry.lock

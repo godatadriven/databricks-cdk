@@ -14,6 +14,7 @@ import {SecretScope, SecretScopeProperties} from "./resources/secrets/secret-sco
 import {Job, JobProperties} from "./resources/jobs/job";
 import {Group, GroupProperties} from "./resources/groups/group";
 import {ScimUser, ScimUserProperties} from "./resources/scim/scimUser";
+import {InstancePool, InstancePoolProperties} from "./resources/instance-pools/instance-pools";
 import {randomUUID} from "crypto";
 import {Construct} from "constructs";
 import * as os from "os";
@@ -107,6 +108,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createJob(scope: Construct, id: string, props: JobProperties): Job {
         return new Job(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createInstancePool(scope: Construct, id: string, props: InstancePoolProperties): InstancePool {
+        return new InstancePool(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
