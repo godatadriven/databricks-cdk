@@ -2,7 +2,7 @@ import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
 export interface InstancePoolAwsAttributes {
-    first_on_demand?: number
+    spot_bid_price_percent?: number
     availability?: string
     zone_id: string
 }

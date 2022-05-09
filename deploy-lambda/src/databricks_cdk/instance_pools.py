@@ -19,7 +19,7 @@ class DockerImage(BaseModel):
 
 
 class InstancePoolAwsAttributes(BaseModel):
-    first_on_demand: int = 1
+    spot_bid_price_percent: Optional[int] = None
     availability: str = "SPOT_WITH_FALLBACK"
     zone_id: str
 
@@ -31,7 +31,7 @@ class InstancePool(BaseModel):
     aws_attributes: Optional[InstancePoolAwsAttributes] = None
     node_type_id: str
     custom_tags: Optional[dict] = None
-    idle_instance_autotermination_minutes: Optional[int] = 60
+    idle_instance_autotermination_minutes: Optional[int] = None
     enable_elastic_disk: bool = False
     disk_spec: Optional[dict] = None
     preloaded_spark_versions: List[str]
