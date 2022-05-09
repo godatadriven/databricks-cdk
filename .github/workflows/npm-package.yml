@@ -17,8 +17,9 @@ jobs:
       - name: Install dependencies
         working-directory: typescript
         run: |
-          npm install
+          npm ci
       - name: Run eslint
         working-directory: typescript
         run: |
           npm run lint
+
