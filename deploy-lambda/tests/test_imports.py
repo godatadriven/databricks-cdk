@@ -1,3 +1,4 @@
+# flake8: noqa 401
 def test_cluster():
     from databricks_cdk import cluster
 
