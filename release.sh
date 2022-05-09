@@ -39,4 +39,5 @@ npm publish
 
 cd ../
 
+git push
 git push --tags
