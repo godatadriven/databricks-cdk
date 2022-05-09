@@ -7,6 +7,7 @@ export * as jobs from "./jobs";
 export * as permissions from "./permissions";
 export * as scim from "./scim";
 export * as secrets from "./secrets";
+export * as instancePools from "./instance-pools";
 
 
 export * from "./account";
@@ -18,3 +19,4 @@ export * from "./jobs";
 export * from "./permissions";
 export * from "./scim";
 export * from "./secrets";
+export * from "./instance-pools";
