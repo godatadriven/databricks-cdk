@@ -9,7 +9,7 @@ export interface JobClusterAutoScale {
 export interface JobClusterAwsAttributes {
     first_on_demand?: number
     availability?: string
-    zone_id: string
+    zone_id?: string
     instance_profile_arn?: string
     spot_bid_price_percent?: number
     ebs_volume_type?: string
@@ -23,7 +23,7 @@ export interface JobClusterStorageInfo {
     destination: string
 }
 
-export interface JobClusterStorageInfoS3 extends JobClusterStorageInfo{
+export interface JobClusterStorageInfoS3 extends JobClusterStorageInfo {
     region: string
     endpoint?: string
     enable_encryption?: boolean
@@ -137,7 +137,7 @@ export interface JobTaskSettings {
     spark_submit_task?: JobSparkSubmitTask
     pipeline_task?: JobPipelineTask
     python_wheel_task?: JobPythonWheelTask
-    libraries? : Array<JobTaskLibrary>
+    libraries?: Array<JobTaskLibrary>
     email_notifications?: JobEmailNotifications
     timeout_seconds?: number
     max_retries?: number
