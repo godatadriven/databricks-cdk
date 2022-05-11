@@ -54,24 +54,15 @@ export interface JobClusterDockerImage {
     basic_auth?: JobClusterDockerBasicAuth
 }
 
-export interface ClusterStorageInfo {
+export interface JobClusterStorageInfo {
     destination: string
 }
 
-export interface ClusterStorageInfoS3 extends ClusterStorageInfo {
-    region: string
-    endpoint?: string
-    enable_encryption?: boolean
-    encryption_type?: string
-    kms_key?: string
-    canned_acl?: string
+export interface JobClusterLogConfDbfs {
+    dbfs: JobClusterStorageInfo;
 }
-
-export interface ClusterLogConfDbfs {
-    dbfs: ClusterStorageInfo;
-}
-export interface ClusterLogConfS3 {
-    s3: ClusterStorageInfoS3;
+export interface JobClusterLogConfS3 {
+    s3: JobClusterStorageInfoS3;
 }
 
 export interface JobNewCluster {
@@ -84,7 +75,7 @@ export interface JobNewCluster {
     driver_node_type_id?: string
     ssh_public_keys?: Array<string>
     custom_tags?: Record<string, unknown>
-    cluster_log_conf?: ClusterLogConfDbfs | ClusterLogConfS3
+    cluster_log_conf?: JobClusterLogConfDbfs | JobClusterLogConfS3
     init_scripts?: Array<JobClusterInitScriptInfoDbfs | JobClusterInitScriptInfoFile | JobClusterInitScriptInfoS3>
     docker_image?: JobClusterDockerImage
     spark_env_vars?: Record<string, unknown>
