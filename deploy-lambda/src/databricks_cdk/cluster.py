@@ -15,9 +15,9 @@ class AutoScale(BaseModel):
 
 
 class AwsAttributes(BaseModel):
-    first_on_demand: int = 1
-    availability: str = "SPOT_WITH_FALLBACK"
-    zone_id: str
+    first_on_demand: Optional[int] = None
+    availability: Optional[str] = None
+    zone_id: Optional[str] = None
     instance_profile_arn: Optional[str] = None
     spot_bid_price_percent: Optional[int] = None
     ebs_volume_type: Optional[str] = None

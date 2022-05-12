@@ -9,7 +9,7 @@ export interface ClusterAutoScale {
 export interface ClusterAwsAttributes {
     first_on_demand?: number
     availability?: string
-    zone_id: string
+    zone_id?: string
     instance_profile_arn?: string
     spot_bid_price_percent?: number
     ebs_volume_type?: string
