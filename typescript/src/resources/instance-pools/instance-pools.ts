@@ -4,7 +4,7 @@ import {Construct} from "constructs";
 export interface InstancePoolAwsAttributes {
     spot_bid_price_percent?: number
     availability?: string
-    zone_id: string
+    zone_id?: string
 }
 
 export interface InstancePoolDockerBasicAuth {

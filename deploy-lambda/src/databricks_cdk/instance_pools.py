@@ -21,7 +21,7 @@ class DockerImage(BaseModel):
 class InstancePoolAwsAttributes(BaseModel):
     spot_bid_price_percent: Optional[int] = None
     availability: str = "SPOT_WITH_FALLBACK"
-    zone_id: str
+    zone_id: Optional[str] = None
 
 
 class InstancePool(BaseModel):
