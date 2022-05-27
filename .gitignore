@@ -10,3 +10,5 @@ node_modules/
 
 *.iml
 .vscode
+
+cdk.out/
