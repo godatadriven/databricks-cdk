@@ -1,0 +1,28 @@
+{
+  "name": "simple-workspace",
+  "version": "0.1.0",
+  "license": "MIT",
+  "bin": {
+    "cdk-ts": "bin/deploy.ts"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0 'bin/**/*.ts'  'lib/**/*.ts'",
+    "preinstall": "mkdir -p ./node_modules && touch ./node_modules/.metadata_never_index",
+    "cdk": "cdk",
+    "synth": "cdk synth --context env='staging' --context tag='debug'",
+    "deploy": "cdk deploy --context env='staging' --context tag='debug'"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.41",
+    "@typescript-eslint/eslint-plugin": "^4.23.0",
+    "@typescript-eslint/parser": "^4.23.0",
+    "eslint": "^7.24.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "databricks-cdk": "^0.4.6",
+    "aws-cdk-lib": "^2.16.0",
+    "constructs": "^10.0.84"
+  }
+}
