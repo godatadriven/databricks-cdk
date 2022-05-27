@@ -23,3 +23,27 @@ jobs:
         run: |
           npm run lint
 
+  example-run:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        example-name: ["simple-workspace"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        working-directory: examples/${{ matrix.example-name }}
+        run: |
+          npm install aws-cdk
+          npm ci
+      - name: Run eslint
+        working-directory: examples/${{ matrix.example-name }}
+        run: |
+          npm run lint
+      - name: Run cdk synth
+        working-directory: examples/${{ matrix.example-name }}
+        run: |
+          npm run cdk synth

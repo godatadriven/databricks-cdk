@@ -24,6 +24,9 @@ interface CustomDeployLambdaProps {
     readonly accountId: string
     readonly region: string
     readonly lambdaVersion?: string
+    readonly databricksUserParam?: string
+    readonly databricksPassParam?: string
+    readonly databricksAccountParam?: string
 }
 
 export abstract class IDatabricksDeployLambda extends Construct {
@@ -177,9 +180,9 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
             role: this.lambdaRole,
             memorySize: 512,
             environment: {
-                LAMBDA_METHOD: "databricks-deploy",
-                SENTRY_DSN: aws_ssm.StringParameter.valueForStringParameter(
-                    this, "/datascience-resources/sentry_dsn"),
+                USER_PARAM: props.databricksUserParam || "/databricks/deploy/user",
+                PASS_PARAM: props.databricksPassParam || "/databricks/deploy/password",
+                ACCOUNT_PARAM: props.databricksAccountParam || "/databricks/account-id"
             },
             logRetention: aws_logs.RetentionDays.THREE_MONTHS,
         });
