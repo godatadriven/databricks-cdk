@@ -1,5 +1,5 @@
 import {Duration} from "aws-cdk-lib";
-import {aws_lambda, aws_ssm, aws_logs, aws_iam} from "aws-cdk-lib";
+import {aws_lambda, aws_logs, aws_iam} from "aws-cdk-lib";
 import path from "path";
 import * as fs from "fs";
 import {AccountCredentials, AccountCredentialsProperties} from "./resources/account/accountCredentials";
