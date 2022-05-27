@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 USER_PARAM = os.environ.get("USER_PARAM", "/databricks/deploy/user")
 PASS_PARAM = os.environ.get("PASS_PARAM", "/databricks/deploy/password")
-ACCOUNT_PARAM = os.environ.get("PASS_PARAM", "/databricks/account-id")
+ACCOUNT_PARAM = os.environ.get("ACCOUNT_PARAM", "/databricks/account-id")
 
 ACCOUNTS_BASE_URL = os.environ.get("BASE_URL", "https://accounts.cloud.databricks.com")
 
