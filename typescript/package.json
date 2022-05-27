@@ -28,7 +28,7 @@
         "@typescript-eslint/eslint-plugin": "^4.23.0",
         "@typescript-eslint/parser": "^4.23.0",
         "eslint": "^7.24.0",
-        "ts-node": "^9.1.1",
+        "ts-node": "^10.8.0",
         "typescript": "^4.6.3"
     },
     "dependencies": {
