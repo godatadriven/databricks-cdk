@@ -14,7 +14,7 @@ export interface SecretScopeProps extends SecretScopeProperties {
 }
 
 export class SecretScope extends CustomResource {
-    props: SecretScopeProps
+    props: SecretScopeProps;
 
     constructor(scope: Construct, id: string, props: SecretScopeProps) {
         super(scope, id, {

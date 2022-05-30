@@ -30,7 +30,7 @@ interface CustomDeployLambdaProps {
 }
 
 export abstract class IDatabricksDeployLambda extends Construct {
-    serviceToken = ""
+    serviceToken = "";
 
     public createCredential(scope: Construct, id: string, props: AccountCredentialsProperties): AccountCredentials {
         return new AccountCredentials(scope, id, {
@@ -133,9 +133,9 @@ export class DatabricksDeployLambdaImport extends IDatabricksDeployLambda {
 
 export class DatabricksDeployLambda extends IDatabricksDeployLambda {
 
-    readonly props: CustomDeployLambdaProps
-    readonly lambda: aws_lambda.IFunction
-    readonly lambdaRole: aws_iam.IRole
+    readonly props: CustomDeployLambdaProps;
+    readonly lambda: aws_lambda.IFunction;
+    readonly lambdaRole: aws_iam.IRole;
 
     constructor(scope: Construct, id: string, props: CustomDeployLambdaProps) {
         super(scope, id);
