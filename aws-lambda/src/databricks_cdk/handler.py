@@ -2,7 +2,7 @@ import os
 
 
 def handler(event, context):
-    lambda_method = os.environ.get("LAMBDA_METHOD", "cnf-deploy")
+    lambda_method = os.environ.get("LAMBDA_METHOD", "cfn-deploy")
 
     if lambda_method == "cfn-deploy":
         from databricks_cdk.resources.handler import handler
