@@ -24,12 +24,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        working-directory: deploy-lambda
+        working-directory: aws-lambda
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           poetry install
       - name: Test with pytest
-        working-directory: deploy-lambda
+        working-directory: aws-lambda
         run: |
           poetry run coverage run -m pytest
           poetry run coverage report
@@ -38,11 +38,11 @@ jobs:
         uses: mikepenz/action-junit-report@v2
         if: always() # always run even if the previous step fails
         with:
-          report_paths: 'deploy-lambda/junit/report.xml'
+          report_paths: 'aws-lambda/junit/report.xml'
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
-          files: ./deploy-lambda/coverage.xml
+          files: ./aws-lambda/coverage.xml
 
   flake8:
     runs-on: ubuntu-latest
@@ -53,12 +53,12 @@ jobs:
         with:
           python-version: 3.8
       - name: Install dependencies
-        working-directory: deploy-lambda
+        working-directory: aws-lambda
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           poetry install
       - name: Lint with flake8
-        working-directory: deploy-lambda
+        working-directory: aws-lambda
         run: |
           # stop the build if there are Python syntax errors or undefined names
           poetry run pflake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -74,12 +74,12 @@ jobs:
         with:
           python-version: 3.8
       - name: Install dependencies
-        working-directory: deploy-lambda
+        working-directory: aws-lambda
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           poetry install
       - name: Lint with black
-        working-directory: deploy-lambda
+        working-directory: aws-lambda
         run: |
           poetry run black --check .
 
@@ -92,11 +92,11 @@ jobs:
         with:
           python-version: 3.8
       - name: Install dependencies
-        working-directory: deploy-lambda
+        working-directory: aws-lambda
         run: |
           curl -sSL https://install.python-poetry.org | python3 -
           poetry install
       - name: Lint with isort
-        working-directory: deploy-lambda
+        working-directory: aws-lambda
         run: |
           poetry run isort --check .

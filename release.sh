@@ -2,8 +2,9 @@
 
 set -eu
 
+# Possible values: patch, minor, major
 BUMP_LEVEL=$1
-IMAGE_NAME="databricks-cdk-deploy-lambda"
+IMAGE_NAME="databricks-cdk-lambda"
 
 echo "bump level: ${BUMP_LEVEL}"
 
@@ -14,7 +15,7 @@ git add package.json package-lock.json
 echo "new version: ${NEW_VERSION}"
 rm -r dist
 npx tsc
-cd ../deploy-lambda
+cd ../aws-lambda
 
 poetry version "${NEW_VERSION}"
 poetry update
