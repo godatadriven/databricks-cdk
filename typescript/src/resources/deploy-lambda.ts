@@ -17,7 +17,7 @@ import {Construct} from "constructs";
 import {DockerImage} from "../docker-image";
 
 
-interface CustomDeployLambdaProps {
+export interface CustomDeployLambdaProps {
     readonly accountId: string
     readonly region: string
     readonly lambdaVersion?: string
