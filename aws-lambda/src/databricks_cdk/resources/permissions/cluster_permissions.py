@@ -1,9 +1,8 @@
 import logging
 from typing import List, Union
 
-from pydantic import BaseModel
-
 from databricks_cdk.utils import CnfResponse, put_request
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -36,14 +35,19 @@ def get_cluster_permissions_url(workspace_url: str, cluster_id: str):
     return f"{workspace_url}/api/2.0/permissions/clusters/{cluster_id}"
 
 
-def create_or_update_cluster_permissions(properties: ClusterPermissionsProperties) -> CnfResponse:
+def create_or_update_cluster_permissions(
+    properties: ClusterPermissionsProperties,
+) -> CnfResponse:
     """Create get_instance_profile_by_arn at databricks"""
 
     # Json data
     body = {
         "access_control_list": [a.dict() for a in properties.access_control_list],
     }
-    put_request(f"{get_cluster_permissions_url(properties.workspace_url, properties.cluster_id)}", body=body)
+    put_request(
+        f"{get_cluster_permissions_url(properties.workspace_url, properties.cluster_id)}",
+        body=body,
+    )
     return CnfResponse(
         physical_resource_id=f"{properties.cluster_id}/permissions",
     )

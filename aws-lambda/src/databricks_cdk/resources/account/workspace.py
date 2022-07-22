@@ -2,8 +2,6 @@ import logging
 import time
 from typing import Optional
 
-from pydantic import BaseModel
-
 from databricks_cdk.utils import (
     ACCOUNTS_BASE_URL,
     CnfResponse,
@@ -13,6 +11,7 @@ from databricks_cdk.utils import (
     patch_request,
     post_request,
 )
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 

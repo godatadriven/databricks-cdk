@@ -1,8 +1,6 @@
 import logging
 from typing import Optional
 
-from pydantic import BaseModel
-
 from databricks_cdk.utils import (
     ACCOUNTS_BASE_URL,
     CnfResponse,
@@ -11,6 +9,7 @@ from databricks_cdk.utils import (
     get_request,
     post_request,
 )
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +52,9 @@ def get_credentials_by_name(credentials_name: str) -> Optional[dict]:
     return current
 
 
-def create_or_update_credentials(properties: CredentialsProperties) -> CredentialsResponse:
+def create_or_update_credentials(
+    properties: CredentialsProperties,
+) -> CredentialsResponse:
     """Create credentials config at databricks"""
     url = get_credentials_url()
 

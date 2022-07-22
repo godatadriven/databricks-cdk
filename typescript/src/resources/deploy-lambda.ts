@@ -1,23 +1,20 @@
 import {Duration} from "aws-cdk-lib";
 import {aws_lambda, aws_logs, aws_iam} from "aws-cdk-lib";
-import path from "path";
-import * as fs from "fs";
-import {AccountCredentials, AccountCredentialsProperties} from "./resources/account/accountCredentials";
-import {AccountStorageConfig, AccountStorageConfigProperties} from "./resources/account/account-storage-config";
-import {AccountNetwork, AccountNetworkProperties} from "./resources/account/accountNetwork";
-import {Workspace, WorkspaceProperties} from "./resources/account/workspace";
-import {InstanceProfile, InstanceProfileProperties} from "./resources/instance-profiles/instance-profile";
-import {Cluster, ClusterProperties} from "./resources/clusters/cluster";
-import {ClusterPermissions, ClusterPermissionsProperties} from "./resources/permissions/cluster-permissions";
-import {DbfsFile, DbfsFileProperties} from "./resources/dbfs/dbfs-file";
-import {SecretScope, SecretScopeProperties} from "./resources/secrets/secret-scope";
-import {Job, JobProperties} from "./resources/jobs/job";
-import {Group, GroupProperties} from "./resources/groups/group";
-import {ScimUser, ScimUserProperties} from "./resources/scim/scimUser";
-import {InstancePool, InstancePoolProperties} from "./resources/instance-pools/instance-pools";
-import {randomUUID} from "crypto";
+import {AccountCredentials, AccountCredentialsProperties} from "./account/accountCredentials";
+import {AccountStorageConfig, AccountStorageConfigProperties} from "./account/account-storage-config";
+import {AccountNetwork, AccountNetworkProperties} from "./account/accountNetwork";
+import {Workspace, WorkspaceProperties} from "./account/workspace";
+import {InstanceProfile, InstanceProfileProperties} from "./instance-profiles/instance-profile";
+import {Cluster, ClusterProperties} from "./clusters/cluster";
+import {ClusterPermissions, ClusterPermissionsProperties} from "./permissions/cluster-permissions";
+import {DbfsFile, DbfsFileProperties} from "./dbfs/dbfs-file";
+import {SecretScope, SecretScopeProperties} from "./secrets/secret-scope";
+import {Job, JobProperties} from "./jobs/job";
+import {Group, GroupProperties} from "./groups/group";
+import {ScimUser, ScimUserProperties} from "./scim/scimUser";
+import {InstancePool, InstancePoolProperties} from "./instance-pools/instance-pools";
 import {Construct} from "constructs";
-import * as os from "os";
+import {DockerImage} from "../docker-image";
 
 
 interface CustomDeployLambdaProps {
@@ -27,6 +24,7 @@ interface CustomDeployLambdaProps {
     readonly databricksUserParam?: string
     readonly databricksPassParam?: string
     readonly databricksAccountParam?: string
+    readonly lambdaCode?: aws_lambda.DockerImageCode
 }
 
 export abstract class IDatabricksDeployLambda extends Construct {
@@ -141,23 +139,7 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
         super(scope, id);
         this.props = props;
 
-        const dockerTempDir = fs.mkdtempSync(path.join(os.tmpdir(), "databricks-cdk-lambda-"));
-        const dockerFile = path.join(dockerTempDir, "Dockerfile");
-        const lambdaVersion = props.lambdaVersion || "dev"; // TODO: get from package version
-        fs.writeFileSync(dockerFile, `FROM ffinfo/databricks-cdk-lambda:${lambdaVersion}`);
-
-        // Random hash will trigger a rebuild always, only need if dev is used
-        const randomHash = (lambdaVersion == "dev") ? randomUUID() : "";
-
-        const dockerImageCode = aws_lambda.DockerImageCode.fromImageAsset(
-            dockerTempDir, {
-                file: "Dockerfile",
-                buildArgs: {
-                    version: lambdaVersion,
-                    randomHash: randomHash,
-                }
-            }
-        );
+        const dockerImageCode = this.props.lambdaCode || DockerImage.generate(this.props.lambdaVersion);
 
         this.lambdaRole = new aws_iam.Role(this, "Role", {
             assumedBy: new aws_iam.ServicePrincipal("lambda.amazonaws.com"),
@@ -180,6 +162,7 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
             role: this.lambdaRole,
             memorySize: 512,
             environment: {
+                LAMBDA_METHOD: "cfn-deploy",
                 USER_PARAM: props.databricksUserParam || "/databricks/deploy/user",
                 PASS_PARAM: props.databricksPassParam || "/databricks/deploy/password",
                 ACCOUNT_PARAM: props.databricksAccountParam || "/databricks/account-id"

@@ -3,9 +3,8 @@ import logging
 from typing import Dict, List, Optional, Union
 
 import requests
-from pydantic import BaseModel
-
 from databricks_cdk.utils import CnfResponse, get_auth, post_request
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -193,7 +192,10 @@ def create_or_update_job(properties: JobProperties, physical_resource_id: Option
         return JobResponse(job_id=job_id, physical_resource_id=job_id)
     else:
         job_id = current.get("job_id")
-        reset_body = {"job_id": job_id, "new_settings": json.loads(properties.job.json())}
+        reset_body = {
+            "job_id": job_id,
+            "new_settings": json.loads(properties.job.json()),
+        }
         post_request(f"{url}/reset", body=reset_body)
         return JobResponse(job_id=job_id, physical_resource_id=job_id)
 

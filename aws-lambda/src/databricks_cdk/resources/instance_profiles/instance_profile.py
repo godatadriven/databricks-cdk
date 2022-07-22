@@ -1,9 +1,8 @@
 import logging
 from typing import Optional
 
-from pydantic import BaseModel
-
 from databricks_cdk.utils import CnfResponse, get_request, post_request
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +30,9 @@ def get_instance_profile_by_arn(instance_profile_arn: str, workspace_url: str) -
     return None
 
 
-def create_or_update_instance_profile(properties: InstanceProfileProperties) -> CnfResponse:
+def create_or_update_instance_profile(
+    properties: InstanceProfileProperties,
+) -> CnfResponse:
     """Create instance_profile at databricks"""
 
     current = get_instance_profile_by_arn(properties.instance_profile_arn, properties.workspace_url)

@@ -2,9 +2,8 @@ import logging
 from typing import Optional
 
 import requests
-from pydantic import BaseModel
-
 from databricks_cdk.utils import CnfResponse, get_auth, get_request, post_request
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +26,10 @@ def get_user_url(workspace_url: str):
 
 def get_user_by_user_name(user_name: str, workspace_url: str) -> Optional[dict]:
     """Getting user based on user_name"""
-    get_response = get_request(url=f"{get_user_url(workspace_url)}", params={"filter": f"userName eq {user_name}"})
+    get_response = get_request(
+        url=f"{get_user_url(workspace_url)}",
+        params={"filter": f"userName eq {user_name}"},
+    )
     if get_response["totalResults"] == 0:
         return None
     return get_response["Resources"][0]
@@ -57,7 +59,11 @@ def delete_user(properties: UserProperties, physical_resource_id: str) -> CnfRes
     if current is not None:
         auth = get_auth()
         if auth.username != properties.user_name:
-            resp = requests.delete(f"{get_user_url(properties.workspace_url)}/{current['id']}", headers={}, auth=auth)
+            resp = requests.delete(
+                f"{get_user_url(properties.workspace_url)}/{current['id']}",
+                headers={},
+                auth=auth,
+            )
             resp.raise_for_status()
         else:
             logger.warning("Can't remove deploy user")

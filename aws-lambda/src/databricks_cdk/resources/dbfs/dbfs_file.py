@@ -1,8 +1,7 @@
 import logging
 
-from pydantic import BaseModel
-
 from databricks_cdk.utils import CnfResponse, post_request
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +38,9 @@ def create_or_update_dbfs_file(properties: DbfsFileProperties) -> DbfsFileRespon
     post_request(f"{get_dbfs_file_url(properties.workspace_url)}/close", body={"handle": handle})
 
     return DbfsFileResponse(
-        physical_resource_id=properties.path, dbfs_path=f"dbfs:{properties.path}", file_path=f"/dbfs{properties.path}"
+        physical_resource_id=properties.path,
+        dbfs_path=f"dbfs:{properties.path}",
+        file_path=f"/dbfs{properties.path}",
     )
 
 

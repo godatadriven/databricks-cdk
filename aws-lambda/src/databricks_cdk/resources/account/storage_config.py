@@ -1,8 +1,6 @@
 import logging
 from typing import Optional
 
-from pydantic import BaseModel
-
 from databricks_cdk.utils import (
     ACCOUNTS_BASE_URL,
     CnfResponse,
@@ -11,6 +9,7 @@ from databricks_cdk.utils import (
     get_request,
     post_request,
 )
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +52,9 @@ def get_storage_by_name(storage_configuration_name: str) -> Optional[dict]:
     return current
 
 
-def create_or_update_storage_configuration(properties: StorageConfigProperties) -> StorageConfigResponse:
+def create_or_update_storage_configuration(
+    properties: StorageConfigProperties,
+) -> StorageConfigResponse:
     """Creates storage config at databricks"""
     url = get_storage_configuration_url()
 
