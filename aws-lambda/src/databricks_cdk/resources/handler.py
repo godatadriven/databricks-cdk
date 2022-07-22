@@ -2,6 +2,8 @@ import logging
 from typing import Optional
 
 import cfnresponse
+from pydantic import BaseModel
+
 from databricks_cdk.resources.account.credentials import (
     CredentialsProperties,
     create_or_update_credentials,
@@ -45,7 +47,6 @@ from databricks_cdk.resources.secrets.secret_scope import (
     delete_secret_scope,
 )
 from databricks_cdk.utils import CnfResponse
-from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 

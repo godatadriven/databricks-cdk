@@ -1,8 +1,9 @@
 import logging
 from typing import List, Optional, Union
 
-from databricks_cdk.utils import CnfResponse, get_request, post_request
 from pydantic import BaseModel
+
+from databricks_cdk.utils import CnfResponse, get_request, post_request
 
 logger = logging.getLogger(__name__)
 
