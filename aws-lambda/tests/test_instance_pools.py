@@ -1,6 +1,6 @@
 from unittest.mock import patch
 
-from databricks_cdk.instance_pools import (
+from databricks_cdk.resources.instance_pools.instance_pools import (
     InstancePool,
     InstancePoolProperties,
     create_or_update_instance_pool,
@@ -15,7 +15,7 @@ def test_get_instance_pools_url():
     assert get_instance_pools_url(test_workspace_url) == "https://dbc-test.cloud.databricks.com/api/2.0/instance-pools"
 
 
-@patch("databricks_cdk.instance_pools.post_request")
+@patch("databricks_cdk.resources.instance_pools.instance_pools.post_request")
 def test_create_instance_pool(patched_get_post_request):
     patched_get_post_request.return_value = {"instance_pool_id": "some_id"}
 
@@ -39,8 +39,8 @@ def test_create_instance_pool(patched_get_post_request):
     )
 
 
-@patch("databricks_cdk.instance_pools.get_instance_pool_by_id")
-@patch("databricks_cdk.instance_pools.post_request")
+@patch("databricks_cdk.resources.instance_pools.instance_pools.get_instance_pool_by_id")
+@patch("databricks_cdk.resources.instance_pools.instance_pools.post_request")
 def test_update_instance_pool(patched_get_post_request, patched_get_instance_pool_by_id):
     patched_get_instance_pool_by_id.return_value = {"instance_pool_id": "some_id"}
     patched_get_post_request.return_value = {"instance_pool_id": "some_id"}
@@ -64,8 +64,8 @@ def test_update_instance_pool(patched_get_post_request, patched_get_instance_poo
     )
 
 
-@patch("databricks_cdk.instance_pools.get_instance_pool_by_id")
-@patch("databricks_cdk.instance_pools.post_request")
+@patch("databricks_cdk.resources.instance_pools.instance_pools.get_instance_pool_by_id")
+@patch("databricks_cdk.resources.instance_pools.instance_pools.post_request")
 def test_delete_instance_pool(patched_get_post_request, patched_get_instance_pool_by_id):
     patched_get_instance_pool_by_id.return_value = {"instance_pool_id": "some_id"}
     patched_get_post_request.return_value = {"instance_pool_id": "some_id"}
