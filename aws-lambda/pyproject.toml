@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "databricks-cdk"
-version = "v0.5.2"
+version = "v0.5.3"
 description = "Deploying databricks resources from cdk"
 authors = ["Peter van 't Hof' <peter.vanthof@godatadriven.com>"]
 
