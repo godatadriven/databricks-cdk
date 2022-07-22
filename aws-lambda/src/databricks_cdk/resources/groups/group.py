@@ -64,13 +64,19 @@ def create_or_update_group(properties: GroupProperties) -> GroupResponse:
             # Adding users that does not exists in group
             add_member_body = member.dict()
             add_member_body["parent_name"] = properties.group_name
-            post_request(f"{get_groups_url(properties.workspace_url)}/add-member", body=add_member_body)
+            post_request(
+                f"{get_groups_url(properties.workspace_url)}/add-member",
+                body=add_member_body,
+            )
     for member in current.members:
         # Removing members from group
         if member not in properties.members:
             remove_member_body = member.dict()
             remove_member_body["parent_name"] = properties.group_name
-            post_request(f"{get_groups_url(properties.workspace_url)}/remove-member", body=remove_member_body)
+            post_request(
+                f"{get_groups_url(properties.workspace_url)}/remove-member",
+                body=remove_member_body,
+            )
 
     return GroupResponse(
         physical_resource_id=properties.group_name,

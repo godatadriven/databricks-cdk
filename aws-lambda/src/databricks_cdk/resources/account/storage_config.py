@@ -53,7 +53,9 @@ def get_storage_by_name(storage_configuration_name: str) -> Optional[dict]:
     return current
 
 
-def create_or_update_storage_configuration(properties: StorageConfigProperties) -> StorageConfigResponse:
+def create_or_update_storage_configuration(
+    properties: StorageConfigProperties,
+) -> StorageConfigResponse:
     """Creates storage config at databricks"""
     url = get_storage_configuration_url()
 

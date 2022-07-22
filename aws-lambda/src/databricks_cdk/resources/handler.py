@@ -104,14 +104,18 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_credentials(CredentialsProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "storage-configurations":
         return delete_storage_configuration(
-            StorageConfigProperties(**event.ResourceProperties), event.PhysicalResourceId
+            StorageConfigProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
         )
     elif action == "networks":
         return delete_networks(NetworksProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "workspaces":
         return delete_workspaces(WorkspaceProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "instance-profile":
-        return delete_instance_profile(InstanceProfileProperties(**event.ResourceProperties), event.PhysicalResourceId)
+        return delete_instance_profile(
+            InstanceProfileProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
     elif action == "cluster":
         return delete_cluster(ClusterProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "user":

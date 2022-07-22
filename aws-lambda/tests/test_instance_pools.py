@@ -20,10 +20,13 @@ def test_create_instance_pool(patched_get_post_request):
     patched_get_post_request.return_value = {"instance_pool_id": "some_id"}
 
     instance_pool = InstancePool(
-        instance_pool_name="test", node_type_id="test", preloaded_spark_versions=["some_version"]
+        instance_pool_name="test",
+        node_type_id="test",
+        preloaded_spark_versions=["some_version"],
     )
     instance_pool_properties = InstancePoolProperties(
-        workspace_url="https://dbc-test.cloud.databricks.com", instance_pool=instance_pool
+        workspace_url="https://dbc-test.cloud.databricks.com",
+        instance_pool=instance_pool,
     )
 
     # first without physical resource id then resource doesn't exist yet
@@ -46,10 +49,13 @@ def test_update_instance_pool(patched_get_post_request, patched_get_instance_poo
     patched_get_post_request.return_value = {"instance_pool_id": "some_id"}
 
     instance_pool = InstancePool(
-        instance_pool_name="test", node_type_id="test", preloaded_spark_versions=["some_version"]
+        instance_pool_name="test",
+        node_type_id="test",
+        preloaded_spark_versions=["some_version"],
     )
     instance_pool_properties = InstancePoolProperties(
-        workspace_url="https://dbc-test.cloud.databricks.com", instance_pool=instance_pool
+        workspace_url="https://dbc-test.cloud.databricks.com",
+        instance_pool=instance_pool,
     )
 
     # first without physical resource id then resource doesn't exist yet
@@ -71,10 +77,13 @@ def test_delete_instance_pool(patched_get_post_request, patched_get_instance_poo
     patched_get_post_request.return_value = {"instance_pool_id": "some_id"}
 
     instance_pool = InstancePool(
-        instance_pool_name="test", node_type_id="test", preloaded_spark_versions=["some_version"]
+        instance_pool_name="test",
+        node_type_id="test",
+        preloaded_spark_versions=["some_version"],
     )
     instance_pool_properties = InstancePoolProperties(
-        workspace_url="https://dbc-test.cloud.databricks.com", instance_pool=instance_pool
+        workspace_url="https://dbc-test.cloud.databricks.com",
+        instance_pool=instance_pool,
     )
 
     response = delete_instance_pool(properties=instance_pool_properties, physical_resource_id="some_id")

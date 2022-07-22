@@ -31,7 +31,11 @@ def create_or_update_secret(properties: SecretProperties) -> CnfResponse:
     """Create secret at databricks"""
 
     url = get_secret_url(properties.workspace_url)
-    create_body = {"scope": properties.scope, "key": properties.key, "string_value": properties.string_value}
+    create_body = {
+        "scope": properties.scope,
+        "key": properties.key,
+        "string_value": properties.string_value,
+    }
     post_request(f"{url}/put", body=create_body)
 
     return CnfResponse(physical_resource_id=properties.scope)

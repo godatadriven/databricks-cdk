@@ -53,7 +53,9 @@ def get_credentials_by_name(credentials_name: str) -> Optional[dict]:
     return current
 
 
-def create_or_update_credentials(properties: CredentialsProperties) -> CredentialsResponse:
+def create_or_update_credentials(
+    properties: CredentialsProperties,
+) -> CredentialsResponse:
     """Create credentials config at databricks"""
     url = get_credentials_url()
 
