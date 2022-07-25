@@ -23,6 +23,6 @@
   "dependencies": {
     "aws-cdk-lib": "^2.33.0",
     "constructs": "^10.1.53",
-    "databricks-cdk": "^0.4.6"
+    "databricks-cdk": "^0.5.3"
   }
 }
