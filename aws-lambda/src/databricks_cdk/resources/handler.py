@@ -39,6 +39,10 @@ from databricks_cdk.resources.permissions.cluster_permissions import (
     create_or_update_cluster_permissions,
     delete_cluster_permissions,
 )
+from databricks_cdk.resources.permissions.warehouse_permissions import (
+    SQLWarehousePermissionsProperties,
+    create_or_update_warehouse_permissions,
+)
 from databricks_cdk.resources.scim.user import UserProperties, create_or_update_user, delete_user
 from databricks_cdk.resources.secrets.secret import SecretProperties, create_or_update_secret, delete_secret
 from databricks_cdk.resources.secrets.secret_scope import (
@@ -100,6 +104,8 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         )
     elif action == "warehouse":
         return create_or_update_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "warehouse-permissions":
+        return create_or_update_warehouse_permissions(SQLWarehousePermissionsProperties(**event.ResourceProperties))
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
