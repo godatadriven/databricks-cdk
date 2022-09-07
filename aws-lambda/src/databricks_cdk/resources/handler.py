@@ -39,7 +39,7 @@ from databricks_cdk.resources.permissions.cluster_permissions import (
     create_or_update_cluster_permissions,
     delete_cluster_permissions,
 )
-from databricks_cdk.resources.permissions.warehouse_permissions import (
+from databricks_cdk.resources.permissions.sql_warehouse_permissions import (
     SQLWarehousePermissionsProperties,
     create_or_update_warehouse_permissions,
 )
