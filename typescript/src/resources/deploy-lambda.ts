@@ -13,7 +13,7 @@ import {Job, JobProperties} from "./jobs/job";
 import {Group, GroupProperties} from "./groups/group";
 import {ScimUser, ScimUserProperties} from "./scim/scimUser";
 import {InstancePool, InstancePoolProperties} from "./instance-pools/instance-pools";
-import {Warehouse, WarehouseProperties} from "./instance-pools/instance-pools";
+import {Warehouse, WarehouseProperties} from "./sql-warehouses/sql-warehouses";
 import {Construct} from "constructs";
 import {DockerImage} from "../docker-image";
 
