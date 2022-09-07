@@ -26,7 +26,7 @@ class SQLWarehouse(BaseModel):
     max_num_clusters: int
     auto_stop_mins: Optional[int] = 15
     tags: Optional[List[WarehouseTags]] = []
-    spot_instance_policy: Optional[WarehouseSpotInstancePolicy] = "COST_OPTIMIZED"
+    spot_instance_policy: Optional[WarehouseSpotInstancePolicy] = WarehouseSpotInstancePolicy.COST_OPTIMIZED
     enable_photon: Optional[bool] = True
     enable_serverless_compute: Optional[bool] = True
     channel: Optional[str] = "CHANNEL_NAME_CURRENT"
