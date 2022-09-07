@@ -1,5 +1,6 @@
 import logging
-from typing import Optional
+from enum import Enum
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -8,31 +9,41 @@ from databricks_cdk.utils import CnfResponse, delete_request, get_request, post_
 logger = logging.getLogger(__name__)
 
 
+class WarehouseSpotInstancePolicy(Enum):
+    COST_OPTIMIZED = "COST_OPTIMIZED"
+    RELIABILITY_OPTIMIZED = "RELIABILITY_OPTIMIZED"
+
+
+class WarehouseTags(BaseModel):
+    key: str
+    value: str
+
+
 class SQLWarehouse(BaseModel):
     name: str
     cluster_size: str
     min_num_clusters: Optional[int] = 1
     max_num_clusters: int
-    auto_stop_mins: Optional[int] = None
-    tags: Optional[dict] = None
-    spot_instance_policy: Optional[str] = None
-    enable_photon: Optional[bool] = None
-    enable_serverless_compute: Optional[bool] = None
-    channel: Optional[dict] = None
+    auto_stop_mins: Optional[int] = 15
+    tags: Optional[List[WarehouseTags]] = []
+    spot_instance_policy: Optional[WarehouseSpotInstancePolicy] = "COST_OPTIMIZED"
+    enable_photon: Optional[bool] = True
+    enable_serverless_compute: Optional[bool] = True
+    channel: Optional[str] = "CHANNEL_NAME_CURRENT"
 
 
 class SQLWarehouseEdit(BaseModel):
-    id: Optional[str] = None
-    name: Optional[str] = None
-    cluster_size: Optional[str] = "XXSMALL"
-    min_num_clusters: Optional[int] = 1
-    max_num_clusters: Optional[int] = 1
-    auto_stop_mins: Optional[int] = 10
-    tags: Optional[dict] = None
-    spot_instance_policy: Optional[dict] = None
-    enable_photon: Optional[bool] = None
-    enable_serverless_compute: Optional[bool] = None
-    channel: Optional[bool] = None
+    id: Optional[str]
+    name: Optional[str]
+    cluster_size: Optional[str]
+    min_num_clusters: Optional[int]
+    max_num_clusters: Optional[int]
+    auto_stop_mins: Optional[int]
+    tags: Optional[List[WarehouseTags]]
+    spot_instance_policy: Optional[WarehouseSpotInstancePolicy]
+    enable_photon: Optional[bool]
+    enable_serverless_compute: Optional[bool]
+    channel: Optional[str]
 
 
 class SQLWarehouseProperties(BaseModel):
