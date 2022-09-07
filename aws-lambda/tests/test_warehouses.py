@@ -10,7 +10,7 @@ from databricks_cdk.utils import CnfResponse
 
 
 @patch("databricks_cdk.resources.sql_warehouses.sql_warehouses.post_request")
-def test_create_instance_pool(patched_get_post_request):
+def test_create_warehouse(patched_get_post_request):
     patched_get_post_request.return_value = {"warehouse_id": "some_id"}
 
     warehouse = SQLWarehouse(
@@ -34,7 +34,7 @@ def test_create_instance_pool(patched_get_post_request):
 
 @patch("databricks_cdk.resources.sql_warehouses.sql_warehouses.get_warehouse_by_id")
 @patch("databricks_cdk.resources.sql_warehouses.sql_warehouses.post_request")
-def test_update_instance_pool(patched_get_post_request, patched_get_warehouse_by_id):
+def test_update_warehouse(patched_get_post_request, patched_get_warehouse_by_id):
     patched_get_warehouse_by_id.return_value = {"warehouse_id": "some_id"}
     patched_get_post_request.return_value = {"warehouse_id": "some_id"}
 
@@ -59,7 +59,7 @@ def test_update_instance_pool(patched_get_post_request, patched_get_warehouse_by
 
 @patch("databricks_cdk.resources.sql_warehouses.sql_warehouses.get_warehouse_by_id")
 @patch("databricks_cdk.resources.sql_warehouses.sql_warehouses.delete_request")
-def test_delete_instance_pool(patched_get_delete_request, patched_get_warehouse_by_id):
+def test_delete_warehouse(patched_get_delete_request, patched_get_warehouse_by_id):
     patched_get_warehouse_by_id.return_value = {"warehouse_id": "some_id"}
     patched_get_delete_request.return_value = {"warehouse_id": "some_id"}
 
