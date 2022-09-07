@@ -13,6 +13,7 @@ import {Job, JobProperties} from "./jobs/job";
 import {Group, GroupProperties} from "./groups/group";
 import {ScimUser, ScimUserProperties} from "./scim/scimUser";
 import {InstancePool, InstancePoolProperties} from "./instance-pools/instance-pools";
+import {Warehouse, WarehouseProperties} from "./instance-pools/instance-pools";
 import {Construct} from "constructs";
 import {DockerImage} from "../docker-image";
 
@@ -116,6 +117,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createInstancePool(scope: Construct, id: string, props: InstancePoolProperties): InstancePool {
         return new InstancePool(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createWarehouse(scope: Construct, id: string, props: WarehouseProperties): Warehouse {
+        return new Warehouse(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
