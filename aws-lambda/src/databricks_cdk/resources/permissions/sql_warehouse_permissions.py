@@ -39,7 +39,7 @@ def get_warehouse_permissions_url(workspace_url: str, endpoint_id: str):
 def create_or_update_warehouse_permissions(
     properties: SQLWarehousePermissionsProperties,
 ) -> CnfResponse:
-    """Create get_instance_profile_by_arn at databricks"""
+    """Replace warrehouse permissions at databricks"""
 
     # Json data
     body = {
