@@ -39,18 +39,18 @@ def get_warehouse_permissions_url(workspace_url: str, endpoint_id: str):
 def create_or_update_warehouse_permissions(
     properties: SQLWarehousePermissionsProperties,
 ) -> CnfResponse:
-    """Replace warrehouse permissions at databricks"""
+    """Replace warehouse permissions at databricks"""
 
     # Json data
     body = {
         "access_control_list": [a.dict() for a in properties.access_control_list],
     }
     put_request(
-        f"{get_warehouse_permissions_url(properties.workspace_url, properties.cluster_id)}",
+        f"{get_warehouse_permissions_url(properties.workspace_url, properties.endpoint_id)}",
         body=body,
     )
     return CnfResponse(
-        physical_resource_id=f"{properties.cluster_id}/permissions",
+        physical_resource_id=f"{properties.endpoint_id}/permissions",
     )
 
 
