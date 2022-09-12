@@ -9,7 +9,7 @@ export interface WarehouseTags {
 export const SpotInstancePolicy = {
     COST_OPTIMIZED: "COST_OPTIMIZED",
     RELIABILITY_OPTIMIZED: "RELIABILITY_OPTIMIZED"
-}
+};
 
 export interface DatabricksWarehouse {
     name: string
