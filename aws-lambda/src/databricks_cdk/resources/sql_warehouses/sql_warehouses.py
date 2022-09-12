@@ -9,11 +9,6 @@ from databricks_cdk.utils import CnfResponse, delete_request, get_request, post_
 logger = logging.getLogger(__name__)
 
 
-class WarehouseSpotInstancePolicy(Enum):
-    COST_OPTIMIZED = "COST_OPTIMIZED"
-    RELIABILITY_OPTIMIZED = "RELIABILITY_OPTIMIZED"
-
-
 class WarehouseTags(BaseModel):
     key: str
     value: str
@@ -26,7 +21,7 @@ class SQLWarehouse(BaseModel):
     max_num_clusters: int
     auto_stop_mins: Optional[int] = None
     tags: Optional[List[WarehouseTags]] = None
-    spot_instance_policy: Optional[WarehouseSpotInstancePolicy] = None
+    spot_instance_policy: Optional[str] = None
     enable_photon: Optional[bool] = None
     enable_serverless_compute: Optional[bool] = None
     channel: Optional[str] = None
@@ -40,7 +35,7 @@ class SQLWarehouseEdit(BaseModel):
     max_num_clusters: Optional[int]
     auto_stop_mins: Optional[int]
     tags: Optional[List[WarehouseTags]]
-    spot_instance_policy: Optional[WarehouseSpotInstancePolicy]
+    spot_instance_policy: Optional[str]
     enable_photon: Optional[bool]
     enable_serverless_compute: Optional[bool]
     channel: Optional[str]

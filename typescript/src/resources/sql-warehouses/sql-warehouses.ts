@@ -6,11 +6,6 @@ export interface WarehouseTags {
     value: string
 }
 
-export const SpotInstancePolicy = {
-    COST_OPTIMIZED: "COST_OPTIMIZED",
-    RELIABILITY_OPTIMIZED: "RELIABILITY_OPTIMIZED"
-};
-
 export interface DatabricksWarehouse {
     name: string
     cluster_size: string
@@ -18,7 +13,7 @@ export interface DatabricksWarehouse {
     max_num_clusters: number
     auto_stop_mins?: number
     tags?: Array<WarehouseTags>
-    spot_instance_policy?: SpotInstancePolicy
+    spot_instance_policy?: string
     enable_photon?: boolean
     enable_serverless_compute?: boolean
     channel?: string
