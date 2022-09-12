@@ -8,6 +8,7 @@ export * as permissions from "./permissions";
 export * as scim from "./scim";
 export * as secrets from "./secrets";
 export * as instancePools from "./instance-pools";
+export * as warehouses from "./sql-warehouses";
 
 
 export * from "./account";
@@ -20,3 +21,5 @@ export * from "./permissions";
 export * from "./scim";
 export * from "./secrets";
 export * from "./instance-pools";
+export * from "./sql-warehouses";
+
