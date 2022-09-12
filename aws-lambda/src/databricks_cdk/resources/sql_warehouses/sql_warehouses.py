@@ -53,7 +53,7 @@ class SQLWarehouseResponse(CnfResponse):
 
 def get_warehouse_url(workspace_url: str):
     """Getting url for SQL Warehouse requests"""
-    return f"{workspace_url}/2.0/sql/warehouses/"
+    return f"{workspace_url}/api/2.0/sql/warehouses/"
 
 
 def get_warehouse_by_id(warehouse_id: str, workspace_url: str) -> Optional[dict]:
