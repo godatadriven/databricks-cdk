@@ -149,6 +149,8 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_instance_pool(InstancePoolProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "warehouse":
         return delete_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "warehouse-permissions":
+        return delete_cluster_permissions(event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 

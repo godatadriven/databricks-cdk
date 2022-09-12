@@ -52,3 +52,9 @@ def create_or_update_warehouse_permissions(
     return CnfResponse(
         physical_resource_id=f"{properties.cluster_id}/permissions",
     )
+
+
+def delete_cluster_permissions(physical_resource_id: str) -> CnfResponse:
+    """Call back for cloudformation purposes"""
+    # no need to remove
+    return CnfResponse(physical_resource_id=physical_resource_id)
