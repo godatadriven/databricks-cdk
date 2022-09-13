@@ -29,7 +29,7 @@ def test_create_warehouse(patched_get_post_request):
     assert response.physical_resource_id == "some_id"
 
     # make sure create endpoint is called
-    assert patched_get_post_request.call_args.args[0] == "https://dbc-test.cloud.databricks.com/api/2.0/sql/warehouses/"
+    assert patched_get_post_request.call_args.kwargs["url"] == "https://dbc-test.cloud.databricks.com/api/2.0/sql/warehouses/"
 
 
 @patch("databricks_cdk.resources.sql_warehouses.sql_warehouses.get_warehouse_by_name")
