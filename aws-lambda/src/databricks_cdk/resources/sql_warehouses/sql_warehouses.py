@@ -28,17 +28,17 @@ class SQLWarehouse(BaseModel):
 
 
 class SQLWarehouseEdit(BaseModel):
-    id: Optional[str]
-    name: Optional[str]
-    cluster_size: Optional[str]
-    min_num_clusters: Optional[int]
-    max_num_clusters: Optional[int]
-    auto_stop_mins: Optional[int]
-    tags: Optional[List[WarehouseTags]]
-    spot_instance_policy: Optional[str]
-    enable_photon: Optional[bool]
-    enable_serverless_compute: Optional[bool]
-    channel: Optional[str]
+    id: Optional[str] = None
+    name: Optional[str] = None
+    cluster_size: Optional[str] = None
+    min_num_clusters: Optional[int] = None
+    max_num_clusters: Optional[int] = None
+    auto_stop_mins: Optional[int] = None
+    tags: Optional[List[WarehouseTags]] = None
+    spot_instance_policy: Optional[str] = None
+    enable_photon: Optional[bool] = None
+    enable_serverless_compute: Optional[bool] = None
+    channel: Optional[str] = None
 
 
 class SQLWarehouseProperties(BaseModel):
@@ -73,7 +73,6 @@ def create_or_update_warehouse(properties: SQLWarehouseProperties, physical_reso
     if current is None:
         create_response = post_request(url=url, body=warehouse_properties.dict())
         warehouse_id = create_response.get("warehouse_id")
-        post_request(url, body=warehouse_properties.dict())
         return SQLWarehouseResponse(warehouse_id=warehouse_id, physical_resource_id=warehouse_id)
     else:
         warehouse_id = current.get("warehouse_id")
@@ -106,4 +105,5 @@ def delete_warehouse(properties: SQLWarehouseProperties, physical_resource_id: s
         delete_request(f"{get_warehouse_url(properties.workspace_url)}{physical_resource_id}")
     else:
         logger.warning("Already removed")
+
     return CnfResponse(physical_resource_id=physical_resource_id)
