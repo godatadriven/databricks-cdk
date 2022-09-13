@@ -1,9 +1,17 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
-export interface WarehouseTags {
+export interface WarehouseTagPairs {
     key: string
     value: string
+}
+
+export interface WarehouseTags {
+    custom_tags: Array<WarehouseTagPairs>
+}
+
+export interface Channel {
+    name: string
 }
 
 export interface DatabricksWarehouse {
@@ -12,11 +20,11 @@ export interface DatabricksWarehouse {
     min_num_clusters?: number
     max_num_clusters: number
     auto_stop_mins?: number
-    tags?: Array<WarehouseTags>
+    tags?: WarehouseTags
     spot_instance_policy?: string
     enable_photon?: boolean
     enable_serverless_compute?: boolean
-    channel?: string
+    channel?: Channel
 }
 
 export interface WarehouseProperties {

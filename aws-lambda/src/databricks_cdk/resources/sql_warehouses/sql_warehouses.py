@@ -9,9 +9,17 @@ from databricks_cdk.utils import CnfResponse, delete_request, get_request, post_
 logger = logging.getLogger(__name__)
 
 
-class WarehouseTags(BaseModel):
+class WarehouseTagPairs(BaseModel):
     key: str
     value: str
+
+
+class WarehouseTags(BaseModel):
+    custom_tags: List[WarehouseTagPairs]
+
+
+class Channel(BaseModel):
+    name: str
 
 
 class SQLWarehouse(BaseModel):
@@ -20,11 +28,11 @@ class SQLWarehouse(BaseModel):
     min_num_clusters: Optional[int] = None
     max_num_clusters: int
     auto_stop_mins: Optional[int] = None
-    tags: Optional[List[WarehouseTags]] = None
+    tags: Optional[WarehouseTags] = None
     spot_instance_policy: Optional[str] = None
     enable_photon: Optional[bool] = None
     enable_serverless_compute: Optional[bool] = None
-    channel: Optional[str] = None
+    channel: Optional[Channel] = None
 
 
 class SQLWarehouseEdit(BaseModel):
@@ -34,7 +42,7 @@ class SQLWarehouseEdit(BaseModel):
     min_num_clusters: Optional[int] = None
     max_num_clusters: Optional[int] = None
     auto_stop_mins: Optional[int] = None
-    tags: Optional[List[WarehouseTags]] = None
+    tags: Optional[WarehouseTags] = None
     spot_instance_policy: Optional[str] = None
     enable_photon: Optional[bool] = None
     enable_serverless_compute: Optional[bool] = None
@@ -72,10 +80,10 @@ def create_or_update_warehouse(properties: SQLWarehouseProperties, physical_reso
 
     if current is None:
         create_response = post_request(url=url, body=warehouse_properties.dict())
-        warehouse_id = create_response.get("warehouse_id")
+        warehouse_id = create_response.get("id")
         return SQLWarehouseResponse(warehouse_id=warehouse_id, physical_resource_id=warehouse_id)
     else:
-        warehouse_id = current.get("warehouse_id")
+        warehouse_id = current.get("id")
         warehouse_edit = SQLWarehouseEdit(
             id=warehouse_id,
             name=warehouse_properties.name,
@@ -99,9 +107,6 @@ def delete_warehouse(properties: SQLWarehouseProperties, physical_resource_id: s
     current = get_warehouse_by_id(physical_resource_id, properties.workspace_url)
 
     if current is not None:
-        body = {
-            "warehouse_id": physical_resource_id,
-        }
         delete_request(f"{get_warehouse_url(properties.workspace_url)}{physical_resource_id}")
     else:
         logger.warning("Already removed")
