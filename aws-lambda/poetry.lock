@@ -419,7 +419,7 @@ six = ">=1.5"
 
 [[package]]
 name = "regex"
-version = "2022.9.11"
+version = "2022.9.13"
 description = "Alternative regular expression module, to replace re."
 category = "dev"
 optional = false
