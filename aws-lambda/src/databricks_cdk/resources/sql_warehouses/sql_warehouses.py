@@ -73,7 +73,6 @@ def create_or_update_warehouse(properties: SQLWarehouseProperties, physical_reso
     if current is None:
         create_response = post_request(url=url, body=warehouse_properties.dict())
         warehouse_id = create_response.get("warehouse_id")
-        post_request(url, body=warehouse_properties.dict())
         return SQLWarehouseResponse(warehouse_id=warehouse_id, physical_resource_id=warehouse_id)
     else:
         warehouse_id = current.get("warehouse_id")
