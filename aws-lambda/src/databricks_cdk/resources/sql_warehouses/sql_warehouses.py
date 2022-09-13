@@ -110,7 +110,7 @@ def create_or_update_warehouse(properties: SQLWarehouseProperties, physical_reso
 
 def delete_warehouse(properties: SQLWarehouseProperties, physical_resource_id: str):
     """Delete warehouse at databricks"""
-    current = get_warehouse_by_name(physical_resource_id, properties.workspace_url)
+    current = get_warehouse_by_name(properties.warehouse.name, properties.workspace_url)
 
     if current is not None:
         delete_request(f"{get_warehouse_url(properties.workspace_url)}{physical_resource_id}")
