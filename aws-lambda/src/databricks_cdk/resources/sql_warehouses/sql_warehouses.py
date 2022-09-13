@@ -46,7 +46,7 @@ class SQLWarehouseEdit(BaseModel):
     spot_instance_policy: Optional[str] = None
     enable_photon: Optional[bool] = None
     enable_serverless_compute: Optional[bool] = None
-    channel: Optional[str] = None
+    channel: Optional[Channel] = None
 
 
 class SQLWarehouseProperties(BaseModel):
@@ -56,17 +56,23 @@ class SQLWarehouseProperties(BaseModel):
 
 
 class SQLWarehouseResponse(CnfResponse):
-    warehouse_id: str
+    id: str
 
 
 def get_warehouse_url(workspace_url: str):
     """Getting url for SQL Warehouse requests"""
-    return f"{workspace_url}/2.0/sql/warehouses/"
+    return f"{workspace_url}/api/2.0/sql/warehouses/"
 
 
-def get_warehouse_by_id(warehouse_id: str, workspace_url: str) -> Optional[dict]:
-    """Getting warehouse by id"""
-    return get_request(f"{workspace_url}/2.0/sql/warehouses/{warehouse_id}")
+def get_warehouse_by_name(warehouse_name: str, workspace_url: str) -> Optional[dict]:
+    """Getting warehouse by name"""
+    all_warehouses = get_request(f"{workspace_url}/api/2.0/sql/warehouses/")["warehouses"]
+
+    for warehouse_dict in all_warehouses:
+        if warehouse_name == warehouse_dict["name"]:
+            return warehouse_dict
+
+    return None
 
 
 def create_or_update_warehouse(properties: SQLWarehouseProperties, physical_resource_id: Optional[str]):
@@ -76,12 +82,12 @@ def create_or_update_warehouse(properties: SQLWarehouseProperties, physical_reso
     warehouse_properties = properties.warehouse
 
     if physical_resource_id is not None:
-        current = get_warehouse_by_id(physical_resource_id, properties.workspace_url)
+        current = get_warehouse_by_name(warehouse_properties.name, properties.workspace_url)
 
     if current is None:
         create_response = post_request(url=url, body=warehouse_properties.dict())
         warehouse_id = create_response.get("id")
-        return SQLWarehouseResponse(warehouse_id=warehouse_id, physical_resource_id=warehouse_id)
+        return SQLWarehouseResponse(id=warehouse_id, physical_resource_id=warehouse_id)
     else:
         warehouse_id = current.get("id")
         warehouse_edit = SQLWarehouseEdit(
@@ -99,12 +105,12 @@ def create_or_update_warehouse(properties: SQLWarehouseProperties, physical_reso
         )
 
         post_request(f"{url}{warehouse_id}/edit", body=warehouse_edit.dict())
-        return SQLWarehouseResponse(warehouse_id=warehouse_id, physical_resource_id=warehouse_id)
+        return SQLWarehouseResponse(id=warehouse_id, physical_resource_id=warehouse_id)
 
 
 def delete_warehouse(properties: SQLWarehouseProperties, physical_resource_id: str):
     """Delete warehouse at databricks"""
-    current = get_warehouse_by_id(physical_resource_id, properties.workspace_url)
+    current = get_warehouse_by_name(physical_resource_id, properties.workspace_url)
 
     if current is not None:
         delete_request(f"{get_warehouse_url(properties.workspace_url)}{physical_resource_id}")
