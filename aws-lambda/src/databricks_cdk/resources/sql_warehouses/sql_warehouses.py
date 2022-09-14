@@ -65,7 +65,9 @@ def get_warehouse_url(workspace_url: str):
 
 def get_warehouse_by_name(warehouse_name: str, workspace_url: str) -> Optional[dict]:
     """Getting warehouse by name"""
-    all_warehouses = get_request(f"{workspace_url}/api/2.0/sql/warehouses/")["warehouses"]
+    all_warehouses = get_request(f"{workspace_url}/api/2.0/sql/warehouses/").get("warehouses")
+    if all_warehouses is None:
+        return None
 
     for warehouse_dict in all_warehouses:
         if warehouse_name == warehouse_dict["name"]:
