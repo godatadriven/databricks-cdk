@@ -9,9 +9,9 @@ COPY poetry.lock .
 COPY README.md .
 
 RUN yum install -y -q gcc gcc-c++ unixODBC-devel curl netcat \
-    && export POETRY_VERSION=1.1.13 \
-    && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
-    && PATH="${PATH}:/root/.poetry/bin" \
+    && export POETRY_VERSION=1.2.0 \
+    && curl -sSL https://install.python-poetry.org | python3 - \
+    && export PATH="/root/.local/bin:$PATH" \
     && poetry config virtualenvs.create false \
     && poetry install --no-dev --no-ansi \
     && yum remove -y gcc gcc-c++ unixODBC-devel \
