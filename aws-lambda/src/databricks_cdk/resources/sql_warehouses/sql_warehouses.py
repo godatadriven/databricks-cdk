@@ -78,11 +78,9 @@ def get_warehouse_by_name(warehouse_name: str, workspace_url: str) -> Optional[d
 def create_or_update_warehouse(properties: SQLWarehouseProperties, physical_resource_id: Optional[str]):
     """Create or update warehouse at Databricks"""
     url = get_warehouse_url(properties.workspace_url)
-    current: Optional[dict] = None
     warehouse_properties = properties.warehouse
 
-    if physical_resource_id is not None:
-        current = get_warehouse_by_name(warehouse_properties.name, properties.workspace_url)
+    current = get_warehouse_by_name(warehouse_properties.name, properties.workspace_url)
 
     if current is None:
         create_response = post_request(url=url, body=warehouse_properties.dict())
