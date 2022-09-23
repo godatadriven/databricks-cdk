@@ -55,6 +55,23 @@ from databricks_cdk.resources.sql_warehouses.sql_warehouses import (
     create_or_update_warehouse,
     delete_warehouse,
 )
+from databricks_cdk.resources.unity_catalog.catalogs import CatalogProperties, create_or_update_catalog, delete_catalog
+from databricks_cdk.resources.unity_catalog.metastore import (
+    MetastoreProperties,
+    create_or_update_metastore,
+    delete_metastore,
+)
+from databricks_cdk.resources.unity_catalog.metastore_assignment import (
+    AssignmentProperties,
+    create_or_update_assignment,
+    delete_assignment,
+)
+from databricks_cdk.resources.unity_catalog.permissions import (
+    PermissionsProperties,
+    create_or_update_permissions,
+    delete_permissions,
+)
+from databricks_cdk.resources.unity_catalog.schemas import SchemaProperties, create_or_update_schema, delete_schema
 from databricks_cdk.utils import CnfResponse
 
 logger = logging.getLogger(__name__)
@@ -106,6 +123,16 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "warehouse-permissions":
         return create_or_update_warehouse_permissions(SQLWarehousePermissionsProperties(**event.ResourceProperties))
+    elif action == "metastore":
+        return create_or_update_metastore(MetastoreProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "metastore-assignment":
+        return create_or_update_assignment(AssignmentProperties(**event.ResourceProperties))
+    elif action == "catalog":
+        return create_or_update_catalog(CatalogProperties(**event.ResourceProperties))
+    elif action == "schema":
+        return create_or_update_schema(SchemaProperties(**event.ResourceProperties))
+    elif action == "catalog-permission":
+        return create_or_update_permissions(PermissionsProperties(**event.ResourceProperties))
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -151,6 +178,16 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "warehouse-permissions":
         return delete_cluster_permissions(event.PhysicalResourceId)
+    elif action == "metastore":
+        return delete_metastore(MetastoreProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "metastore-assignment":
+        return delete_assignment(AssignmentProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "catalog":
+        return delete_catalog(CatalogProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "schema":
+        return delete_schema(SchemaProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "catalog-permission":
+        return delete_permissions(PermissionsProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 

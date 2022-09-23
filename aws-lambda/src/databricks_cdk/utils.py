@@ -52,10 +52,11 @@ def get_auth() -> HTTPBasicAuth:
 def post_request(
     url: str,
     body: dict,
+    params: dict = None,
 ) -> dict:
     """Generic method to do post requests"""
     auth = get_auth()
-    resp = requests.post(url, json=body, headers={}, auth=auth)
+    resp = requests.post(url, json=body, headers={}, auth=auth, params=params)
 
     # If the response was successful, no Exception will be raised
     if resp.status_code >= 400:
@@ -71,10 +72,11 @@ def post_request(
 def put_request(
     url: str,
     body: dict,
+    params: dict = None,
 ) -> dict:
     """Generic method to do post requests"""
     auth = get_auth()
-    resp = requests.put(url, json=body, headers={}, auth=auth)
+    resp = requests.put(url, json=body, headers={}, auth=auth, params=params)
 
     # If the response was successful, no Exception will be raised
     if resp.status_code >= 400:
@@ -87,10 +89,10 @@ def put_request(
     return data
 
 
-def patch_request(url: str, body: dict) -> dict:
+def patch_request(url: str, body: dict, params: dict = None) -> dict:
     """Generic method to do patch requests"""
     auth = get_auth()
-    resp = requests.patch(url, json=body, headers={}, auth=auth)
+    resp = requests.patch(url, json=body, headers={}, auth=auth, params=params)
 
     # If the response was successful, no Exception will be raised
     if resp.status_code >= 400:
@@ -123,10 +125,10 @@ def get_request(url: str, params: dict = None, body: dict = None) -> Optional[di
     return data
 
 
-def delete_request(url: str) -> Optional[dict]:
+def delete_request(url: str, params: dict = None, body: dict = None) -> Optional[dict]:
     """Generic method to do delete requests"""
     auth = get_auth()
-    resp = requests.delete(url, headers={}, auth=auth)
+    resp = requests.delete(url, headers={}, auth=auth, params=params, json=body)
 
     # If the response was successful, no Exception will be raised
     if resp.status_code >= 400:

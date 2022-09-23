@@ -9,6 +9,7 @@ export * as scim from "./scim";
 export * as secrets from "./secrets";
 export * as instancePools from "./instance-pools";
 export * as warehouses from "./sql-warehouses";
+export * as unity_catalog from "./unity-catalog";
 
 
 export * from "./account";
@@ -22,4 +23,5 @@ export * from "./scim";
 export * from "./secrets";
 export * from "./instance-pools";
 export * from "./sql-warehouses";
+export * from "./unity-catalog";
 
