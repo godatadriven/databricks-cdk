@@ -17,6 +17,18 @@ import {Warehouse, WarehouseProperties} from "./sql-warehouses/sql-warehouses";
 import {WarehousePermissions, WarehousePermissionsProperties} from "./permissions/sql-warehouse-permissions";
 import {Construct} from "constructs";
 import {DockerImage} from "../docker-image";
+import {
+    UnityCatalogCatalog,
+    UnityCatalogCatalogProperties,
+    UnityCatalogMetastore,
+    UnityCatalogMetastoreAssignment,
+    UnityCatalogMetastoreAssignmentProperties,
+    UnityCatalogMetastoreProperties,
+    UnityCatalogPermission,
+    UnityCatalogPermissionProperties,
+    UnityCatalogSchema,
+    UnityCatalogSchemaProperties
+} from "./unity-catalog";
 
 
 export interface CustomDeployLambdaProps {
@@ -132,6 +144,41 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createWarehousePermissions(scope: Construct, id: string, props: WarehousePermissionsProperties): WarehousePermissions {
         return new WarehousePermissions(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogMetastore(scope: Construct, id: string, props: UnityCatalogMetastoreProperties): UnityCatalogMetastore {
+        return new UnityCatalogMetastore(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogMetastoreAssignment(scope: Construct, id: string, props: UnityCatalogMetastoreAssignmentProperties): UnityCatalogMetastoreAssignment {
+        return new UnityCatalogMetastoreAssignment(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogCatalog(scope: Construct, id: string, props: UnityCatalogCatalogProperties): UnityCatalogCatalog {
+        return new UnityCatalogCatalog(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogSchema(scope: Construct, id: string, props: UnityCatalogSchemaProperties): UnityCatalogSchema {
+        return new UnityCatalogSchema(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogPermission(scope: Construct, id: string, props: UnityCatalogPermissionProperties): UnityCatalogPermission {
+        return new UnityCatalogPermission(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
