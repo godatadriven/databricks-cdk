@@ -64,7 +64,7 @@ def create_or_update_metastore(
     else:
         metastore_id = current.get("metastore_id")
         body = json.loads(properties.metastore.json())
-        if current.get("storage_root") == f"{properties.metastore.storage_root}/{metastore_id}":
+        if current.get("storage_root") == f"{properties.metastore.storage_root}/{metastore_id}".replace("//", "/"):
             del body["storage_root"]
         else:
             raise RuntimeError("storage_root can't be changed after first deployment")

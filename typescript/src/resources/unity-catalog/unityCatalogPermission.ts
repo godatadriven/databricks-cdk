@@ -30,6 +30,8 @@ export class UnityCatalogPermission extends CustomResource {
                 action: "catalog-permission",
                 workspace_url: props.workspace_url,
                 permissions: props.permissions,
+                sec_type: props.sec_type,
+                sec_id: props.sec_id,
             }
         });
     }
