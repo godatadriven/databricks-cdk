@@ -7,7 +7,7 @@ from databricks_cdk.utils import CnfResponse, put_request
 
 
 class JobPermissionsProperties(BaseModel):
-    action: str = "job-permissions"  #
+    action: str = "job-permissions"
     workspace_url: str
     job_id: str
     access_control_list: List[Union[UserPermission, GroupPermission, ServicePrincipalPermission]] = []
