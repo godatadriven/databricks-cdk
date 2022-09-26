@@ -64,10 +64,13 @@ def create_or_update_metastore(
     else:
         metastore_id = current.get("metastore_id")
         body = json.loads(properties.metastore.json())
-        if current.get("storage_root") == f"{properties.metastore.storage_root}/{metastore_id}".replace("//", "/"):
+        if current.get("storage_root").startswith(properties.metastore.storage_root):
             del body["storage_root"]
         else:
-            raise RuntimeError("storage_root can't be changed after first deployment")
+            new_storage_root = f"{properties.metastore.storage_root}/{metastore_id}"
+            raise RuntimeError(
+                f"storage_root can't be changed after first deployment, old: {current.get('storage_root')}, new: {new_storage_root}"
+            )
         update_response = patch_request(f"{base_url}/{metastore_id}", body=body)
         global_metastore_id = update_response.get("global_metastore_id")
         return MetastoreResponse(
