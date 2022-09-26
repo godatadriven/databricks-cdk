@@ -3,25 +3,10 @@ from typing import List, Union
 
 from pydantic import BaseModel
 
+from databricks_cdk.resources.permissions.models import GroupPermission, ServicePrincipalPermission, UserPermission
 from databricks_cdk.utils import CnfResponse, put_request
 
 logger = logging.getLogger(__name__)
-
-
-class Permission(BaseModel):
-    permission_level: str
-
-
-class UserPermission(Permission):
-    user_name: str
-
-
-class GroupPermission(Permission):
-    group_name: str
-
-
-class ServicePrincipalPermission(Permission):
-    service_principal_name: str
 
 
 class ClusterPermissionsProperties(BaseModel):

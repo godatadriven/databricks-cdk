@@ -39,6 +39,11 @@ from databricks_cdk.resources.permissions.cluster_permissions import (
     create_or_update_cluster_permissions,
     delete_cluster_permissions,
 )
+from databricks_cdk.resources.permissions.job_permissions import (
+    JobPermissionsProperties,
+    create_or_update_job_permissions,
+    delete_job_permissions,
+)
 from databricks_cdk.resources.permissions.sql_warehouse_permissions import (
     SQLWarehousePermissionsProperties,
     create_or_update_warehouse_permissions,
@@ -105,6 +110,8 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_user(UserProperties(**event.ResourceProperties))
     elif action == "cluster-permissions":
         return create_or_update_cluster_permissions(ClusterPermissionsProperties(**event.ResourceProperties))
+    elif action == "job-permissions":
+        return create_or_update_job_permissions(JobPermissionsProperties(**event.ResourceProperties))
     elif action == "group":
         return create_or_update_group(GroupProperties(**event.ResourceProperties))
     elif action == "dbfs-file":
@@ -188,6 +195,8 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_schema(SchemaProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "catalog-permission":
         return delete_permissions(PermissionsProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "job-permissions":
+        return delete_job_permissions(JobPermissionsProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
