@@ -22,7 +22,7 @@ export interface JobPermissionsProperties {
     workspaceUrl: string
     jobId: string
     accessControlList: Array<JobPermissionUser | JobPermissionGroup | JobPermissionServicePrincipal>
-    ownerName: string
+    ownerPermission: JobPermissionUser | JobPermissionGroup | JobPermissionServicePrincipal
 }
 
 export interface JobPermissionsProps extends JobPermissionsProperties {
@@ -38,7 +38,7 @@ export class JobPermissions extends CustomResource {
                 workspace_url: props.workspaceUrl,
                 cluster_id: props.jobId,
                 access_control_list: props.accessControlList,
-                owner_name: props.ownerName
+                owner_permission: props.ownerPermission
             }
         });
     }

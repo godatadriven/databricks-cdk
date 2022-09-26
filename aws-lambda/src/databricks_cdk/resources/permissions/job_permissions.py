@@ -11,7 +11,7 @@ class JobPermissionsProperties(BaseModel):
     workspace_url: str
     job_id: str
     access_control_list: List[Union[UserPermission, GroupPermission, ServicePrincipalPermission]] = []
-    owner_name: str
+    owner_permission: Union[UserPermission, GroupPermission, ServicePrincipalPermission]
 
 
 def get_job_permissions_url(workspace_url: str, job_id: str):
@@ -25,7 +25,7 @@ def create_or_update_job_permissions(properties: JobPermissionsProperties) -> Cn
     # Json data
     access_control_list = [a.dict() for a in properties.access_control_list]
     # Always add owner
-    access_control_list.append(UserPermission(permission_level="IS_OWNER", user_name=properties.owner_name).dict())
+    access_control_list.append(properties.owner_permission.dict())
 
     body = {
         "access_control_list": access_control_list,
@@ -41,9 +41,9 @@ def create_or_update_job_permissions(properties: JobPermissionsProperties) -> Cn
 
 def delete_job_permissions(properties: JobPermissionsProperties, physical_resource_id: str) -> CnfResponse:
     """Deletes all job permissions on job at databricks"""
-    # remove everything but the owner
+    # remove everything but the owner permission
     body = {
-        "access_control_list": [UserPermission(permission_level="IS_OWNER", user_name=properties.owner_name).dict()],
+        "access_control_list": [properties.owner_permission.dict()],
     }
 
     put_request(
