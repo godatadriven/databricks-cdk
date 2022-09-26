@@ -2,7 +2,7 @@ import json
 import logging
 from typing import Dict, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from databricks_cdk.utils import CnfResponse, delete_request, get_request, patch_request, post_request
 
@@ -19,7 +19,7 @@ class Schema(BaseModel):
 
 class SchemaProperties(BaseModel):
     workspace_url: str
-    schema_object: Schema
+    schema_object: Schema = Field(alias="schema")
 
 
 class SchemaResponse(CnfResponse):
