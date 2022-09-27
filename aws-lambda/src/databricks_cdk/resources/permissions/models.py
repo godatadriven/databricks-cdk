@@ -1,17 +1,25 @@
 from pydantic import BaseModel
 
 
-class Permission(BaseModel):
-    permission_level: str
-
-
-class UserPermission(Permission):
+class User(BaseModel):
     user_name: str
 
 
-class GroupPermission(Permission):
+class Group(BaseModel):
     group_name: str
 
 
-class ServicePrincipalPermission(Permission):
+class ServicePrincipal(BaseModel):
     service_principal_name: str
+
+
+class UserPermission(User):
+    permission_level: str
+
+
+class GroupPermission(Group):
+    permission_level: str
+
+
+class ServicePrincipalPermission(ServicePrincipal):
+    permission_level: str

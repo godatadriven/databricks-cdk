@@ -1,28 +1,13 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
+import {User, Group, ServicePrincipal, UserPermission, GroupPermission, ServicePrinicpalPermission} from "./models";
 
-
-interface JobPermission {
-    permission_level: string
-}
-
-export interface JobPermissionUser extends JobPermission {
-    user_name: string
-}
-
-export interface JobPermissionGroup extends JobPermission {
-    group_name: string
-}
-
-export interface JobPermissionServicePrincipal extends JobPermission {
-    service_principal: string
-}
 
 export interface JobPermissionsProperties {
     workspaceUrl: string
     jobId: string
-    accessControlList: Array<JobPermissionUser | JobPermissionGroup | JobPermissionServicePrincipal>
-    ownerPermission: JobPermissionUser | JobPermissionGroup | JobPermissionServicePrincipal
+    accessControlList: Array<UserPermission | GroupPermission | ServicePrinicpalPermission>
+    owner: User | Group | ServicePrincipal
 }
 
 export interface JobPermissionsProps extends JobPermissionsProperties {
@@ -38,7 +23,7 @@ export class JobPermissions extends CustomResource {
                 workspace_url: props.workspaceUrl,
                 cluster_id: props.jobId,
                 access_control_list: props.accessControlList,
-                owner_permission: props.ownerPermission
+                owner: props.owner
             }
         });
     }

@@ -2,7 +2,14 @@ from typing import List, Union
 
 from pydantic import BaseModel
 
-from databricks_cdk.resources.permissions.models import GroupPermission, ServicePrincipalPermission, UserPermission
+from databricks_cdk.resources.permissions.models import (
+    Group,
+    GroupPermission,
+    ServicePrincipal,
+    ServicePrincipalPermission,
+    User,
+    UserPermission,
+)
 from databricks_cdk.utils import CnfResponse, put_request
 
 
@@ -11,7 +18,7 @@ class JobPermissionsProperties(BaseModel):
     workspace_url: str
     job_id: str
     access_control_list: List[Union[UserPermission, GroupPermission, ServicePrincipalPermission]] = []
-    owner_permission: Union[UserPermission, GroupPermission, ServicePrincipalPermission]
+    owner: Union[User, Group, ServicePrincipal]
 
 
 def get_job_permissions_url(workspace_url: str, job_id: str):
@@ -25,7 +32,10 @@ def create_or_update_job_permissions(properties: JobPermissionsProperties) -> Cn
     # Json data
     access_control_list = [a.dict() for a in properties.access_control_list]
     # Always add owner
-    access_control_list.append(properties.owner_permission.dict())
+
+    owner_dict = properties.owner.dict()
+    owner_dict["permission_level"] = "IS_OWNER"
+    access_control_list.append(owner_dict)
 
     body = {
         "access_control_list": access_control_list,
@@ -42,8 +52,13 @@ def create_or_update_job_permissions(properties: JobPermissionsProperties) -> Cn
 def delete_job_permissions(properties: JobPermissionsProperties, physical_resource_id: str) -> CnfResponse:
     """Deletes all job permissions on job at databricks"""
     # remove everything but the owner permission
+    access_control_list = []
+    owner_dict = properties.owner.dict()
+    owner_dict["permission_level"] = "IS_OWNER"
+    access_control_list.append(owner_dict)
+
     body = {
-        "access_control_list": [properties.owner_permission.dict()],
+        "access_control_list": access_control_list,
     }
 
     put_request(

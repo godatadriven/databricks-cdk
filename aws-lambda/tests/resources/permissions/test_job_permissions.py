@@ -6,7 +6,7 @@ from databricks_cdk.resources.permissions.job_permissions import (
     delete_job_permissions,
     get_job_permissions_url,
 )
-from databricks_cdk.resources.permissions.models import UserPermission
+from databricks_cdk.resources.permissions.models import User, UserPermission
 from databricks_cdk.utils import CnfResponse
 
 
@@ -26,7 +26,7 @@ def test_create_job_permissions(patched_get_put_request):
         workspace_url="https://dbc-test.cloud.databricks.com",
         job_id="ae5850e0-8046-44e6-aa1e-6ec3e84f2f8f",
         access_control_list=[UserPermission(permission_level="CAN_MANAGE", user_name="test")],
-        owner_permission=UserPermission(permission_level="IS_OWNER", user_name="owner"),
+        owner=User(user_name="owner"),
     )
 
     response = create_or_update_job_permissions(job_permissions)
@@ -52,7 +52,7 @@ def test_delete_job_permissions(patched_get_put_request):
         workspace_url="https://dbc-test.cloud.databricks.com",
         job_id="ae5850e0-8046-44e6-aa1e-6ec3e84f2f8f",
         access_control_list=[UserPermission(permission_level="CAN_MANAGE", user_name="test")],
-        owner_permission=UserPermission(permission_level="IS_OWNER", user_name="owner"),
+        owner=User(user_name="owner"),
     )
     response = delete_job_permissions(job_permissions, "ae5850e0-8046-44e6-aa1e-6ec3e84f2f8f")
     assert response == CnfResponse(physical_resource_id="ae5850e0-8046-44e6-aa1e-6ec3e84f2f8f")
