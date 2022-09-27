@@ -29,6 +29,7 @@ import {
     UnityCatalogSchema,
     UnityCatalogSchemaProperties
 } from "./unity-catalog";
+import {JobPermissions, JobPermissionsProperties} from "./permissions";
 
 
 export interface CustomDeployLambdaProps {
@@ -123,6 +124,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createJob(scope: Construct, id: string, props: JobProperties): Job {
         return new Job(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createJobPermissions(scope: Construct, id: string, props: JobPermissionsProperties): JobPermissions {
+        return new JobPermissions(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
