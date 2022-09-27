@@ -21,7 +21,7 @@ export class JobPermissions extends CustomResource {
             properties: {
                 action: "job-permissions",
                 workspace_url: props.workspaceUrl,
-                cluster_id: props.jobId,
+                job_id: props.jobId,
                 access_control_list: props.accessControlList,
                 owner: props.owner
             }
