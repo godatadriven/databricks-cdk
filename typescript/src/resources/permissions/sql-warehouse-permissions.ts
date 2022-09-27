@@ -1,27 +1,11 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
-
-
-interface WarehousePermission {
-    permission_level: string
-}
-
-export interface WarehousePermissionUser extends WarehousePermission {
-    user_name: string
-}
-
-export interface WarehousePermissionGroup extends WarehousePermission {
-    group_name: string
-}
-
-export interface WarehousePermissionServicePrincipal extends WarehousePermission {
-    service_principal: string
-}
+import {UserPermission, GroupPermission, ServicePrinicpalPermission} from "./models";
 
 export interface WarehousePermissionsProperties {
     workspaceUrl: string
     endpointId: string
-    accessControlList: Array<WarehousePermissionUser | WarehousePermissionGroup | WarehousePermissionServicePrincipal>
+    accessControlList: Array<UserPermission | GroupPermission | ServicePrinicpalPermission>
 }
 
 export interface WarehousePermissionsProps extends WarehousePermissionsProperties {
