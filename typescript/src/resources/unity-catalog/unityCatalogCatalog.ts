@@ -22,7 +22,7 @@ export class UnityCatalogCatalog extends CustomResource {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
-                action: "catalog",
+                action: "unity-catalog",
                 workspace_url: props.workspace_url,
                 catalog: props.catalog,
             }

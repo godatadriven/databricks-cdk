@@ -4,7 +4,7 @@ import {Construct} from "constructs";
 export interface UnityCatalogMetastoreAssignmentProperties {
     workspace_url: string
     workspace_id: string
-    metastore_id: string
+    metastore_name: string
     default_catalog_name: string
 }
 
@@ -17,10 +17,10 @@ export class UnityCatalogMetastoreAssignment extends CustomResource {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
-                action: "metastore-assignment",
+                action: "unity-metastore-assignment",
                 workspace_url: props.workspace_url,
                 workspace_id: props.workspace_id,
-                metastore_id: props.metastore_id,
+                metastore_name: props.metastore_name,
                 default_catalog_name: props.default_catalog_name,
             }
         });
