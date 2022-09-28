@@ -10,6 +10,7 @@ export interface UnityCatalogMetastoreSettings {
 export interface UnityCatalogMetastoreProperties {
     workspace_url: string
     metastore: UnityCatalogMetastoreSettings
+    iam_role: string
 }
 
 export interface UnityCatalogMetastoreProps extends UnityCatalogMetastoreProperties {
@@ -21,9 +22,10 @@ export class UnityCatalogMetastore extends CustomResource {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
-                action: "metastore",
+                action: "unity-metastore",
                 workspace_url: props.workspace_url,
                 metastore: props.metastore,
+                iam_role: props.iam_role,
             }
         });
     }

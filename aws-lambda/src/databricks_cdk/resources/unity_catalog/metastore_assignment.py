@@ -2,6 +2,7 @@ import logging
 
 from pydantic import BaseModel
 
+from databricks_cdk.resources.unity_catalog.metastore import get_metastore_by_name, get_metastore_url
 from databricks_cdk.utils import CnfResponse, delete_request, put_request
 
 logger = logging.getLogger(__name__)
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 class AssignmentProperties(BaseModel):
     workspace_url: str
     workspace_id: str
-    metastore_id: str
+    metastore_name: str
     default_catalog_name: str
 
 
@@ -26,7 +27,15 @@ def get_assignment_url(workspace_url: str, workspace_id: str):
 def create_or_update_assignment(properties: AssignmentProperties) -> AssignmentResponse:
     """Create assignment at databricks"""
     base_url = get_assignment_url(properties.workspace_url, properties.workspace_id)
-    body = {"metastore_id": properties.metastore_id, "default_catalog_name": properties.default_catalog_name}
+    metastore_result = get_metastore_by_name(
+        properties.metastore_name, base_url=get_metastore_url(properties.workspace_url)
+    )
+    if metastore_result is None:
+        raise RuntimeError(f"No metastore found with name {properties.metastore_name}")
+    body = {
+        "metastore_id": metastore_result.get("metastore_id"),
+        "default_catalog_name": properties.default_catalog_name,
+    }
     put_request(base_url, body=body)
     return AssignmentResponse(
         workspace_id=properties.workspace_id,

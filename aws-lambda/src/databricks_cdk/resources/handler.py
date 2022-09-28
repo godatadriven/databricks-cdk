@@ -61,6 +61,11 @@ from databricks_cdk.resources.sql_warehouses.sql_warehouses import (
     delete_warehouse,
 )
 from databricks_cdk.resources.unity_catalog.catalogs import CatalogProperties, create_or_update_catalog, delete_catalog
+from databricks_cdk.resources.unity_catalog.external_storage import (
+    ExternalLocationProperties,
+    create_or_update_external_location,
+    delete_external_location,
+)
 from databricks_cdk.resources.unity_catalog.metastore import (
     MetastoreProperties,
     create_or_update_metastore,
@@ -77,6 +82,11 @@ from databricks_cdk.resources.unity_catalog.permissions import (
     delete_permissions,
 )
 from databricks_cdk.resources.unity_catalog.schemas import SchemaProperties, create_or_update_schema, delete_schema
+from databricks_cdk.resources.unity_catalog.storage_credentials import (
+    StorageCredentialsProperties,
+    create_or_update_storage_credential,
+    delete_storage_credential,
+)
 from databricks_cdk.utils import CnfResponse
 
 logger = logging.getLogger(__name__)
@@ -130,16 +140,20 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "warehouse-permissions":
         return create_or_update_warehouse_permissions(SQLWarehousePermissionsProperties(**event.ResourceProperties))
-    elif action == "metastore":
+    elif action == "metastore" or action == "unity-metastore":
         return create_or_update_metastore(MetastoreProperties(**event.ResourceProperties), event.PhysicalResourceId)
-    elif action == "metastore-assignment":
+    elif action == "metastore-assignment" or action == "unity-metastore-assignment":
         return create_or_update_assignment(AssignmentProperties(**event.ResourceProperties))
-    elif action == "catalog":
+    elif action == "catalog" or action == "unity-catalog":
         return create_or_update_catalog(CatalogProperties(**event.ResourceProperties))
-    elif action == "schema":
+    elif action == "schema" or action == "unity-schema":
         return create_or_update_schema(SchemaProperties(**event.ResourceProperties))
-    elif action == "catalog-permission":
+    elif action == "catalog-permission" or action == "unity-catalog-permission":
         return create_or_update_permissions(PermissionsProperties(**event.ResourceProperties))
+    elif action == "unity-storage-credentials":
+        return create_or_update_storage_credential(StorageCredentialsProperties(**event.ResourceProperties))
+    elif action == "unity-external-storage":
+        return create_or_update_external_location(ExternalLocationProperties(**event.ResourceProperties))
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -185,18 +199,26 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "warehouse-permissions":
         return delete_cluster_permissions(event.PhysicalResourceId)
-    elif action == "metastore":
+    elif action == "metastore" or action == "unity-metastore":
         return delete_metastore(MetastoreProperties(**event.ResourceProperties), event.PhysicalResourceId)
-    elif action == "metastore-assignment":
+    elif action == "metastore-assignment" or action == "unity-metastore-assignment":
         return delete_assignment(AssignmentProperties(**event.ResourceProperties), event.PhysicalResourceId)
-    elif action == "catalog":
+    elif action == "catalog" or action == "unity-catalog":
         return delete_catalog(CatalogProperties(**event.ResourceProperties), event.PhysicalResourceId)
-    elif action == "schema":
+    elif action == "schema" or action == "unity-schema":
         return delete_schema(SchemaProperties(**event.ResourceProperties), event.PhysicalResourceId)
-    elif action == "catalog-permission":
+    elif action == "catalog-permission" or action == "unity-catalog-permission":
         return delete_permissions(PermissionsProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "job-permissions":
         return delete_job_permissions(JobPermissionsProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "unity-storage-credentials":
+        return delete_storage_credential(
+            StorageCredentialsProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
+    elif action == "unity-external-storage":
+        return delete_external_location(
+            ExternalLocationProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 

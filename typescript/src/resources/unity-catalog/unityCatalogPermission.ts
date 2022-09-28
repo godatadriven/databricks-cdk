@@ -27,7 +27,7 @@ export class UnityCatalogPermission extends CustomResource {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
-                action: "catalog-permission",
+                action: "unity-catalog-permission",
                 workspace_url: props.workspace_url,
                 permissions: props.permissions,
                 sec_type: props.sec_type,

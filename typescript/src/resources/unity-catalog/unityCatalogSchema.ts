@@ -23,7 +23,7 @@ export class UnityCatalogSchema extends CustomResource {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
-                action: "schema",
+                action: "unity-schema",
                 workspace_url: props.workspace_url,
                 schema: props.schema,
             }
