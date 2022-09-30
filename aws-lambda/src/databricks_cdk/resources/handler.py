@@ -152,7 +152,7 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_permissions(PermissionsProperties(**event.ResourceProperties))
     elif action == "unity-storage-credentials":
         return create_or_update_storage_credential(StorageCredentialsProperties(**event.ResourceProperties))
-    elif action == "unity-external-storage":
+    elif action == "unity-external-location":
         return create_or_update_external_location(ExternalLocationProperties(**event.ResourceProperties))
     else:
         raise RuntimeError(f"Unknown action: {action}")
