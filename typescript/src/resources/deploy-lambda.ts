@@ -19,7 +19,7 @@ import {Construct} from "constructs";
 import {DockerImage} from "../docker-image";
 import {
     UnityCatalogCatalog,
-    UnityCatalogCatalogProperties,
+    UnityCatalogCatalogProperties, UnityCatalogExternalLocation, UnityCatalogExternalLocationProperties,
     UnityCatalogMetastore,
     UnityCatalogMetastoreAssignment,
     UnityCatalogMetastoreAssignmentProperties,
@@ -27,7 +27,7 @@ import {
     UnityCatalogPermission,
     UnityCatalogPermissionProperties,
     UnityCatalogSchema,
-    UnityCatalogSchemaProperties
+    UnityCatalogSchemaProperties, UnityCatalogStorageCredential, UnityCatalogStorageCredentialProperties
 } from "./unity-catalog";
 import {JobPermissions, JobPermissionsProperties} from "./permissions";
 
@@ -187,6 +187,20 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createUnityCatalogPermission(scope: Construct, id: string, props: UnityCatalogPermissionProperties): UnityCatalogPermission {
         return new UnityCatalogPermission(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogStorageCredential(scope: Construct, id: string, props: UnityCatalogStorageCredentialProperties): UnityCatalogStorageCredential {
+        return new UnityCatalogStorageCredential(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogExternalLocation(scope: Construct, id: string, props: UnityCatalogExternalLocationProperties): UnityCatalogExternalLocation {
+        return new UnityCatalogExternalLocation(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
