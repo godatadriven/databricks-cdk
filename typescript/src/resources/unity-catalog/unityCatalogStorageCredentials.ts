@@ -1,7 +1,7 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
-export interface UnityCatalogStorageCredential {
+export interface UnityCatalogStorageCredentialAbstract {
     name: string
     comment?: string
 }
@@ -10,7 +10,7 @@ export interface UnityCatalogAwsIamRole {
     role_arn: string
 }
 
-export interface StorageCredentialAws extends UnityCatalogStorageCredential {
+export interface StorageCredentialAws extends UnityCatalogStorageCredentialAbstract {
     aws_iam_role: UnityCatalogAwsIamRole
 }
 
@@ -20,7 +20,7 @@ export interface UnityCatalogAzureServicePrincipal {
     client_secret: string
 }
 
-export interface StorageCredentialAzure extends UnityCatalogStorageCredential {
+export interface StorageCredentialAzure extends UnityCatalogStorageCredentialAbstract {
     azure_service_principal: UnityCatalogAzureServicePrincipal
 }
 
@@ -30,7 +30,7 @@ export interface UnityCatalogGcpServiceAccountKey {
     private_key: string
 }
 
-export interface StorageCredentialGcp extends UnityCatalogStorageCredential {
+export interface StorageCredentialGcp extends UnityCatalogStorageCredentialAbstract {
     gcp_service_account_key: UnityCatalogGcpServiceAccountKey
 }
 

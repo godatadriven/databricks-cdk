@@ -1,7 +1,7 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
-export interface UnityCatalogExternalLocation {
+export interface UnityCatalogExternalLocationSettings {
     name: string
     comment?: string
     url: string
@@ -11,7 +11,7 @@ export interface UnityCatalogExternalLocation {
 
 export interface UnityCatalogExternalLocationProperties {
     workspace_url: string
-    external_location: UnityCatalogExternalLocation
+    external_location: UnityCatalogExternalLocationSettings
 }
 
 export interface UnityCatalogExternalLocationProps extends UnityCatalogExternalLocationProperties {
