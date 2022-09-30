@@ -215,7 +215,7 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_storage_credential(
             StorageCredentialsProperties(**event.ResourceProperties), event.PhysicalResourceId
         )
-    elif action == "unity-external-storage":
+    elif action == "unity-external-location":
         return delete_external_location(
             ExternalLocationProperties(**event.ResourceProperties), event.PhysicalResourceId
         )
