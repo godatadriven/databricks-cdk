@@ -59,6 +59,8 @@ class Cluster(BaseModel):
     idempotency_token: Optional[str] = None
     apply_policy_default_values: Optional[bool] = None
     enable_local_disk_encryption: Optional[bool] = None
+    data_security_mode: Optional[str] = None
+    runtime_engine: Optional[str] = None
 
 
 class ClusterProperties(BaseModel):

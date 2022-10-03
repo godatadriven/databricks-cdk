@@ -69,7 +69,7 @@ def delete_schema(properties: SchemaProperties, physical_resource_id: str) -> Cn
     )
     if current is not None:
         delete_request(
-            f"{base_url}/{properties.schema_object.name}",
+            f"{base_url}/{properties.schema_object.catalog_name}.{properties.schema_object.name}",
             params={"catalog_name": properties.schema_object.catalog_name},
         )
     else:

@@ -83,6 +83,8 @@ export interface JobNewCluster {
     enable_elastic_disk?: boolean
     driver_instance_pool_id?: string
     instance_pool_id?: string
+    data_security_mode?: string
+    runtime_engine?: string
 }
 
 export interface JobCluster {

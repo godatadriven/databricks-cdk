@@ -62,6 +62,8 @@ class NewCluster(BaseModel):
     enable_elastic_disk: Optional[bool] = None
     driver_instance_pool_id: Optional[str] = None
     instance_pool_id: Optional[str] = None
+    data_security_mode: Optional[str] = None
+    runtime_engine: Optional[str] = None
 
 
 class JobCluster(BaseModel):
