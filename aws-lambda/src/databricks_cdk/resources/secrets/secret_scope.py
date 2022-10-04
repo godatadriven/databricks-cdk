@@ -21,7 +21,7 @@ def get_secret_scope_url(workspace_url: str):
 
 def get_scope(properties: SecretScopeProperties):
     url = get_secret_scope_url(properties.workspace_url)
-    list_response = get_request(f"{url}/list")
+    list_response = get_request(f"{url}/list").get("scopes", [])
     for s in list_response:
         if s.get("name") == properties.scope:
             return s
