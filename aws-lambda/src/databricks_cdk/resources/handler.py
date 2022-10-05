@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 import cfnresponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from databricks_cdk.resources.account.credentials import (
     CredentialsProperties,
@@ -225,12 +225,16 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
 
 def process_event(event: DatabricksEvent) -> CnfResponse:
     """Process a databricks deploy event"""
-    if event.RequestType == "Create" or event.RequestType == "Update":
-        return create_or_update_resource(event)
-    elif event.RequestType == "Delete":
-        return delete_resource(event)
-    else:
-        logger.error(f"unknown request_type: {event.RequestType}")
+    try:
+        if event.RequestType == "Create" or event.RequestType == "Update":
+            return create_or_update_resource(event)
+        elif event.RequestType == "Delete":
+            return delete_resource(event)
+        else:
+            logger.error(f"unknown request_type: {event.RequestType}")
+    except ValidationError:
+        logger.error(f"{event}")
+        raise
 
 
 def handler(event, context):
