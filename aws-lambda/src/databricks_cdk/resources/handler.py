@@ -20,6 +20,11 @@ from databricks_cdk.resources.account.workspace import (
     create_or_update_workspaces,
     delete_workspaces,
 )
+from databricks_cdk.resources.cluster_policies.cluster_policy import (
+    ClusterPolicyProperties,
+    create_or_update_cluster_policy,
+    delete_cluster_policy,
+)
 from databricks_cdk.resources.clusters.cluster import ClusterProperties, create_or_update_cluster, delete_cluster
 from databricks_cdk.resources.dbfs.dbfs_file import DbfsFileProperties, create_or_update_dbfs_file, delete_dbfs_file
 from databricks_cdk.resources.groups.group import GroupProperties, create_or_update_group, delete_group
@@ -39,6 +44,11 @@ from databricks_cdk.resources.permissions.cluster_permissions import (
     create_or_update_cluster_permissions,
     delete_cluster_permissions,
 )
+from databricks_cdk.resources.permissions.cluster_policy_permissions import (
+    ClusterPolicyPermissionsProperties,
+    create_or_update_cluster_policy_permissions,
+    delete_cluster_policy_permissions,
+)
 from databricks_cdk.resources.permissions.job_permissions import (
     JobPermissionsProperties,
     create_or_update_job_permissions,
@@ -47,6 +57,7 @@ from databricks_cdk.resources.permissions.job_permissions import (
 from databricks_cdk.resources.permissions.sql_warehouse_permissions import (
     SQLWarehousePermissionsProperties,
     create_or_update_warehouse_permissions,
+    delete_warehouse_permissions,
 )
 from databricks_cdk.resources.scim.user import UserProperties, create_or_update_user, delete_user
 from databricks_cdk.resources.secrets.secret import SecretProperties, create_or_update_secret, delete_secret
@@ -116,10 +127,20 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_instance_profile(InstanceProfileProperties(**event.ResourceProperties))
     elif action == "cluster":
         return create_or_update_cluster(ClusterProperties(**event.ResourceProperties), event.PhysicalResourceId)
-    elif action == "user":
-        return create_or_update_user(UserProperties(**event.ResourceProperties))
+
     elif action == "cluster-permissions":
         return create_or_update_cluster_permissions(ClusterPermissionsProperties(**event.ResourceProperties))
+    elif action == "cluster-policy":
+        return create_or_update_cluster_policy(
+            ClusterPolicyProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "cluster-policy-permissions":
+        return create_or_update_cluster_policy_permissions(
+            ClusterPolicyPermissionsProperties(**event.ResourceProperties)
+        )
+    elif action == "user":
+        return create_or_update_user(UserProperties(**event.ResourceProperties))
     elif action == "job-permissions":
         return create_or_update_job_permissions(JobPermissionsProperties(**event.ResourceProperties))
     elif action == "group":
@@ -179,6 +200,15 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         )
     elif action == "cluster":
         return delete_cluster(ClusterProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "cluster-policy":
+        return delete_cluster_policy(
+            ClusterPolicyProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "cluster-policy-permissions":
+        return delete_cluster_policy_permissions(
+            event.PhysicalResourceId,
+        )
     elif action == "user":
         return delete_user(UserProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "cluster-permissions":
@@ -198,7 +228,7 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
     elif action == "warehouse":
         return delete_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "warehouse-permissions":
-        return delete_cluster_permissions(event.PhysicalResourceId)
+        return delete_warehouse_permissions(event.PhysicalResourceId)
     elif action == "metastore" or action == "unity-metastore":
         return delete_metastore(MetastoreProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "metastore-assignment" or action == "unity-metastore-assignment":
@@ -210,14 +240,19 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
     elif action == "catalog-permission" or action == "unity-catalog-permission":
         return delete_permissions(PermissionsProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "job-permissions":
-        return delete_job_permissions(JobPermissionsProperties(**event.ResourceProperties), event.PhysicalResourceId)
+        return delete_job_permissions(
+            JobPermissionsProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
     elif action == "unity-storage-credentials":
         return delete_storage_credential(
-            StorageCredentialsProperties(**event.ResourceProperties), event.PhysicalResourceId
+            StorageCredentialsProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
         )
     elif action == "unity-external-location":
         return delete_external_location(
-            ExternalLocationProperties(**event.ResourceProperties), event.PhysicalResourceId
+            ExternalLocationProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
         )
     else:
         raise RuntimeError(f"Unknown action: {action}")

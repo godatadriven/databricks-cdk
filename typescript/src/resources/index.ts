@@ -1,4 +1,5 @@
 export * as account from "./account";
+export * as clusterPolicies from "./cluster-policies";
 export * as clusters from "./clusters";
 export * as dbfs from "./dbfs";
 export * as groups from "./groups";
@@ -13,6 +14,7 @@ export * as unity_catalog from "./unity-catalog";
 
 
 export * from "./account";
+export * from "./cluster-policies";
 export * from "./clusters";
 export * from "./dbfs";
 export * from "./groups";
