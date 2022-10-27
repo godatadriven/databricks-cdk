@@ -52,6 +52,7 @@ from databricks_cdk.resources.permissions.job_permissions import (
 from databricks_cdk.resources.permissions.sql_warehouse_permissions import (
     SQLWarehousePermissionsProperties,
     create_or_update_warehouse_permissions,
+    delete_warehouse_permissions,
 )
 from databricks_cdk.resources.scim.user import UserProperties, create_or_update_user, delete_user
 from databricks_cdk.resources.secrets.secret import SecretProperties, create_or_update_secret, delete_secret
@@ -213,7 +214,7 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
     elif action == "warehouse":
         return delete_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "warehouse-permissions":
-        return delete_cluster_permissions(event.PhysicalResourceId)
+        return delete_warehouse_permissions(event.PhysicalResourceId)
     elif action == "metastore" or action == "unity-metastore":
         return delete_metastore(MetastoreProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "metastore-assignment" or action == "unity-metastore-assignment":

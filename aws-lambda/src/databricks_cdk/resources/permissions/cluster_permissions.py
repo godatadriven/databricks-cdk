@@ -40,6 +40,6 @@ def create_or_update_cluster_permissions(
 
 
 def delete_cluster_permissions(physical_resource_id: str) -> CnfResponse:
-    """Deletes get_instance_profile_by_arn at databricks"""
+    """Deletes cluster permissions at databricks"""
     # no need to remove
     return CnfResponse(physical_resource_id=physical_resource_id)
