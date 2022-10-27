@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class ClusterPolicy(BaseModel):
     name: str
     description: Optional[str]
-    definition: str
+    definition: dict
 
 
 class ClusterPolicyProperties(BaseModel):
@@ -39,6 +39,7 @@ def create_or_update_cluster_policy(
     current = None
     base_url = get_cluster_policy_url(properties.workspace_url)
     body = json.loads(properties.cluster_policy.json())
+    body["definition"] = json.dumps(body["definition"])
 
     if physical_resource_id is not None:
         current = get_cluster_policy_by_id(

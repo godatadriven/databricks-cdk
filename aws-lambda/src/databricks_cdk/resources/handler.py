@@ -44,6 +44,11 @@ from databricks_cdk.resources.permissions.cluster_permissions import (
     create_or_update_cluster_permissions,
     delete_cluster_permissions,
 )
+from databricks_cdk.resources.permissions.cluster_policy_permissions import (
+    ClusterPolicyPermissionsProperties,
+    create_or_update_cluster_policy_permissions,
+    delete_cluster_policy_permissions,
+)
 from databricks_cdk.resources.permissions.job_permissions import (
     JobPermissionsProperties,
     create_or_update_job_permissions,
@@ -122,15 +127,20 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_instance_profile(InstanceProfileProperties(**event.ResourceProperties))
     elif action == "cluster":
         return create_or_update_cluster(ClusterProperties(**event.ResourceProperties), event.PhysicalResourceId)
+
+    elif action == "cluster-permissions":
+        return create_or_update_cluster_permissions(ClusterPermissionsProperties(**event.ResourceProperties))
     elif action == "cluster-policy":
         return create_or_update_cluster_policy(
             ClusterPolicyProperties(**event.ResourceProperties),
             event.PhysicalResourceId,
         )
+    elif action == "cluster-policy-permissions":
+        return create_or_update_cluster_policy_permissions(
+            ClusterPolicyPermissionsProperties(**event.ResourceProperties)
+        )
     elif action == "user":
         return create_or_update_user(UserProperties(**event.ResourceProperties))
-    elif action == "cluster-permissions":
-        return create_or_update_cluster_permissions(ClusterPermissionsProperties(**event.ResourceProperties))
     elif action == "job-permissions":
         return create_or_update_job_permissions(JobPermissionsProperties(**event.ResourceProperties))
     elif action == "group":
@@ -193,6 +203,10 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
     elif action == "cluster-policy":
         return delete_cluster_policy(
             ClusterPolicyProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "cluster-policy-permissions":
+        return delete_cluster_policy_permissions(
             event.PhysicalResourceId,
         )
     elif action == "user":

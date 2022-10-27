@@ -5,7 +5,7 @@ import {Construct} from "constructs";
 export interface ClusterPolicySettings {
     name: string
     description?: string
-    definition: string | Record<string, Record<string, number | boolean | string | Array<string>>>
+    definition: Record<string, Record<string, number | boolean | string | Array<string>>>
 }
 
 export interface ClusterPolicyProperties {
@@ -17,10 +17,8 @@ export interface ClusterPolicyProps extends ClusterPolicyProperties {
     serviceToken: string
 }
 
-
 export class ClusterPolicy extends CustomResource {
     constructor(scope: Construct, id: string, props: ClusterPolicyProps) {
-        props.clusterPolicy.definition = JSON.stringify(props.clusterPolicy.definition);
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {

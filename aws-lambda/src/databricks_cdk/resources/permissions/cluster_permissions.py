@@ -24,7 +24,7 @@ def get_cluster_permissions_url(workspace_url: str, cluster_id: str):
 def create_or_update_cluster_permissions(
     properties: ClusterPermissionsProperties,
 ) -> CnfResponse:
-    """Create get_instance_profile_by_arn at databricks"""
+    """Create cluster permissions at databricks"""
 
     # Json data
     body = {
