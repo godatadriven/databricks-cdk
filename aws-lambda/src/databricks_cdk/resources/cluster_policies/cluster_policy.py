@@ -9,7 +9,7 @@ from databricks_cdk.utils import CnfResponse, get_request, post_request
 logger = logging.getLogger(__name__)
 
 
-Value = Union[str, int, bool]
+Value = Union[int, bool, str]
 
 
 class PolicyElement(BaseModel):

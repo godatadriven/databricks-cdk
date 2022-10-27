@@ -17,7 +17,7 @@ def test_create_cluster_policy(mock_request: MagicMock):
     definition = {
         "test": {
             "type": "regex",
-            # "value": "test",
+            "value": 10,
             "pattern": "*",
             "hidden": "true",
         }
@@ -26,7 +26,7 @@ def test_create_cluster_policy(mock_request: MagicMock):
     properties = ClusterPolicyProperties(workspace_url=WORKSPACE_URL, cluster_policy=cluster_policy)
     mock_request.return_value = {"policy_id": "12345"}
     expected_body = {
-        "definition": """{"test": {"type": "regex", "hidden": true, "pattern": "*"}}""",
+        "definition": """{"test": {"type": "regex", "value": 10, "hidden": true, "pattern": "*"}}""",
         "description": "test create policy",
         "name": "Test Policy",
     }
