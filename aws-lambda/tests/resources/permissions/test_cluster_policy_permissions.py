@@ -4,12 +4,7 @@ from databricks_cdk.resources.permissions.cluster_policy_permissions import (
     ClusterPolicyPermissionsProperties,
     create_or_update_cluster_policy_permissions,
 )
-from databricks_cdk.resources.permissions.models import (
-    GroupPermission,
-    ServicePrincipalPermission,
-    User,
-    UserPermission,
-)
+from databricks_cdk.resources.permissions.models import GroupPermission, User, UserPermission
 
 
 @patch("databricks_cdk.resources.permissions.cluster_policy_permissions.put_request")

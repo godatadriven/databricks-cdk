@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Optional
+from typing import Dict, List, Optional, Union
 
 from pydantic import BaseModel
 
@@ -9,10 +9,25 @@ from databricks_cdk.utils import CnfResponse, get_request, post_request
 logger = logging.getLogger(__name__)
 
 
+Value = Union[str, int, bool]
+
+
+class PolicyElement(BaseModel):
+    type: str
+    value: Optional[Value]
+    hidden: Optional[bool]
+    defaultValue: Optional[Value]
+    isOptional: Optional[bool]
+    minValue: Optional[int]
+    maxValue: Optional[int]
+    values: Optional[List[Value]]
+    pattern: Optional[str]
+
+
 class ClusterPolicy(BaseModel):
     name: str
     description: Optional[str]
-    definition: dict
+    definition: Dict[str, PolicyElement]
 
 
 class ClusterPolicyProperties(BaseModel):
@@ -38,7 +53,7 @@ def create_or_update_cluster_policy(
     """Create cluster policy at databricks"""
     current = None
     base_url = get_cluster_policy_url(properties.workspace_url)
-    body = json.loads(properties.cluster_policy.json())
+    body = json.loads(properties.cluster_policy.json(exclude_none=True))
     body["definition"] = json.dumps(body["definition"])
 
     if physical_resource_id is not None:
