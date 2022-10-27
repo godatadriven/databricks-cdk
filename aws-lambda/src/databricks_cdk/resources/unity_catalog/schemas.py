@@ -42,12 +42,18 @@ def create_or_update_schema(properties: SchemaProperties) -> SchemaResponse:
     base_url = get_schema_url(properties.workspace_url)
     if current is None:
         current = get_schema_by_name(
-            properties.schema_object.catalog_name, properties.schema_object.name, base_url=base_url
+            properties.schema_object.catalog_name,
+            properties.schema_object.name,
+            base_url=base_url,
         )
     body = json.loads(properties.schema_object.json())
     # body["full_name"] = f"{properties.schema_object.catalog_name}.{properties.schema_object.name}"
     if current is None:
-        post_request(base_url, params={"catalog_name": properties.schema_object.catalog_name}, body=body)
+        post_request(
+            base_url,
+            params={"catalog_name": properties.schema_object.catalog_name},
+            body=body,
+        )
     else:
         patch_request(
             f"{base_url}/{properties.schema_object.catalog_name}.{properties.schema_object.name}",
@@ -65,7 +71,9 @@ def delete_schema(properties: SchemaProperties, physical_resource_id: str) -> Cn
     """Deletes schema at databricks"""
     base_url = get_schema_url(properties.workspace_url)
     current = get_schema_by_name(
-        properties.schema_object.catalog_name, properties.schema_object.name, base_url=base_url
+        properties.schema_object.catalog_name,
+        properties.schema_object.name,
+        base_url=base_url,
     )
     if current is not None:
         delete_request(

@@ -35,7 +35,9 @@ def get_external_location_by_name(name: str, base_url: str) -> Optional[dict]:
     return get_request(f"{base_url}/{name}")
 
 
-def create_or_update_external_location(properties: ExternalLocationProperties) -> ExternalLocationResponse:
+def create_or_update_external_location(
+    properties: ExternalLocationProperties,
+) -> ExternalLocationResponse:
     """Create external_locations at databricks"""
     base_url = get_external_location_url(properties.workspace_url)
     current = get_external_location_by_name(properties.external_location.name, base_url=base_url)

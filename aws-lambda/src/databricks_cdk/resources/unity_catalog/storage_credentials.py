@@ -61,7 +61,9 @@ def get_storage_credential_by_name(name: str, base_url: str) -> Optional[dict]:
     return get_request(f"{base_url}/{name}")
 
 
-def create_or_update_storage_credential(properties: StorageCredentialsProperties) -> StorageCredentialsResponse:
+def create_or_update_storage_credential(
+    properties: StorageCredentialsProperties,
+) -> StorageCredentialsResponse:
     """Create storage_credentials at databricks"""
     base_url = get_storage_credential_url(properties.workspace_url)
     current = get_storage_credential_by_name(properties.storage_credential.name, base_url=base_url)

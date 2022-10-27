@@ -25,7 +25,9 @@ def get_job_permissions_url(workspace_url: str, job_id: str):
     return f"{workspace_url}/api/2.0/permissions/jobs/{job_id}"
 
 
-def create_or_update_job_permissions(properties: JobPermissionsProperties) -> CnfResponse:
+def create_or_update_job_permissions(
+    properties: JobPermissionsProperties,
+) -> CnfResponse:
     """Create job permissions on job at databricks"""
 
     # Json data

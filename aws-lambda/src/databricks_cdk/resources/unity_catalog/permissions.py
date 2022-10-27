@@ -68,7 +68,9 @@ def get_permissions_url(workspace_url: str, sec_type: str, sec_id: str):
     return f"{workspace_url}/api/2.1/unity-catalog/permissions/{sec_type}/{sec_id}"
 
 
-def create_or_update_permissions(properties: PermissionsProperties) -> PermissionsResponse:
+def create_or_update_permissions(
+    properties: PermissionsProperties,
+) -> PermissionsResponse:
     """Create permissions at databricks"""
     base_url = get_permissions_url(properties.workspace_url, properties.sec_type, properties.sec_id)
     current = PermissionsList(**get_request(base_url))
