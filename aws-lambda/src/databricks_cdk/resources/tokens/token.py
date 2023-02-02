@@ -44,7 +44,7 @@ def get_existing_tokens(token_url: str) -> List[TokenInfo]:
 
 
 def get_token_url(workspace_url: str):
-    """Getting url for secret requests"""
+    """Getting url for token requests"""
     return f"{workspace_url}/api/2.0/token"
 
 
@@ -67,7 +67,7 @@ def create_token(properties: TokenProperties, physical_resource_id: Optional[str
     """
     url = get_token_url(properties.workspace_url)
 
-    # delete previous token before creating a new one because
+    # delete previous token before creating a new one
     if physical_resource_id in [t.token_id for t in get_existing_tokens(url)]:
         _delete_token(url, physical_resource_id)
 
