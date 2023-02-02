@@ -2,25 +2,24 @@ import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 import {UserPermission, GroupPermission, ServicePrinicpalPermission} from "./models";
 
-
-export interface ClusterPermissionsProperties {
+export interface WarehousePermissionsProperties {
     workspaceUrl: string
-    clusterId: string
+    endpointId: string
     accessControlList: Array<UserPermission | GroupPermission | ServicePrinicpalPermission>
 }
 
-export interface ClusterPermissionsProps extends ClusterPermissionsProperties {
+export interface WarehousePermissionsProps extends WarehousePermissionsProperties {
     readonly serviceToken: string
 }
 
-export class ClusterPermissions extends CustomResource {
-    constructor(scope: Construct, id: string, props: ClusterPermissionsProps) {
+export class WarehousePermissions extends CustomResource {
+    constructor(scope: Construct, id: string, props: WarehousePermissionsProps) {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
-                action: "cluster-permissions",
+                action: "warehouse-permissions",
                 workspace_url: props.workspaceUrl,
-                cluster_id: props.clusterId,
+                endpoint_id: props.endpointId,
                 access_control_list: props.accessControlList,
             }
         });

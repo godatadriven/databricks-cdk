@@ -1,4 +1,5 @@
 export * as account from "./account";
+export * as clusterPolicies from "./cluster-policies";
 export * as clusters from "./clusters";
 export * as dbfs from "./dbfs";
 export * as groups from "./groups";
@@ -8,9 +9,12 @@ export * as permissions from "./permissions";
 export * as scim from "./scim";
 export * as secrets from "./secrets";
 export * as instancePools from "./instance-pools";
+export * as warehouses from "./sql-warehouses";
+export * as unity_catalog from "./unity-catalog";
 
 
 export * from "./account";
+export * from "./cluster-policies";
 export * from "./clusters";
 export * from "./dbfs";
 export * from "./groups";
@@ -20,3 +24,6 @@ export * from "./permissions";
 export * from "./scim";
 export * from "./secrets";
 export * from "./instance-pools";
+export * from "./sql-warehouses";
+export * from "./unity-catalog";
+

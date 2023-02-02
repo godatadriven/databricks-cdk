@@ -3,24 +3,24 @@ import {Construct} from "constructs";
 import {UserPermission, GroupPermission, ServicePrinicpalPermission} from "./models";
 
 
-export interface ClusterPermissionsProperties {
+export interface ClusterPolicyPermissionsProperties {
     workspaceUrl: string
-    clusterId: string
+    clusterPolicyId: string
     accessControlList: Array<UserPermission | GroupPermission | ServicePrinicpalPermission>
 }
 
-export interface ClusterPermissionsProps extends ClusterPermissionsProperties {
+export interface ClusterPolicyPermissionsProps extends ClusterPolicyPermissionsProperties {
     readonly serviceToken: string
 }
 
-export class ClusterPermissions extends CustomResource {
-    constructor(scope: Construct, id: string, props: ClusterPermissionsProps) {
+export class ClusterPolicyPermissions extends CustomResource {
+    constructor(scope: Construct, id: string, props: ClusterPolicyPermissionsProps) {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
-                action: "cluster-permissions",
+                action: "cluster-policy-permissions",
                 workspace_url: props.workspaceUrl,
-                cluster_id: props.clusterId,
+                cluster_policy_id: props.clusterPolicyId,
                 access_control_list: props.accessControlList,
             }
         });

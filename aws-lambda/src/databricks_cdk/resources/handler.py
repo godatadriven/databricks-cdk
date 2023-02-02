@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 
 import cfnresponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from databricks_cdk.resources.account.credentials import (
     CredentialsProperties,
@@ -19,6 +19,11 @@ from databricks_cdk.resources.account.workspace import (
     WorkspaceProperties,
     create_or_update_workspaces,
     delete_workspaces,
+)
+from databricks_cdk.resources.cluster_policies.cluster_policy import (
+    ClusterPolicyProperties,
+    create_or_update_cluster_policy,
+    delete_cluster_policy,
 )
 from databricks_cdk.resources.clusters.cluster import ClusterProperties, create_or_update_cluster, delete_cluster
 from databricks_cdk.resources.dbfs.dbfs_file import DbfsFileProperties, create_or_update_dbfs_file, delete_dbfs_file
@@ -39,12 +44,59 @@ from databricks_cdk.resources.permissions.cluster_permissions import (
     create_or_update_cluster_permissions,
     delete_cluster_permissions,
 )
+from databricks_cdk.resources.permissions.cluster_policy_permissions import (
+    ClusterPolicyPermissionsProperties,
+    create_or_update_cluster_policy_permissions,
+    delete_cluster_policy_permissions,
+)
+from databricks_cdk.resources.permissions.job_permissions import (
+    JobPermissionsProperties,
+    create_or_update_job_permissions,
+    delete_job_permissions,
+)
+from databricks_cdk.resources.permissions.sql_warehouse_permissions import (
+    SQLWarehousePermissionsProperties,
+    create_or_update_warehouse_permissions,
+    delete_warehouse_permissions,
+)
 from databricks_cdk.resources.scim.user import UserProperties, create_or_update_user, delete_user
 from databricks_cdk.resources.secrets.secret import SecretProperties, create_or_update_secret, delete_secret
 from databricks_cdk.resources.secrets.secret_scope import (
     SecretScopeProperties,
     create_or_update_secret_scope,
     delete_secret_scope,
+)
+from databricks_cdk.resources.sql_warehouses.sql_warehouses import (
+    SQLWarehouseProperties,
+    create_or_update_warehouse,
+    delete_warehouse,
+)
+from databricks_cdk.resources.unity_catalog.catalogs import CatalogProperties, create_or_update_catalog, delete_catalog
+from databricks_cdk.resources.unity_catalog.external_storage import (
+    ExternalLocationProperties,
+    create_or_update_external_location,
+    delete_external_location,
+)
+from databricks_cdk.resources.unity_catalog.metastore import (
+    MetastoreProperties,
+    create_or_update_metastore,
+    delete_metastore,
+)
+from databricks_cdk.resources.unity_catalog.metastore_assignment import (
+    AssignmentProperties,
+    create_or_update_assignment,
+    delete_assignment,
+)
+from databricks_cdk.resources.unity_catalog.permissions import (
+    PermissionsProperties,
+    create_or_update_permissions,
+    delete_permissions,
+)
+from databricks_cdk.resources.unity_catalog.schemas import SchemaProperties, create_or_update_schema, delete_schema
+from databricks_cdk.resources.unity_catalog.storage_credentials import (
+    StorageCredentialsProperties,
+    create_or_update_storage_credential,
+    delete_storage_credential,
 )
 from databricks_cdk.utils import CnfResponse
 
@@ -75,10 +127,22 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_instance_profile(InstanceProfileProperties(**event.ResourceProperties))
     elif action == "cluster":
         return create_or_update_cluster(ClusterProperties(**event.ResourceProperties), event.PhysicalResourceId)
-    elif action == "user":
-        return create_or_update_user(UserProperties(**event.ResourceProperties))
+
     elif action == "cluster-permissions":
         return create_or_update_cluster_permissions(ClusterPermissionsProperties(**event.ResourceProperties))
+    elif action == "cluster-policy":
+        return create_or_update_cluster_policy(
+            ClusterPolicyProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "cluster-policy-permissions":
+        return create_or_update_cluster_policy_permissions(
+            ClusterPolicyPermissionsProperties(**event.ResourceProperties)
+        )
+    elif action == "user":
+        return create_or_update_user(UserProperties(**event.ResourceProperties))
+    elif action == "job-permissions":
+        return create_or_update_job_permissions(JobPermissionsProperties(**event.ResourceProperties))
     elif action == "group":
         return create_or_update_group(GroupProperties(**event.ResourceProperties))
     elif action == "dbfs-file":
@@ -93,6 +157,24 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_instance_pool(
             InstancePoolProperties(**event.ResourceProperties), event.PhysicalResourceId
         )
+    elif action == "warehouse":
+        return create_or_update_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "warehouse-permissions":
+        return create_or_update_warehouse_permissions(SQLWarehousePermissionsProperties(**event.ResourceProperties))
+    elif action == "metastore" or action == "unity-metastore":
+        return create_or_update_metastore(MetastoreProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "metastore-assignment" or action == "unity-metastore-assignment":
+        return create_or_update_assignment(AssignmentProperties(**event.ResourceProperties))
+    elif action == "catalog" or action == "unity-catalog":
+        return create_or_update_catalog(CatalogProperties(**event.ResourceProperties))
+    elif action == "schema" or action == "unity-schema":
+        return create_or_update_schema(SchemaProperties(**event.ResourceProperties))
+    elif action == "catalog-permission" or action == "unity-catalog-permission":
+        return create_or_update_permissions(PermissionsProperties(**event.ResourceProperties))
+    elif action == "unity-storage-credentials":
+        return create_or_update_storage_credential(StorageCredentialsProperties(**event.ResourceProperties))
+    elif action == "unity-external-location":
+        return create_or_update_external_location(ExternalLocationProperties(**event.ResourceProperties))
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -118,6 +200,15 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         )
     elif action == "cluster":
         return delete_cluster(ClusterProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "cluster-policy":
+        return delete_cluster_policy(
+            ClusterPolicyProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "cluster-policy-permissions":
+        return delete_cluster_policy_permissions(
+            event.PhysicalResourceId,
+        )
     elif action == "user":
         return delete_user(UserProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "cluster-permissions":
@@ -134,18 +225,51 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_job(JobProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "instance-pool":
         return delete_instance_pool(InstancePoolProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "warehouse":
+        return delete_warehouse(SQLWarehouseProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "warehouse-permissions":
+        return delete_warehouse_permissions(event.PhysicalResourceId)
+    elif action == "metastore" or action == "unity-metastore":
+        return delete_metastore(MetastoreProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "metastore-assignment" or action == "unity-metastore-assignment":
+        return delete_assignment(AssignmentProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "catalog" or action == "unity-catalog":
+        return delete_catalog(CatalogProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "schema" or action == "unity-schema":
+        return delete_schema(SchemaProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "catalog-permission" or action == "unity-catalog-permission":
+        return delete_permissions(PermissionsProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "job-permissions":
+        return delete_job_permissions(
+            JobPermissionsProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "unity-storage-credentials":
+        return delete_storage_credential(
+            StorageCredentialsProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "unity-external-location":
+        return delete_external_location(
+            ExternalLocationProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
 
 def process_event(event: DatabricksEvent) -> CnfResponse:
     """Process a databricks deploy event"""
-    if event.RequestType == "Create" or event.RequestType == "Update":
-        return create_or_update_resource(event)
-    elif event.RequestType == "Delete":
-        return delete_resource(event)
-    else:
-        logger.error(f"unknown request_type: {event.RequestType}")
+    try:
+        if event.RequestType == "Create" or event.RequestType == "Update":
+            return create_or_update_resource(event)
+        elif event.RequestType == "Delete":
+            return delete_resource(event)
+        else:
+            logger.error(f"unknown request_type: {event.RequestType}")
+    except ValidationError:
+        logger.error(f"{event}")
+        raise
 
 
 def handler(event, context):

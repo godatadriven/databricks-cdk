@@ -3,25 +3,10 @@ from typing import List, Union
 
 from pydantic import BaseModel
 
+from databricks_cdk.resources.permissions.models import GroupPermission, ServicePrincipalPermission, UserPermission
 from databricks_cdk.utils import CnfResponse, put_request
 
 logger = logging.getLogger(__name__)
-
-
-class Permission(BaseModel):
-    permission_level: str
-
-
-class UserPermission(Permission):
-    user_name: str
-
-
-class GroupPermission(Permission):
-    group_name: str
-
-
-class ServicePrincipalPermission(Permission):
-    service_principal_name: str
 
 
 class ClusterPermissionsProperties(BaseModel):
@@ -39,7 +24,7 @@ def get_cluster_permissions_url(workspace_url: str, cluster_id: str):
 def create_or_update_cluster_permissions(
     properties: ClusterPermissionsProperties,
 ) -> CnfResponse:
-    """Create get_instance_profile_by_arn at databricks"""
+    """Create cluster permissions at databricks"""
 
     # Json data
     body = {
@@ -55,6 +40,6 @@ def create_or_update_cluster_permissions(
 
 
 def delete_cluster_permissions(physical_resource_id: str) -> CnfResponse:
-    """Deletes get_instance_profile_by_arn at databricks"""
+    """Deletes cluster permissions at databricks"""
     # no need to remove
     return CnfResponse(physical_resource_id=physical_resource_id)

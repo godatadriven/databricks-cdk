@@ -83,6 +83,8 @@ export interface DatabricksCluster {
     idempotency_token?: string
     apply_policy_default_values?: boolean
     enable_local_disk_encryption?: boolean
+    data_security_mode?: string
+    runtime_engine?: string
 }
 
 export interface ClusterProperties {

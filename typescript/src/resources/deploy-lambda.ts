@@ -13,8 +13,25 @@ import {Job, JobProperties} from "./jobs/job";
 import {Group, GroupProperties} from "./groups/group";
 import {ScimUser, ScimUserProperties} from "./scim/scimUser";
 import {InstancePool, InstancePoolProperties} from "./instance-pools/instance-pools";
+import {Warehouse, WarehouseProperties} from "./sql-warehouses/sql-warehouses";
+import {WarehousePermissions, WarehousePermissionsProperties} from "./permissions/sql-warehouse-permissions";
 import {Construct} from "constructs";
 import {DockerImage} from "../docker-image";
+import {
+    UnityCatalogCatalog,
+    UnityCatalogCatalogProperties, UnityCatalogExternalLocation, UnityCatalogExternalLocationProperties,
+    UnityCatalogMetastore,
+    UnityCatalogMetastoreAssignment,
+    UnityCatalogMetastoreAssignmentProperties,
+    UnityCatalogMetastoreProperties,
+    UnityCatalogPermission,
+    UnityCatalogPermissionProperties,
+    UnityCatalogSchema,
+    UnityCatalogSchemaProperties, UnityCatalogStorageCredential, UnityCatalogStorageCredentialProperties
+} from "./unity-catalog";
+import {JobPermissions, JobPermissionsProperties} from "./permissions";
+import {ClusterPolicy, ClusterPolicyProperties} from "./cluster-policies";
+import {ClusterPolicyPermissions, ClusterPolicyPermissionsProperties} from "./permissions/cluster-policy-permissions";
 
 
 export interface CustomDeployLambdaProps {
@@ -86,6 +103,20 @@ export abstract class IDatabricksDeployLambda extends Construct {
         });
     }
 
+    public createClusterPolicy(scope: Construct, id: string, props: ClusterPolicyProperties): ClusterPolicy {
+        return new ClusterPolicy(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createClusterPolicyPermissions(scope: Construct, id: string, props: ClusterPolicyPermissionsProperties): ClusterPolicyPermissions {
+        return new ClusterPolicyPermissions(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
     public createGroup(scope: Construct, id: string, props: GroupProperties): Group {
         return new Group(scope, id, {
             ...props,
@@ -114,8 +145,78 @@ export abstract class IDatabricksDeployLambda extends Construct {
         });
     }
 
+    public createJobPermissions(scope: Construct, id: string, props: JobPermissionsProperties): JobPermissions {
+        return new JobPermissions(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
     public createInstancePool(scope: Construct, id: string, props: InstancePoolProperties): InstancePool {
         return new InstancePool(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createWarehouse(scope: Construct, id: string, props: WarehouseProperties): Warehouse {
+        return new Warehouse(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createWarehousePermissions(scope: Construct, id: string, props: WarehousePermissionsProperties): WarehousePermissions {
+        return new WarehousePermissions(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogMetastore(scope: Construct, id: string, props: UnityCatalogMetastoreProperties): UnityCatalogMetastore {
+        return new UnityCatalogMetastore(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogMetastoreAssignment(scope: Construct, id: string, props: UnityCatalogMetastoreAssignmentProperties): UnityCatalogMetastoreAssignment {
+        return new UnityCatalogMetastoreAssignment(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogCatalog(scope: Construct, id: string, props: UnityCatalogCatalogProperties): UnityCatalogCatalog {
+        return new UnityCatalogCatalog(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogSchema(scope: Construct, id: string, props: UnityCatalogSchemaProperties): UnityCatalogSchema {
+        return new UnityCatalogSchema(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogPermission(scope: Construct, id: string, props: UnityCatalogPermissionProperties): UnityCatalogPermission {
+        return new UnityCatalogPermission(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogStorageCredential(scope: Construct, id: string, props: UnityCatalogStorageCredentialProperties): UnityCatalogStorageCredential {
+        return new UnityCatalogStorageCredential(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createUnityCatalogExternalLocation(scope: Construct, id: string, props: UnityCatalogExternalLocationProperties): UnityCatalogExternalLocation {
+        return new UnityCatalogExternalLocation(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
