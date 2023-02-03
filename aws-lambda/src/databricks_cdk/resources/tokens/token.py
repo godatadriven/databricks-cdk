@@ -53,7 +53,7 @@ def _delete_token(token_url: str, token_id: str):
 
 
 def _create_token(token_url: str, comment: Optional[str], lifetime_seconds: Optional[int]) -> Dict[str, Any]:
-    return post_request(f"{token_url}/create", body={"comment": comment, "lifetime_seconds": comment})
+    return post_request(f"{token_url}/create", body={"comment": comment, "lifetime_seconds": lifetime_seconds})
 
 
 def create_token(properties: TokenProperties, physical_resource_id: Optional[str] = None) -> CnfResponse:
