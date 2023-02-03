@@ -23,4 +23,8 @@ export class Token extends CustomResource {
             }
         });
     }
+
+    public tokenValue(): string {
+        return this.getAttString("token_value");
+    }
 }
