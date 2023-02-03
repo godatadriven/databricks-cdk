@@ -32,6 +32,7 @@ import {
 import {JobPermissions, JobPermissionsProperties} from "./permissions";
 import {ClusterPolicy, ClusterPolicyProperties} from "./cluster-policies";
 import {ClusterPolicyPermissions, ClusterPolicyPermissionsProperties} from "./permissions/cluster-policy-permissions";
+import {Token, TokenProperties} from "./tokens";
 
 
 export interface CustomDeployLambdaProps {
@@ -126,6 +127,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createDbfsFile(scope: Construct, id: string, props: DbfsFileProperties): DbfsFile {
         return new DbfsFile(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createToken(scope: Construct, id: string, props: TokenProperties): Token {
+        return new Token(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });

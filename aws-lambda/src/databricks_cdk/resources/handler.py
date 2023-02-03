@@ -71,6 +71,7 @@ from databricks_cdk.resources.sql_warehouses.sql_warehouses import (
     create_or_update_warehouse,
     delete_warehouse,
 )
+from databricks_cdk.resources.tokens.token import TokenProperties, create_token, delete_token
 from databricks_cdk.resources.unity_catalog.catalogs import CatalogProperties, create_or_update_catalog, delete_catalog
 from databricks_cdk.resources.unity_catalog.external_storage import (
     ExternalLocationProperties,
@@ -171,6 +172,8 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_schema(SchemaProperties(**event.ResourceProperties))
     elif action == "catalog-permission" or action == "unity-catalog-permission":
         return create_or_update_permissions(PermissionsProperties(**event.ResourceProperties))
+    elif action == "token":
+        return create_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "unity-storage-credentials":
         return create_or_update_storage_credential(StorageCredentialsProperties(**event.ResourceProperties))
     elif action == "unity-external-location":
@@ -254,6 +257,8 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
             ExternalLocationProperties(**event.ResourceProperties),
             event.PhysicalResourceId,
         )
+    elif action == "token":
+        return delete_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
