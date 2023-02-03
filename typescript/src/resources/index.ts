@@ -28,4 +28,4 @@ export * from "./instance-pools";
 export * from "./sql-warehouses";
 export * from "./unity-catalog";
 export * from "./tokens";
-
+export * from "./mlflow";
