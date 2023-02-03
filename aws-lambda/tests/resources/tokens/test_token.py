@@ -105,9 +105,7 @@ def test_get_existing_token(patched_get_request):
 def test__create_token(patched_post_request):
     _create_token("https://test.cloud.databricks.com/api/2.0/token", comment="test_comment", lifetime_seconds=1)
 
-    assert patched_post_request.call_args.kwargs == {
-        "body": {"comment": "test_comment", "lifetime_seconds": "test_comment"}
-    }
+    assert patched_post_request.call_args.kwargs == {"body": {"comment": "test_comment", "lifetime_seconds": 1}}
 
 
 @patch("src.databricks_cdk.resources.tokens.token.post_request")
