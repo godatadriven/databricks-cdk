@@ -39,6 +39,11 @@ from databricks_cdk.resources.instance_profiles.instance_profile import (
     delete_instance_profile,
 )
 from databricks_cdk.resources.jobs.job import JobProperties, create_or_update_job, delete_job
+from databricks_cdk.resources.mlflow.experiment import (
+    ExperimentProperties,
+    create_or_update_experiment,
+    delete_experiment,
+)
 from databricks_cdk.resources.permissions.cluster_permissions import (
     ClusterPermissionsProperties,
     create_or_update_cluster_permissions,
@@ -178,6 +183,9 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_storage_credential(StorageCredentialsProperties(**event.ResourceProperties))
     elif action == "unity-external-location":
         return create_or_update_external_location(ExternalLocationProperties(**event.ResourceProperties))
+    elif action == "mlflow-experiment":
+        return create_or_update_experiment(ExperimentProperties(**event.ResourceProperties), event.PhysicalResourceId)
+
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -259,6 +267,8 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         )
     elif action == "token":
         return delete_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "mlflow-experiment":
+        return delete_experiment(ExperimentProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
