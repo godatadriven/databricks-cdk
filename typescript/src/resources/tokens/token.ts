@@ -25,6 +25,10 @@ export class Token extends CustomResource {
     }
 
     public tokenValue(): string {
+        /**
+         * Returns the secret value of the created token. Can only be returned
+         * when creating the token
+         */
         return this.getAttString("token_value");
     }
 }
