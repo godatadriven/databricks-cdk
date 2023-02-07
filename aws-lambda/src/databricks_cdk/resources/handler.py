@@ -59,6 +59,11 @@ from databricks_cdk.resources.permissions.job_permissions import (
     create_or_update_job_permissions,
     delete_job_permissions,
 )
+from databricks_cdk.resources.permissions.registered_model_permissions import (
+    RegisteredModelPermissionPermissionProperties,
+    create_or_update_registered_model_permissions,
+    delete_registered_model_permissions,
+)
 from databricks_cdk.resources.permissions.sql_warehouse_permissions import (
     SQLWarehousePermissionsProperties,
     create_or_update_warehouse_permissions,
@@ -177,6 +182,10 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_schema(SchemaProperties(**event.ResourceProperties))
     elif action == "catalog-permission" or action == "unity-catalog-permission":
         return create_or_update_permissions(PermissionsProperties(**event.ResourceProperties))
+    elif action == "registered-model-permission":
+        return create_or_update_registered_model_permissions(
+            RegisteredModelPermissionPermissionProperties(**event.ResourceProperties)
+        )
     elif action == "token":
         return create_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "unity-storage-credentials":
@@ -253,6 +262,11 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
     elif action == "job-permissions":
         return delete_job_permissions(
             JobPermissionsProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "registered-model-permission":
+        return delete_registered_model_permissions(
+            RegisteredModelPermissionPermissionProperties(**event.ResourceProperties),
             event.PhysicalResourceId,
         )
     elif action == "unity-storage-credentials":
