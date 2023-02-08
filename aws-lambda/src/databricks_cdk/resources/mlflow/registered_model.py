@@ -18,7 +18,7 @@ class ModelVersionTag(BaseModel):
 
 class RegisteredModelProperties(BaseModel):
     name: str
-    tags: List[RegisteredModelTag] = []
+    tags: Optional[List[RegisteredModelTag]] = []
     description: Optional[str]
     workspace_url: str
 

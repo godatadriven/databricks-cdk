@@ -34,7 +34,7 @@ import {ClusterPolicy, ClusterPolicyProperties} from "./cluster-policies";
 import {ClusterPolicyPermissions, ClusterPolicyPermissionsProperties} from "./permissions/cluster-policy-permissions";
 import {Token, TokenProperties} from "./tokens";
 import {Experiment, ExperimentProperties} from "./mlflow";
-import {RegisteredModel, RegisteredModelProps} from "./mlflow/registered_model";
+import {RegisteredModel, RegisteredModelProps} from "./mlflow/registeredModel";
 
 
 export interface CustomDeployLambdaProps {
