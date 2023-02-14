@@ -34,6 +34,7 @@ import {ClusterPolicy, ClusterPolicyProperties} from "./cluster-policies";
 import {ClusterPolicyPermissions, ClusterPolicyPermissionsProperties} from "./permissions/cluster-policy-permissions";
 import {Token, TokenProperties} from "./tokens";
 import {Experiment, ExperimentProperties} from "./mlflow";
+import {RegisteredModel, RegisteredModelProps} from "./mlflow/registeredModel";
 
 
 export interface CustomDeployLambdaProps {
@@ -241,6 +242,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createMlflowExperiment(scope: Construct, id: string, props: ExperimentProperties): Experiment {
         return new Experiment(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createMlflowRegisteredModel(scope: Construct, id: string, props: RegisteredModelProps): RegisteredModel {
+        return new RegisteredModel(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });

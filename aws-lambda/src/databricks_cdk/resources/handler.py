@@ -44,6 +44,11 @@ from databricks_cdk.resources.mlflow.experiment import (
     create_or_update_experiment,
     delete_experiment,
 )
+from databricks_cdk.resources.mlflow.registered_model import (
+    RegisteredModelProperties,
+    create_or_update_registered_model,
+    delete_registered_model,
+)
 from databricks_cdk.resources.permissions.cluster_permissions import (
     ClusterPermissionsProperties,
     create_or_update_cluster_permissions,
@@ -192,7 +197,11 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_external_location(ExternalLocationProperties(**event.ResourceProperties))
     elif action == "mlflow-experiment":
         return create_or_update_experiment(ExperimentProperties(**event.ResourceProperties), event.PhysicalResourceId)
-
+    elif action == "mlflow-registered-model":
+        return create_or_update_registered_model(
+            RegisteredModelProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -280,6 +289,11 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "mlflow-experiment":
         return delete_experiment(ExperimentProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "mlflow-registered-model":
+        return delete_registered_model(
+            RegisteredModelProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
