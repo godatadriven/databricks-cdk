@@ -54,6 +54,11 @@ from databricks_cdk.resources.permissions.cluster_policy_permissions import (
     create_or_update_cluster_policy_permissions,
     delete_cluster_policy_permissions,
 )
+from databricks_cdk.resources.permissions.experiment_permissions import (
+    ExperimentPermissionProperties,
+    create_or_update_experiment_permissions,
+    delete_experiment_permissions,
+)
 from databricks_cdk.resources.permissions.job_permissions import (
     JobPermissionsProperties,
     create_or_update_job_permissions,
@@ -177,6 +182,8 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_schema(SchemaProperties(**event.ResourceProperties))
     elif action == "catalog-permission" or action == "unity-catalog-permission":
         return create_or_update_permissions(PermissionsProperties(**event.ResourceProperties))
+    elif action == "experiment-permission":
+        return create_or_update_experiment_permissions(ExperimentPermissionProperties(**event.ResourceProperties))
     elif action == "token":
         return create_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "unity-storage-credentials":
@@ -224,6 +231,10 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_user(UserProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "cluster-permissions":
         return delete_cluster_permissions(event.PhysicalResourceId)
+    elif action == "experiment-permission":
+        return delete_experiment_permissions(
+            ExperimentPermissionProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
     elif action == "group":
         return delete_group(GroupProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "dbfs-file":
