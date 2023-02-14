@@ -4,7 +4,7 @@ import {CustomResource} from "aws-cdk-lib";
 export interface ExperimentProperties {
     workspaceUrl: string
     artifactLocation?: string
-    name: number
+    name: string
     description?: string
 }
 
