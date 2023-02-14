@@ -29,11 +29,12 @@ import {
     UnityCatalogSchema,
     UnityCatalogSchemaProperties, UnityCatalogStorageCredential, UnityCatalogStorageCredentialProperties
 } from "./unity-catalog";
-import {JobPermissions, JobPermissionsProperties, RegisteredModelPermissions, RegisteredModelPermissionsProperties} from "./permissions";
+import {JobPermissions, JobPermissionsProperties, RegisteredModelPermissions, RegisteredModelPermissionsProperties, ExperimentPermissions, ExperimentPermissionsProperties} from "./permissions";
 import {ClusterPolicy, ClusterPolicyProperties} from "./cluster-policies";
 import {ClusterPolicyPermissions, ClusterPolicyPermissionsProperties} from "./permissions/cluster-policy-permissions";
 import {Token, TokenProperties} from "./tokens";
 import {Experiment, ExperimentProperties} from "./mlflow";
+import {RegisteredModel, RegisteredModelProps} from "./mlflow/registeredModel";
 
 
 export interface CustomDeployLambdaProps {
@@ -125,6 +126,14 @@ export abstract class IDatabricksDeployLambda extends Construct {
             serviceToken: this.serviceToken
         });
     }
+
+    public createExperimentPermissions(scope: Construct, id: string, props: ExperimentPermissionsProperties): ExperimentPermissions {
+        return new ExperimentPermissions(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
 
     public createGroup(scope: Construct, id: string, props: GroupProperties): Group {
         return new Group(scope, id, {
@@ -240,6 +249,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createMlflowExperiment(scope: Construct, id: string, props: ExperimentProperties): Experiment {
         return new Experiment(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createMlflowRegisteredModel(scope: Construct, id: string, props: RegisteredModelProps): RegisteredModel {
+        return new RegisteredModel(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });

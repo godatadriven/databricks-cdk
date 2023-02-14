@@ -44,6 +44,11 @@ from databricks_cdk.resources.mlflow.experiment import (
     create_or_update_experiment,
     delete_experiment,
 )
+from databricks_cdk.resources.mlflow.registered_model import (
+    RegisteredModelProperties,
+    create_or_update_registered_model,
+    delete_registered_model,
+)
 from databricks_cdk.resources.permissions.cluster_permissions import (
     ClusterPermissionsProperties,
     create_or_update_cluster_permissions,
@@ -53,6 +58,11 @@ from databricks_cdk.resources.permissions.cluster_policy_permissions import (
     ClusterPolicyPermissionsProperties,
     create_or_update_cluster_policy_permissions,
     delete_cluster_policy_permissions,
+)
+from databricks_cdk.resources.permissions.experiment_permissions import (
+    ExperimentPermissionProperties,
+    create_or_update_experiment_permissions,
+    delete_experiment_permissions,
 )
 from databricks_cdk.resources.permissions.job_permissions import (
     JobPermissionsProperties,
@@ -186,6 +196,8 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_registered_model_permissions(
             RegisteredModelPermissionPermissionProperties(**event.ResourceProperties)
         )
+    elif action == "experiment-permission":
+        return create_or_update_experiment_permissions(ExperimentPermissionProperties(**event.ResourceProperties))
     elif action == "token":
         return create_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "unity-storage-credentials":
@@ -194,7 +206,11 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_external_location(ExternalLocationProperties(**event.ResourceProperties))
     elif action == "mlflow-experiment":
         return create_or_update_experiment(ExperimentProperties(**event.ResourceProperties), event.PhysicalResourceId)
-
+    elif action == "mlflow-registered-model":
+        return create_or_update_registered_model(
+            RegisteredModelProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -233,6 +249,10 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_user(UserProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "cluster-permissions":
         return delete_cluster_permissions(event.PhysicalResourceId)
+    elif action == "experiment-permission":
+        return delete_experiment_permissions(
+            ExperimentPermissionProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
     elif action == "group":
         return delete_group(GroupProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "dbfs-file":
@@ -283,6 +303,11 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "mlflow-experiment":
         return delete_experiment(ExperimentProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "mlflow-registered-model":
+        return delete_registered_model(
+            RegisteredModelProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 

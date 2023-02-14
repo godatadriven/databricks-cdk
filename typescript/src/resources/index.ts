@@ -12,6 +12,7 @@ export * as instancePools from "./instance-pools";
 export * as warehouses from "./sql-warehouses";
 export * as unity_catalog from "./unity-catalog";
 export * as tokens from "./tokens";
+export * as mlflow from "./mlflow";
 
 
 export * from "./account";
