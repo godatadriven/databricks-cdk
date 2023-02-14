@@ -29,7 +29,7 @@ import {
     UnityCatalogSchema,
     UnityCatalogSchemaProperties, UnityCatalogStorageCredential, UnityCatalogStorageCredentialProperties
 } from "./unity-catalog";
-import {ExperimentPermissions, ExperimentPermissionsProperties, JobPermissions, JobPermissionsProperties} from "./permissions";
+import {JobPermissions, JobPermissionsProperties, RegisteredModelPermissions, RegisteredModelPermissionsProperties, ExperimentPermissions, ExperimentPermissionsProperties} from "./permissions";
 import {ClusterPolicy, ClusterPolicyProperties} from "./cluster-policies";
 import {ClusterPolicyPermissions, ClusterPolicyPermissionsProperties} from "./permissions/cluster-policy-permissions";
 import {Token, TokenProperties} from "./tokens";
@@ -108,6 +108,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createClusterPolicy(scope: Construct, id: string, props: ClusterPolicyProperties): ClusterPolicy {
         return new ClusterPolicy(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createRegisteredModelPermissions(scope: Construct, id: string, props: RegisteredModelPermissionsProperties): RegisteredModelPermissions {
+        return new RegisteredModelPermissions(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
