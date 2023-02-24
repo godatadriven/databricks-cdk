@@ -296,6 +296,14 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
             ]
         }));
 
+        this.lambdaRole.addToPrincipalPolicy(new aws_iam.PolicyStatement({
+            effect: aws_iam.Effect.ALLOW,
+            actions: ["secretsmanager:CreateSecret", "secretsmanager:ListSecrets", "secretsmanager:DeleteSecret"],
+            resources: [
+                `arn:aws:ssm:${this.props.region}:${this.props.accountId}:secret/databricks/token/*`,
+            ]
+        }));
+
         this.lambda = new aws_lambda.DockerImageFunction(this, "Lambda", {
             functionName: "DatabricksDeploy",
             code: dockerImageCode,

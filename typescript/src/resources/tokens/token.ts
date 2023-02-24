@@ -23,4 +23,11 @@ export class Token extends CustomResource {
             }
         });
     }
+    public tokenSecretArn(): string {
+        /**
+      * Returns the secrets manager ARN. Can only be returned
+      * when creating the token
+      */
+        return this.getAttString("token_secrets_arn");
+    }
 }

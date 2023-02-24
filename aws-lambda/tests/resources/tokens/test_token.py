@@ -1,11 +1,12 @@
 from unittest.mock import patch
 
+import src.databricks_cdk.resources.tokens.token
 from src.databricks_cdk.resources.tokens.token import (
     TokenInfo,
     TokenProperties,
     _create_token,
     _delete_token,
-    create_token,
+    create_or_update_token,
     get_existing_tokens,
     get_token_url,
 )
@@ -17,12 +18,21 @@ def test_get_token_url():
     assert get_token_url(workspace_url) == "https://test.cloud.databricks.com/api/2.0/token"
 
 
-@patch("src.databricks_cdk.resources.tokens.token._delete_token")
 @patch("src.databricks_cdk.resources.tokens.token._create_token")
 @patch("src.databricks_cdk.resources.tokens.token.get_existing_tokens")
-def test_create_token_not_exist(patched_get_existing_tokens, patched__create_token, patched__delete_token):
+@patch("src.databricks_cdk.resources.tokens.token.add_token_to_secrets_manager")
+@patch("src.databricks_cdk.resources.tokens.token.token_exists_in_secrets_manager")
+def test_create_token_not_exist(
+    patched_token_exists_in_secrets_manager,
+    patched_add_token_to_secrets_manager,
+    patched_get_existing_tokens,
+    patched__create_token,
+):
     token_properties = TokenProperties(
-        workspace_url="https://test.cloud.databricks.com", lifetime_seconds=1000, comment="some test token"
+        token_name="test",
+        workspace_url="https://test.cloud.databricks.com",
+        lifetime_seconds=1000,
+        comment="some test token",
     )
 
     patched__create_token.return_value = {
@@ -31,7 +41,10 @@ def test_create_token_not_exist(patched_get_existing_tokens, patched__create_tok
     }
     patched_get_existing_tokens.return_value = []
 
-    response = create_token(token_properties)
+    patched_add_token_to_secrets_manager.return_value = "arn:aws::fake"
+    patched_token_exists_in_secrets_manager.return_value = False
+
+    response = create_or_update_token(token_properties)
 
     assert response.physical_resource_id == "some_id"
 
@@ -41,18 +54,24 @@ def test_create_token_not_exist(patched_get_existing_tokens, patched__create_tok
         1000,
     )
 
-    # delete should not have been called because token did not exist yet
-    assert patched__delete_token.call_count == 0
 
-
-@patch("src.databricks_cdk.resources.tokens.token._delete_token")
 @patch("src.databricks_cdk.resources.tokens.token._create_token")
 @patch("src.databricks_cdk.resources.tokens.token.get_existing_tokens")
-def test_create_token_already_exist(patched_get_existing_tokens, patched__create_token, patched__delete_token):
+@patch("src.databricks_cdk.resources.tokens.token.update_token_in_secrets_manager")
+@patch("src.databricks_cdk.resources.tokens.token.token_exists_in_secrets_manager")
+def test_create_token_already_exist(
+    patched_token_exists_in_secrets_manager,
+    patched_update_token_to_secrets_manager,
+    patched_get_existing_tokens,
+    patched__create_token,
+):
     token_properties = TokenProperties(
-        workspace_url="https://test.cloud.databricks.com", lifetime_seconds=1000, comment="some test token"
+        token_name="test",
+        workspace_url="https://test.cloud.databricks.com",
+        lifetime_seconds=1000,
+        comment="some test token",
     )
-
+    patched_token_exists_in_secrets_manager.return_value = True
     patched__create_token.return_value = {
         "token_value": "some_value",
         "token_info": {
@@ -66,7 +85,9 @@ def test_create_token_already_exist(patched_get_existing_tokens, patched__create
         TokenInfo(token_id="existing", creation_time=1, expiry_time=2, comment="blah")
     ]
 
-    response = create_token(token_properties, physical_resource_id="existing")
+    patched_update_token_to_secrets_manager.return_value = {"ARN": "fake_arn"}
+
+    response = create_or_update_token(token_properties, physical_resource_id="existing")
 
     assert response.physical_resource_id == "some_other_id"
 
@@ -75,14 +96,6 @@ def test_create_token_already_exist(patched_get_existing_tokens, patched__create
         "some test token",
         1000,
     )
-
-    assert patched__delete_token.call_args.args == (
-        "https://test.cloud.databricks.com/api/2.0/token",
-        "existing",
-    )
-
-    # delete should not have been called because token did not exist yet
-    assert patched__delete_token.call_count == 1
 
 
 @patch("src.databricks_cdk.resources.tokens.token.get_request")

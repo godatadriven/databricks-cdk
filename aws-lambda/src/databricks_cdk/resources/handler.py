@@ -91,7 +91,7 @@ from databricks_cdk.resources.sql_warehouses.sql_warehouses import (
     create_or_update_warehouse,
     delete_warehouse,
 )
-from databricks_cdk.resources.tokens.token import TokenProperties, create_token, delete_token
+from databricks_cdk.resources.tokens.token import TokenProperties, create_or_update_token, delete_token
 from databricks_cdk.resources.unity_catalog.catalogs import CatalogProperties, create_or_update_catalog, delete_catalog
 from databricks_cdk.resources.unity_catalog.external_storage import (
     ExternalLocationProperties,
@@ -199,7 +199,7 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
     elif action == "experiment-permission":
         return create_or_update_experiment_permissions(ExperimentPermissionProperties(**event.ResourceProperties))
     elif action == "token":
-        return create_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
+        return create_or_update_token(TokenProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "unity-storage-credentials":
         return create_or_update_storage_credential(StorageCredentialsProperties(**event.ResourceProperties))
     elif action == "unity-external-location":
