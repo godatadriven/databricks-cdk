@@ -14,13 +14,3 @@ updates:
     directory: "/typescript/"
     schedule:
       interval: "daily"
-
-  - package-ecosystem: "npm"
-    directory: "/examples/multi-stack/"
-    schedule:
-      interval: "daily"
-
-  - package-ecosystem: "npm"
-    directory: "/examples/simple-workspace/"
-    schedule:
-      interval: "daily"
