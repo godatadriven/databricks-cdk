@@ -3,6 +3,7 @@ import {CustomResource} from "aws-cdk-lib";
 
 export interface TokenProperties {
     workspaceUrl: string
+    tokenName: string
     comment?: string
     lifetimeSeconds?: number
 }
@@ -17,6 +18,7 @@ export class Token extends CustomResource {
             serviceToken: props.serviceToken,
             properties: {
                 action: "token",
+                token_name: props.tokenName,
                 workspace_url: props.workspaceUrl,
                 comment: props.comment,
                 lifetime_seconds: props.lifetimeSeconds,
