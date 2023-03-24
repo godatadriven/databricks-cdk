@@ -72,7 +72,7 @@ jobs:
         docker push "godatadriven/${{ env.IMAGE_NAME }}:${NEW_VERSION}"
 
         cd ../typescript
-        # npm publish
+        npm publish
 
         cd ../
 
