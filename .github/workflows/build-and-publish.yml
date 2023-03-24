@@ -50,7 +50,6 @@ jobs:
         NEW_VERSION=$(npm version "${BUMP_LEVEL}")
         git add package.json package-lock.json
         echo "new version: ${NEW_VERSION}"
-        rm -r dist
         npx tsc
         cd ../aws-lambda
         poetry version "${NEW_VERSION}"
