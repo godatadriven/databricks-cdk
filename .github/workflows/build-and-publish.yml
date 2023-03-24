@@ -76,4 +76,4 @@ jobs:
 
         cd ../
 
-        git push --follow-tags "https://${{ secrets.GIT_TOKEN_DANIEL }}@github.com/godatadriven/databricks-cdk.git" HEAD:main
+        git push -f --follow-tags "https://${{ secrets.GIT_TOKEN_DANIEL }}@github.com/godatadriven/databricks-cdk.git" HEAD:main
