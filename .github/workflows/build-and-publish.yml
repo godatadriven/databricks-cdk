@@ -47,6 +47,9 @@ jobs:
 
         # Version bump
         cd typescript
+        # Install npm package
+        npm ci
+        
         NEW_VERSION=$(npm version "${BUMP_LEVEL}")
         git add package.json package-lock.json
         echo "new version: ${NEW_VERSION}"
