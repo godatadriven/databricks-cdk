@@ -27,7 +27,7 @@ export class DockerImage {
     }
 
     public static version() {
-        const pj = require('../package.json')
-        return `v${pj.version}`
+        const pj = require("../package.json"); // eslint-disable-line @typescript-eslint/no-var-requires
+        return `v${pj.version}`;
     }
 }
