@@ -84,10 +84,12 @@ jobs:
 
     - name: Create Release
       uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN_DANIEL }}
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN_DANIEL }}
       with:
         tag_name: v${{ env.NEW_VERSION }}
         release_name: v${{ env.NEW_VERSION }}
+        body: |
+          npm package: https://www.npmjs.com/package/databricks-cdk/v/${{ env.NEW_VERSION }}
         draft: false
         prerelease: false
