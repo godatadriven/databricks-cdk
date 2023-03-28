@@ -78,4 +78,5 @@ jobs:
 
         cd ../
 
+        git push
         git push --tags
