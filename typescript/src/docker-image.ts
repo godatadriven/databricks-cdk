@@ -8,7 +8,8 @@ export class DockerImage {
     public static generate(version?: string): aws_lambda.DockerImageCode {
         const dockerTempDir = fs.mkdtempSync(path.join(os.tmpdir(), "databricks-cdk-lambda-"));
         const dockerFile = path.join(dockerTempDir, "Dockerfile");
-        const lambdaVersion = version || "dev"; // TODO: get from package version
+
+        const lambdaVersion = version || DockerImage.version();
         fs.writeFileSync(dockerFile, `FROM godatadriven/databricks-cdk-lambda:${lambdaVersion}`);
 
         // Random hash will trigger a rebuild always, only need if dev is used
@@ -23,5 +24,10 @@ export class DockerImage {
                 }
             }
         );
+    }
+
+    public static version() {
+        const pj = require('../package.json')
+        return `v${pj.version}`
     }
 }
