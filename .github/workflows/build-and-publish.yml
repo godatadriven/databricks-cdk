@@ -80,3 +80,13 @@ jobs:
 
         git push
         git push --tags
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GIT_TOKEN_DANIEL }}
+      with:
+        tag_name: ${NEW_VERSION}
+        release_name: Release ${NEW_VERSION}
+        draft: false
+        prerelease: false
