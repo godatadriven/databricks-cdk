@@ -53,7 +53,7 @@ jobs:
         # Install npm package
         npm ci
         
-        NEW_VERSION=$(npm version "${BUMP_LEVEL}")
+        NEW_VERSION=$(npm version "${BUMP_LEVEL}" | sed "s/^v//")
         git config --local user.email "Bumpversion"
         git config --local user.name "Bumpversion"
         git add package.json package-lock.json
@@ -64,7 +64,7 @@ jobs:
         poetry update
         git add pyproject.toml poetry.lock
         git commit -m "Bump version to ${NEW_VERSION}"
-        git tag "${NEW_VERSION}"
+        git tag "v${NEW_VERSION}"
 
         # Docker build
         docker build -t "${{ env.IMAGE_NAME }}:dev" .
@@ -80,13 +80,14 @@ jobs:
 
         git push
         git push --tags
+        echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
 
     - name: Create Release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GIT_TOKEN_DANIEL }}
       with:
-        tag_name: ${NEW_VERSION}
-        release_name: Release ${NEW_VERSION}
+        tag_name: v${{ env.NEW_VERSION }}
+        release_name: v${{ env.NEW_VERSION }}
         draft: false
         prerelease: false
