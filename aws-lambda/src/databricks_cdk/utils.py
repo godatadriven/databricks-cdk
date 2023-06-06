@@ -6,6 +6,7 @@ import boto3
 import requests
 from pydantic import BaseModel
 from requests.auth import HTTPBasicAuth
+from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +16,10 @@ PASS_PARAM = os.environ.get("PASS_PARAM", "/databricks/deploy/password")
 ACCOUNT_PARAM = os.environ.get("ACCOUNT_PARAM", "/databricks/account-id")
 
 ACCOUNTS_BASE_URL = os.environ.get("BASE_URL", "https://accounts.cloud.databricks.com")
+
+
+class TooManyRequests(Exception):
+    pass
 
 
 def get_param(name: str, required: bool = False):
@@ -49,6 +54,12 @@ def get_auth() -> HTTPBasicAuth:
     return HTTPBasicAuth(user, password)
 
 
+@retry(
+    retry_error_callback=lambda exc: isinstance(exc, requests.exceptions.HTTPError) and exc.response.status_code == 429,
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=1, max=10),
+    reraise=True,
+)
 def _do_request(method: str, url: str, body: dict = None, params: dict = None) -> Dict[str, Any]:
     """Generic method to do any type of request"""
     auth = get_auth()
