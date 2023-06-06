@@ -3,10 +3,11 @@ import os
 from typing import Any, Dict, Optional
 
 import boto3
-import requests
 from pydantic import BaseModel
+from requests import request
 from requests.auth import HTTPBasicAuth
-from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponential
+from requests.exceptions import HTTPError
+from tenacity import retry, retry_if_exception, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger(__name__)
 
@@ -34,12 +35,12 @@ class CnfResponse(BaseModel):
     physical_resource_id: str
 
 
-def get_account_id():
+def get_account_id() -> str:
     """Get databricks account id from param store"""
     return get_param(ACCOUNT_PARAM, required=True)
 
 
-def get_deploy_user():
+def get_deploy_user() -> str:
     return get_param(USER_PARAM, required=True)
 
 
@@ -51,13 +52,16 @@ def get_auth() -> HTTPBasicAuth:
 
 
 @retry(
-    retry_error_callback=lambda exc: isinstance(exc, requests.exceptions.HTTPError) and exc.response.status_code == 429,
+    retry=retry_if_exception_type(HTTPError) & retry_if_exception(lambda ex: ex.response.status_code == 429),
     stop=stop_after_attempt(5),
     wait=wait_exponential(multiplier=1, min=1, max=10),
     reraise=True,
 )
 def _do_request(
-    method: str, url: str, body: dict = None, params: dict = None, auth: HTTPBasicAuth = get_auth()
+    method: str,
+    url: str,
+    body: Optional[Dict[str, Any]] = None,
+    params: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Generic method to do any type of request
@@ -70,19 +74,8 @@ def _do_request(
     :raises ValueError: If provided method is not supported
     :return: Response data
     """
-
-    if method == "POST":
-        resp = requests.post(url, json=body, headers={}, auth=auth, params=params)
-    elif method == "PUT":
-        resp = requests.put(url, json=body, headers={}, auth=auth, params=params)
-    elif method == "PATCH":
-        resp = requests.patch(url, json=body, headers={}, auth=auth, params=params)
-    elif method == "GET":
-        resp = requests.get(url, headers={}, auth=auth, params=params, json=body)
-    elif method == "DELETE":
-        resp = requests.delete(url, headers={}, auth=auth, params=params, json=body)
-    else:
-        raise ValueError(f"Method: {method}")
+    auth = get_auth()
+    resp = request(method=method, url=url, json=body, params=params, auth=auth)
 
     # If the response was successful, no Exception will be raised
     if resp.status_code >= 400:
@@ -94,18 +87,18 @@ def _do_request(
 
 def post_request(
     url: str,
-    body: dict,
-    params: dict = None,
-) -> dict:
+    body: Dict[str, Any],
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Generic method to do post requests"""
     return _do_request(method="POST", url=url, body=body, params=params)
 
 
 def put_request(
     url: str,
-    body: dict,
-    params: dict = None,
-) -> dict:
+    body: Dict[str, Any],
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Generic method to do put requests"""
     return _do_request(method="PUT", url=url, body=body, params=params)
 
@@ -116,11 +109,19 @@ def patch_request(url: str, body: dict, params: dict = None) -> dict:
     return _do_request(method="PATCH", url=url, body=body, params=params)
 
 
-def get_request(url: str, params: dict = None, body: dict = None) -> Optional[dict]:
+def get_request(
+    url: str,
+    body: Optional[Dict[str, Any]] = None,
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Generic method to do get requests"""
     return _do_request(method="GET", url=url, body=body, params=params)
 
 
-def delete_request(url: str, params: dict = None, body: dict = None) -> Optional[dict]:
+def delete_request(
+    url: str,
+    body: Optional[Dict[str, Any]] = None,
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Generic method to do delete requests"""
     return _do_request(method="DELETE", url=url, body=body, params=params)
