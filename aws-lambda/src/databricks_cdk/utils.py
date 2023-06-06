@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import boto3
 import requests
@@ -49,24 +49,38 @@ def get_auth() -> HTTPBasicAuth:
     return HTTPBasicAuth(user, password)
 
 
-def post_request(
-    url: str,
-    body: dict,
-    params: dict = None,
-) -> dict:
-    """Generic method to do post requests"""
+def _do_request(method: str, url: str, body: dict = None, params: dict = None) -> Dict[str, Any]:
+    """Generic method to do any type of request"""
     auth = get_auth()
-    resp = requests.post(url, json=body, headers={}, auth=auth, params=params)
+
+    if method == "POST":
+        resp = requests.post(url, json=body, headers={}, auth=auth, params=params)
+    elif method == "PUT":
+        resp = requests.put(url, json=body, headers={}, auth=auth, params=params)
+    elif method == "PATCH":
+        resp = requests.patch(url, json=body, headers={}, auth=auth, params=params)
+    elif method == "GET":
+        resp = requests.get(url, headers={}, auth=auth, params=params, json=body)
+    elif method == "DELETE":
+        resp = requests.delete(url, headers={}, auth=auth, params=params, json=body)
+    else:
+        raise ValueError(f"Method: {method}")
 
     # If the response was successful, no Exception will be raised
     if resp.status_code >= 400:
         logger.warning(resp.text)
     resp.raise_for_status()
 
-    # extracting data in json format
-    data = resp.json()
+    return resp.json()
 
-    return data
+
+def post_request(
+    url: str,
+    body: dict,
+    params: dict = None,
+) -> dict:
+    """Generic method to do post requests"""
+    return _do_request(method="POST", url=url, body=body, params=params)
 
 
 def put_request(
@@ -74,68 +88,21 @@ def put_request(
     body: dict,
     params: dict = None,
 ) -> dict:
-    """Generic method to do post requests"""
-    auth = get_auth()
-    resp = requests.put(url, json=body, headers={}, auth=auth, params=params)
-
-    # If the response was successful, no Exception will be raised
-    if resp.status_code >= 400:
-        logger.warning(resp.text)
-    resp.raise_for_status()
-
-    # extracting data in json format
-    data = resp.json()
-
-    return data
+    """Generic method to do put requests"""
+    return _do_request(method="PUT", url=url, body=body, params=params)
 
 
 def patch_request(url: str, body: dict, params: dict = None) -> dict:
     """Generic method to do patch requests"""
-    auth = get_auth()
-    resp = requests.patch(url, json=body, headers={}, auth=auth, params=params)
 
-    # If the response was successful, no Exception will be raised
-    if resp.status_code >= 400:
-        logger.warning(resp.text)
-    resp.raise_for_status()
-
-    # extracting data in json format
-    data = resp.json()
-
-    return data
+    return _do_request(method="PATCH", url=url, body=body, params=params)
 
 
 def get_request(url: str, params: dict = None, body: dict = None) -> Optional[dict]:
     """Generic method to do get requests"""
-    auth = get_auth()
-    resp = requests.get(url, headers={}, auth=auth, params=params, json=body)
-
-    if resp.status_code == 404:
-        return None
-
-    # If the response was successful, no Exception will be raised
-    if resp.status_code >= 400:
-        logger.warning(resp.text)
-    resp.raise_for_status()
-
-    # extracting data in json format
-    data = resp.json()
-
-    logger.debug("Successful GET call!!")
-    return data
+    return _do_request(method="GET", url=url, body=body, params=params)
 
 
 def delete_request(url: str, params: dict = None, body: dict = None) -> Optional[dict]:
     """Generic method to do delete requests"""
-    auth = get_auth()
-    resp = requests.delete(url, headers={}, auth=auth, params=params, json=body)
-
-    # If the response was successful, no Exception will be raised
-    if resp.status_code >= 400:
-        logger.warning(resp.text)
-    resp.raise_for_status()
-
-    # extracting data in json format
-    data = resp.json()
-
-    return data
+    return _do_request(method="DELETE", url=url, body=body, params=params)
