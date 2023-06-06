@@ -18,10 +18,6 @@ ACCOUNT_PARAM = os.environ.get("ACCOUNT_PARAM", "/databricks/account-id")
 ACCOUNTS_BASE_URL = os.environ.get("BASE_URL", "https://accounts.cloud.databricks.com")
 
 
-class TooManyRequests(Exception):
-    pass
-
-
 def get_param(name: str, required: bool = False):
     ssm = boto3.client("ssm")
     response = ssm.get_parameter(
@@ -60,9 +56,20 @@ def get_auth() -> HTTPBasicAuth:
     wait=wait_exponential(multiplier=1, min=1, max=10),
     reraise=True,
 )
-def _do_request(method: str, url: str, body: dict = None, params: dict = None) -> Dict[str, Any]:
-    """Generic method to do any type of request"""
-    auth = get_auth()
+def _do_request(
+    method: str, url: str, body: dict = None, params: dict = None, auth: HTTPBasicAuth = get_auth()
+) -> Dict[str, Any]:
+    """
+    Generic method to do any type of request
+
+    :param method: Request method to use when doing a request
+    :param url: Url to which to make the request
+    :param body: Optional body to send along with the request, defaults to None
+    :param params: Optional params to send along with the request, defaults to None
+    :param auth: Auth to use which is injected when not explicitely overriden, defaults to get_auth()
+    :raises ValueError: If provided method is not supported
+    :return: Response data
+    """
 
     if method == "POST":
         resp = requests.post(url, json=body, headers={}, auth=auth, params=params)
