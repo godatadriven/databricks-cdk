@@ -1,11 +1,13 @@
 import logging
 import os
-from typing import Optional
+from typing import Any, Dict, Optional
 
 import boto3
-import requests
 from pydantic import BaseModel
+from requests import request
 from requests.auth import HTTPBasicAuth
+from requests.exceptions import HTTPError
+from tenacity import retry, retry_if_exception, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger(__name__)
 
@@ -33,12 +35,12 @@ class CnfResponse(BaseModel):
     physical_resource_id: str
 
 
-def get_account_id():
+def get_account_id() -> str:
     """Get databricks account id from param store"""
     return get_param(ACCOUNT_PARAM, required=True)
 
 
-def get_deploy_user():
+def get_deploy_user() -> str:
     return get_param(USER_PARAM, required=True)
 
 
@@ -49,93 +51,77 @@ def get_auth() -> HTTPBasicAuth:
     return HTTPBasicAuth(user, password)
 
 
-def post_request(
+@retry(
+    retry=retry_if_exception_type(HTTPError) & retry_if_exception(lambda ex: ex.response.status_code == 429),
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=1, max=10),
+    reraise=True,
+)
+def _do_request(
+    method: str,
     url: str,
-    body: dict,
-    params: dict = None,
-) -> dict:
-    """Generic method to do post requests"""
+    body: Optional[Dict[str, Any]] = None,
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """
+    Generic method to do any type of request
+
+    :param method: Request method to use when doing a request
+    :param url: Url to which to make the request
+    :param body: Optional body to send along with the request, defaults to None
+    :param params: Optional params to send along with the request, defaults to None
+    :param auth: Auth to use which is injected when not explicitely overriden, defaults to get_auth()
+    :raises ValueError: If provided method is not supported
+    :return: Response data
+    """
     auth = get_auth()
-    resp = requests.post(url, json=body, headers={}, auth=auth, params=params)
+    resp = request(method=method, url=url, json=body, params=params, auth=auth)
 
     # If the response was successful, no Exception will be raised
     if resp.status_code >= 400:
         logger.warning(resp.text)
     resp.raise_for_status()
 
-    # extracting data in json format
-    data = resp.json()
+    return resp.json()
 
-    return data
+
+def post_request(
+    url: str,
+    body: Dict[str, Any],
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Generic method to do post requests"""
+    return _do_request(method="POST", url=url, body=body, params=params)
 
 
 def put_request(
     url: str,
-    body: dict,
-    params: dict = None,
-) -> dict:
-    """Generic method to do post requests"""
-    auth = get_auth()
-    resp = requests.put(url, json=body, headers={}, auth=auth, params=params)
-
-    # If the response was successful, no Exception will be raised
-    if resp.status_code >= 400:
-        logger.warning(resp.text)
-    resp.raise_for_status()
-
-    # extracting data in json format
-    data = resp.json()
-
-    return data
+    body: Dict[str, Any],
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
+    """Generic method to do put requests"""
+    return _do_request(method="PUT", url=url, body=body, params=params)
 
 
 def patch_request(url: str, body: dict, params: dict = None) -> dict:
     """Generic method to do patch requests"""
-    auth = get_auth()
-    resp = requests.patch(url, json=body, headers={}, auth=auth, params=params)
 
-    # If the response was successful, no Exception will be raised
-    if resp.status_code >= 400:
-        logger.warning(resp.text)
-    resp.raise_for_status()
-
-    # extracting data in json format
-    data = resp.json()
-
-    return data
+    return _do_request(method="PATCH", url=url, body=body, params=params)
 
 
-def get_request(url: str, params: dict = None, body: dict = None) -> Optional[dict]:
+def get_request(
+    url: str,
+    body: Optional[Dict[str, Any]] = None,
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Generic method to do get requests"""
-    auth = get_auth()
-    resp = requests.get(url, headers={}, auth=auth, params=params, json=body)
-
-    if resp.status_code == 404:
-        return None
-
-    # If the response was successful, no Exception will be raised
-    if resp.status_code >= 400:
-        logger.warning(resp.text)
-    resp.raise_for_status()
-
-    # extracting data in json format
-    data = resp.json()
-
-    logger.debug("Successful GET call!!")
-    return data
+    return _do_request(method="GET", url=url, body=body, params=params)
 
 
-def delete_request(url: str, params: dict = None, body: dict = None) -> Optional[dict]:
+def delete_request(
+    url: str,
+    body: Optional[Dict[str, Any]] = None,
+    params: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     """Generic method to do delete requests"""
-    auth = get_auth()
-    resp = requests.delete(url, headers={}, auth=auth, params=params, json=body)
-
-    # If the response was successful, no Exception will be raised
-    if resp.status_code >= 400:
-        logger.warning(resp.text)
-    resp.raise_for_status()
-
-    # extracting data in json format
-    data = resp.json()
-
-    return data
+    return _do_request(method="DELETE", url=url, body=body, params=params)
