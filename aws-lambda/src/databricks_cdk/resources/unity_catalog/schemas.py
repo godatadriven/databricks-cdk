@@ -37,9 +37,8 @@ def get_schema_by_name(catalog_name: str, schema_name: str, base_url: str) -> Op
     try:
         return get_request(f"{base_url}/{catalog_name}.{schema_name}")
     except requests.exceptions.HTTPError as e:
-        if e.response.status_code == 404:
-            return None
-        raise
+        logger.info("Schema not found, returning None")
+        return None
 
 
 def create_or_update_schema(properties: SchemaProperties) -> SchemaResponse:
