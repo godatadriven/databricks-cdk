@@ -2,6 +2,7 @@ import json
 import logging
 from typing import Dict, Optional
 
+import requests.exceptions
 from pydantic import BaseModel, Field
 
 from databricks_cdk.utils import CnfResponse, delete_request, get_request, patch_request, post_request
@@ -29,11 +30,16 @@ class SchemaResponse(CnfResponse):
 
 def get_schema_url(workspace_url: str):
     """Getting url for job requests"""
-    return f"{workspace_url}/api/2.1/unity-catalog/schemas"
+    return f"{workspace_url}api/2.1/unity-catalog/schemas"
 
 
 def get_schema_by_name(catalog_name: str, schema_name: str, base_url: str) -> Optional[dict]:
-    return get_request(f"{base_url}/{catalog_name}.{schema_name}")
+    try:
+        return get_request(f"{base_url}/{catalog_name}.{schema_name}")
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 404:
+            return None
+        raise
 
 
 def create_or_update_schema(properties: SchemaProperties) -> SchemaResponse:
@@ -47,7 +53,7 @@ def create_or_update_schema(properties: SchemaProperties) -> SchemaResponse:
             base_url=base_url,
         )
     body = json.loads(properties.schema_object.json())
-    # body["full_name"] = f"{properties.schema_object.catalog_name}.{properties.schema_object.name}"
+
     if current is None:
         post_request(
             base_url,
