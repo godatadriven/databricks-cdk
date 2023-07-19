@@ -36,8 +36,8 @@ def get_schema_url(workspace_url: str):
 def get_schema_by_name(catalog_name: str, schema_name: str, base_url: str) -> Optional[dict]:
     try:
         return get_request(f"{base_url}/{catalog_name}.{schema_name}")
-    except requests.exceptions.HTTPError as e:
-        logger.info("Schema not found, returning None")
+    except Exception as e:
+        logger.info(f"Schema not found, returning None. Exception: {e}")
         return None
 
 
