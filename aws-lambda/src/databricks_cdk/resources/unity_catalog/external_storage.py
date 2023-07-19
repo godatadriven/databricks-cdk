@@ -32,7 +32,11 @@ def get_external_location_url(workspace_url: str) -> str:
 
 
 def get_external_location_by_name(name: str, base_url: str) -> Optional[dict]:
-    return get_request(f"{base_url}/{name}")
+    try:
+        return get_request(f"{base_url}/{name}")
+    except Exception as e:
+        logger.info(f"External location not found, returning None. Exception: {e}")
+        return None
 
 
 def create_or_update_external_location(

@@ -58,7 +58,11 @@ def get_storage_credential_url(workspace_url: str) -> str:
 
 
 def get_storage_credential_by_name(name: str, base_url: str) -> Optional[dict]:
-    return get_request(f"{base_url}/{name}")
+    try:
+        return get_request(f"{base_url}/{name}")
+    except Exception as e:
+        logger.info(f"Storage credential not found, returning None. Exception: {e}")
+        return None
 
 
 def create_or_update_storage_credential(
