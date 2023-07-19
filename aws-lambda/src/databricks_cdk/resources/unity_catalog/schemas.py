@@ -30,7 +30,7 @@ class SchemaResponse(CnfResponse):
 
 def get_schema_url(workspace_url: str):
     """Getting url for job requests"""
-    return f"{workspace_url}api/2.1/unity-catalog/schemas"
+    return f"{workspace_url}/api/2.1/unity-catalog/schemas"
 
 
 def get_schema_by_name(catalog_name: str, schema_name: str, base_url: str) -> Optional[dict]:
