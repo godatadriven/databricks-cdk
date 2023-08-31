@@ -7,7 +7,6 @@
   },
   "scripts": {
     "lint": "eslint --max-warnings 0 'bin/**/*.ts'  'lib/**/*.ts'",
-    "preinstall": "mkdir -p ./node_modules && touch ./node_modules/.metadata_never_index",
     "cdk": "cdk",
     "synth": "cdk synth --context env='staging' --context tag='debug'",
     "deploy": "cdk deploy --context env='staging' --context tag='debug'"
