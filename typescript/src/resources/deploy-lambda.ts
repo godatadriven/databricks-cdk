@@ -304,7 +304,7 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
 
         this.lambdaRole.addToPrincipalPolicy(new aws_iam.PolicyStatement({
             effect: aws_iam.Effect.ALLOW,
-            actions: ["secretsmanager:CreateSecret", "secretsmanager:DeleteSecret"],
+            actions: ["secretsmanager:CreateSecret", "secretsmanager:DeleteSecret", "secretsmanager:UpdateSecret"],
             resources: [
                 `arn:aws:secretsmanager:${this.props.region}:${this.props.accountId}:secret:/databricks/token/*`,
             ]
