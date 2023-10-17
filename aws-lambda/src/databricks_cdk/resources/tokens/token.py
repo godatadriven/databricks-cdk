@@ -126,6 +126,9 @@ def create_or_update_token(properties: TokenProperties, physical_resource_id: Op
     if update_token or existing_token is None:
         logger.info("Creating new token")
         new_token = _create_token(url, properties.comment, properties.lifetime_seconds)
+        # delete old token if it exists
+        if existing_token:
+            _delete_token(token_url=url, token_id=token_id)
 
         token_id = new_token["token_info"]["token_id"]
         token_value = new_token["token_value"]

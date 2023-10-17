@@ -55,6 +55,7 @@ def test_create_token_not_exist(
     )
 
 
+@patch("src.databricks_cdk.resources.tokens.token._delete_token")
 @patch("src.databricks_cdk.resources.tokens.token._create_token")
 @patch("src.databricks_cdk.resources.tokens.token.get_existing_tokens")
 @patch("src.databricks_cdk.resources.tokens.token.update_token_in_secrets_manager")
@@ -64,6 +65,7 @@ def test_create_token_already_exist(
     patched_update_token_to_secrets_manager,
     patched_get_existing_tokens,
     patched__create_token,
+    patched__delete_token,
 ):
     token_properties = TokenProperties(
         token_name="test",
