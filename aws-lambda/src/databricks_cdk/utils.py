@@ -3,6 +3,8 @@ import os
 from typing import Any, Dict, Optional
 
 import boto3
+from databricks.sdk import WorkspaceClient
+from databricks.sdk.core import Config
 from pydantic import BaseModel
 from requests import request
 from requests.auth import HTTPBasicAuth
@@ -42,6 +44,10 @@ def get_account_id() -> str:
 
 def get_deploy_user() -> str:
     return get_param(USER_PARAM, required=True)
+
+
+def get_password() -> str:
+    return get_param(PASS_PARAM, required=True)
 
 
 def get_auth() -> HTTPBasicAuth:
@@ -125,3 +131,15 @@ def delete_request(
 ) -> Dict[str, Any]:
     """Generic method to do delete requests"""
     return _do_request(method="DELETE", url=url, body=body, params=params)
+
+
+def get_workspace_client(workspace_url: str, config: Optional[Config] = None) -> WorkspaceClient:
+    """Get Databricks WorkspaceClient instance, either from config or from username/password
+    :param workspace_url: Workspace url to connect to
+    :param config: Optional config to use, when provided overwrites workspace_url provided,
+        defaults to None
+    """
+    if config:
+        return WorkspaceClient(config=config)
+
+    return WorkspaceClient(username=get_deploy_user(), password=get_password(), host=workspace_url)

@@ -9,29 +9,28 @@ readme = "README.md"
 license = "MIT"
 homepage = "https://github.com/godatadriven/databricks-cdk"
 repository = "https://github.com/godatadriven/databricks-cdk"
-include = [
-    "LICENSE",
-]
+include = ["LICENSE"]
 
 
-packages = [{ include = "databricks_cdk", from = "src"}]
+packages = [{ include = "databricks_cdk", from = "src" }]
 
 [tool.poetry.dependencies]
-python = ">=3.6.1,<4.0"
+python = "^3.7"
 pydantic = "^1.4.0"
 requests = ">=2.22"
 boto3 = "^1.21.10"
 cfnresponse = "^1.1.2"
 tenacity = "^8.2.2"
+databricks-sdk = "^0.11.0"
 
 [tool.poetry.dev-dependencies]
-coverage= {version=  "^6.1.1", extras=["toml"]}
-pytest= "7.0.1"
-pytest-mock="3.6.1"
-pyproject-flake8 ="^5.0.4"
-isort ="^5.10.0"
-black="20.8b1"
-pytest-cov= "^4.0.0"
+coverage = { version = "^6.1.1", extras = ["toml"] }
+pytest = "7.0.1"
+pytest-mock = "3.6.1"
+pyproject-flake8 = "^5.0.4"
+isort = "^5.10.0"
+black = "20.8b1"
+pytest-cov = "^4.0.0"
 mypy = "^0.971"
 
 [tool.black]
@@ -50,7 +49,7 @@ show_missing = true
 
 [tool.coverage.run]
 command_line = "-m pytest -v tests/"
-omit = ["tests/*",".venv/*"]
+omit = ["tests/*", ".venv/*"]
 
 [tool.flake8]
 max-line-length = 180
