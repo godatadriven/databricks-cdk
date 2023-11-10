@@ -1,6 +1,8 @@
 import os
+from unittest.mock import MagicMock
 
 import pytest
+from databricks.sdk import ModelRegistryAPI, WorkspaceClient
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -12,3 +14,13 @@ def aws_credentials():
     os.environ["AWS_SECURITY_TOKEN"] = "testing"
     os.environ["AWS_SESSION_TOKEN"] = "testing"
     os.environ["AWS_DEFAULT_REGION"] = "eu-west-1"
+
+
+@pytest.fixture(scope="function")
+def workspace_client():
+    workspace_client = MagicMock(spec=WorkspaceClient)
+
+    # mock all of the underlying service api's
+    workspace_client.model_registry = MagicMock(spec=ModelRegistryAPI)
+
+    return workspace_client
