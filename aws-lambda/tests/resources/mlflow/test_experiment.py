@@ -65,6 +65,37 @@ def test_create_or_update_experiment_existing(patched_get_workspace_client, work
 
 
 @patch("databricks_cdk.resources.mlflow.experiment.get_workspace_client")
+def test_create_or_update_experiment_existing_new_description(patched_get_workspace_client, workspace_client):
+    props = ExperimentProperties(
+        name="name",
+        artifact_location="s3://test",
+        workspace_url="https://test.cloud.databricks.com",
+        description="new description",
+    )
+    patched_get_workspace_client.return_value = workspace_client
+    workspace_client.experiments.get_experiment.return_value = GetExperimentResponse(
+        experiment=Experiment(
+            experiment_id="test_id",
+            name="name",
+            artifact_location="s3://test",
+            lifecycle_stage="blah",
+            last_update_time=1234,
+            creation_time=1234,
+            tags=[ExperimentTag(key="mlflow.note.content", value="some old description")],
+        )
+    )
+
+    # already existing experiment
+    response = create_or_update_experiment(props, physical_resource_id="test_id")
+
+    assert response == ExperimentCreateResponse(physical_resource_id="test_id", name="name")
+    assert workspace_client.experiments.update_experiment.call_count == 0
+    workspace_client.experiments.set_experiment_tag.assert_called_once_with(
+        experiment_id="test_id", key="mlflow.note.content", value="new description"
+    )
+
+
+@patch("databricks_cdk.resources.mlflow.experiment.get_workspace_client")
 def test_create_or_update_experiment_existing_invalid_id(patched_get_workspace_client, workspace_client):
     props = ExperimentProperties(
         name="name",
