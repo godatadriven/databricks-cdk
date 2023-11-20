@@ -4,7 +4,7 @@ import pytest
 
 from databricks_cdk.resources.unity_catalog.volumes import (
     Volume,
-    VolumeCreatedError,
+    VolumeCreationError,
     VolumeInfo,
     VolumeProperties,
     VolumeResponse,
@@ -72,7 +72,7 @@ def test_create_or_update_volume_error(patch_get_workspace_client, workspace_cli
 
     workspace_client.volumes.list.return_value = []
 
-    with pytest.raises(VolumeCreatedError):
+    with pytest.raises(VolumeCreationError):
         create_or_update_volume(properties=mock_properties, physical_resource_id="some_id")
 
 
@@ -105,7 +105,7 @@ def test_create_volume_error(workspace_client):
 
     workspace_client.volumes.create.return_value = VolumeInfo(volume_id=None)
 
-    with pytest.raises(VolumeCreatedError):
+    with pytest.raises(VolumeCreationError):
         create_volume(mock_properties, workspace_client)
 
 

@@ -31,7 +31,7 @@ export class UnityCatalogVolume extends CustomResource {
         super(scope, id, {
             serviceToken: props.serviceToken,
             properties: {
-                action: "unity-catalog",
+                action: "volume",
                 workspace_url: props.workspace_url,
                 catalog: props.volume,
             }
