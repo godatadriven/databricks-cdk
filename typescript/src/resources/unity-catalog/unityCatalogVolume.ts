@@ -1,7 +1,7 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
 
-enum volumeType {
+export enum VolumeType {
     EXTERNAL = "EXTERNAL",
     MANAGED = "MANAGED",
 }
@@ -11,7 +11,7 @@ export interface UnityCatalogVolumeSettings {
     name: string
     schema_name: string
     catalog_name: string
-    volume_type?: volumeType
+    volume_type?: VolumeType
     comment?: string
     storage_location?: string
 
