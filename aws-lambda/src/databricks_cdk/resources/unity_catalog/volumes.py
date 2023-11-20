@@ -45,7 +45,6 @@ def create_or_update_volume(properties: VolumeProperties, physical_resource_id: 
         # volume doesn't exist yet so create new one
         return create_volume(properties, workspace_client)
 
-
     # update existing volume
     existing_volume = [
         v
