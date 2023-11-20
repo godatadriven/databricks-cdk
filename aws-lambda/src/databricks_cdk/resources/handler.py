@@ -119,6 +119,7 @@ from databricks_cdk.resources.unity_catalog.storage_credentials import (
     create_or_update_storage_credential,
     delete_storage_credential,
 )
+from databricks_cdk.resources.unity_catalog.volumes import VolumeProperties, create_or_update_volume, delete_volume
 from databricks_cdk.utils import CnfResponse
 
 logger = logging.getLogger(__name__)
@@ -211,6 +212,8 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
             RegisteredModelProperties(**event.ResourceProperties),
             event.PhysicalResourceId,
         )
+    elif action == "volume":
+        return create_or_update_volume(VolumeProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -308,6 +311,8 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
             RegisteredModelProperties(**event.ResourceProperties),
             event.PhysicalResourceId,
         )
+    elif action == "volume":
+        return delete_volume(VolumeProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
