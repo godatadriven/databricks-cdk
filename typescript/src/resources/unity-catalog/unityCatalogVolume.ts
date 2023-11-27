@@ -33,7 +33,7 @@ export class UnityCatalogVolume extends CustomResource {
             properties: {
                 action: "volume",
                 workspace_url: props.workspace_url,
-                catalog: props.volume,
+                volume: props.volume,
             }
         });
     }

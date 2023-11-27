@@ -32,7 +32,7 @@ describe("UnityCatalogVolume", () => {
                 "workspace_url": {
                     "Fn::ImportValue": "databricks-workspace-url"
                 },
-                "catalog": {
+                "volume": {
                     "name": "some-name",
                     "catalog_name": "some-catalog-name",
                     "schema_name": "some-schema-name",
