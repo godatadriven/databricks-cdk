@@ -7,6 +7,7 @@ import {Workspace, WorkspaceProperties} from "./account/workspace";
 import {InstanceProfile, InstanceProfileProperties} from "./instance-profiles/instance-profile";
 import {Cluster, ClusterProperties} from "./clusters/cluster";
 import {ClusterPermissions, ClusterPermissionsProperties} from "./permissions/cluster-permissions";
+import {VolumePermissions, VolumePermissionsProperties} from "./permissions/volumePermissions";
 import {DbfsFile, DbfsFileProperties} from "./dbfs/dbfs-file";
 import {SecretScope, SecretScopeProperties} from "./secrets/secret-scope";
 import {Job, JobProperties} from "./jobs/job";
@@ -174,6 +175,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createJobPermissions(scope: Construct, id: string, props: JobPermissionsProperties): JobPermissions {
         return new JobPermissions(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createVolumePermissions(scope: Construct, id: string, props: VolumePermissionsProperties): VolumePermissions {
+        return new VolumePermissions(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });

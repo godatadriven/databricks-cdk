@@ -79,6 +79,11 @@ from databricks_cdk.resources.permissions.sql_warehouse_permissions import (
     create_or_update_warehouse_permissions,
     delete_warehouse_permissions,
 )
+from databricks_cdk.resources.permissions.volume_permissions import (
+    VolumePermissionsProperties,
+    create_or_update_volume_permissions,
+    delete_volume_permissions,
+)
 from databricks_cdk.resources.scim.user import UserProperties, create_or_update_user, delete_user
 from databricks_cdk.resources.secrets.secret import SecretProperties, create_or_update_secret, delete_secret
 from databricks_cdk.resources.secrets.secret_scope import (
@@ -197,6 +202,8 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_registered_model_permissions(
             RegisteredModelPermissionPermissionProperties(**event.ResourceProperties)
         )
+    elif action == "volume-permissions":
+        return create_or_update_volume_permissions(VolumePermissionsProperties(**event.ResourceProperties))
     elif action == "experiment-permission":
         return create_or_update_experiment_permissions(ExperimentPermissionProperties(**event.ResourceProperties))
     elif action == "token":
@@ -290,6 +297,11 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
     elif action == "registered-model-permission":
         return delete_registered_model_permissions(
             RegisteredModelPermissionPermissionProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
+    elif action == "volume-permissions":
+        return delete_volume_permissions(
+            VolumePermissionsProperties(**event.ResourceProperties),
             event.PhysicalResourceId,
         )
     elif action == "unity-storage-credentials":
