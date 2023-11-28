@@ -29,7 +29,7 @@ def get_assignment_dict_from_privilege_assignments(
 def get_permission_changes_principals(
     assignments_on_databricks_dict: Dict[str, List[Privilege]],
     assignments_from_properties_dict: Dict[str, List[Privilege]],
-) -> list[PermissionsChange]:
+) -> List[PermissionsChange]:
     """See if there are new principals that need to be added"""
     permission_changes = []
 

@@ -16,6 +16,7 @@ export interface PrivilegeAssignmentVolume {
 export interface VolumePermissionsProperties {
     workspaceUrl: string
     privilege_assignments: Array<PrivilegeAssignmentVolume>
+    volume_name: string
 }
 
 export interface VolumePermissionsProps extends VolumePermissionsProperties {
@@ -29,6 +30,7 @@ export class VolumePermissions extends CustomResource {
             properties: {
                 action: "volume-permissions",
                 workspace_url: props.workspaceUrl,
+                volume_name: props.volume_name,
                 privilege_assignments: props.privilege_assignments,
             }
         });

@@ -30,6 +30,7 @@ describe("VolumePermissions", () => {
             ],
             workspaceUrl: workspaceUrl.toString(),
             serviceToken: deployLambda.serviceToken.toString(),
+            volume_name: "some-volume"
         });
 
         const template = Template.fromStack(databricksStack);
@@ -59,7 +60,8 @@ describe("VolumePermissions", () => {
                             "READ_VOLUME"
                         ]
                     }
-                ]
+                ],
+                "volume_name": "some-volume"
             });
     });
 });
