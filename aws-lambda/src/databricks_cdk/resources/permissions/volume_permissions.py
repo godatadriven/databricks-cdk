@@ -1,3 +1,5 @@
+from typing import List
+
 from databricks.sdk.service.catalog import PermissionsList, PrivilegeAssignment, SecurableType
 from pydantic import BaseModel
 
@@ -8,7 +10,7 @@ from databricks_cdk.utils import CnfResponse, get_workspace_client
 class VolumePermissionsProperties(BaseModel):
     workspace_url: str
     volume_name: str
-    privilege_assignments: list[PrivilegeAssignment] = []
+    privilege_assignments: List[PrivilegeAssignment] = []
 
 
 def create_or_update_volume_permissions(
