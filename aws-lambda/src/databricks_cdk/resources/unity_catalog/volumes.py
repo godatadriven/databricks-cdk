@@ -1,10 +1,14 @@
+import logging
 from typing import Optional
 
 from databricks.sdk import WorkspaceClient
+from databricks.sdk.errors import NotFound
 from databricks.sdk.service.catalog import VolumeInfo, VolumeType
 from pydantic import BaseModel
 
 from databricks_cdk.utils import CnfResponse, get_workspace_client
+
+logger = logging.getLogger(__name__)
 
 
 class VolumeCreationError(Exception):
@@ -99,5 +103,9 @@ def update_volume(
 def delete_volume(properties: VolumeProperties, physical_resource_id: str) -> CnfResponse:
     """Delete a volume on databricks"""
     workspace_client = get_workspace_client(properties.workspace_url)
-    workspace_client.volumes.delete(full_name_arg=properties.volume.full_name)
+    try:
+        workspace_client.volumes.delete(full_name_arg=properties.volume.full_name)
+    except NotFound:
+        logger.warning("Volume not found, never existed or already removed")
+
     return CnfResponse(physical_resource_id=physical_resource_id)
