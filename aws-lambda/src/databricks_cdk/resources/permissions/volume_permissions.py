@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from databricks.sdk.service.catalog import PermissionsList, PrivilegeAssignment, SecurableType
@@ -5,6 +6,8 @@ from pydantic import BaseModel
 
 from databricks_cdk.resources.permissions.changes import get_permission_changes
 from databricks_cdk.utils import CnfResponse, get_workspace_client
+
+logger = logging.getLogger(__name__)
 
 
 class VolumePermissionsProperties(BaseModel):
@@ -17,7 +20,7 @@ def create_or_update_volume_permissions(
     properties: VolumePermissionsProperties,
 ) -> CnfResponse:
     """Create volume permissions on volume at databricks"""
-
+    logger.info(f"Creating volume permissions {properties.privilege_assignments} for volume {properties.volume_name}")
     workspace_client = get_workspace_client(properties.workspace_url)
     existing_grants: PermissionsList = workspace_client.grants.get(
         securable_type=SecurableType.VOLUME, full_name=properties.volume_name
