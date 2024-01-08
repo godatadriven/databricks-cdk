@@ -2,7 +2,7 @@ import os
 from unittest.mock import MagicMock
 
 import pytest
-from databricks.sdk import ExperimentsAPI, ModelRegistryAPI, VolumesAPI, WorkspaceClient
+from databricks.sdk import AccountClient, CredentialsAPI, ExperimentsAPI, ModelRegistryAPI, VolumesAPI, WorkspaceClient
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -26,3 +26,13 @@ def workspace_client():
     workspace_client.volumes = MagicMock(spec=VolumesAPI)
 
     return workspace_client
+
+
+@pytest.fixture(scope="function")
+def account_client():
+    account_client = MagicMock(spec=AccountClient)
+
+    # mock all of the underlying service api's
+    account_client.credentials = MagicMock(spec=CredentialsAPI)
+
+    return account_client

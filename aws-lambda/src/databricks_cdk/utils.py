@@ -3,7 +3,7 @@ import os
 from typing import Any, Dict, Optional
 
 import boto3
-from databricks.sdk import WorkspaceClient, AccountClient
+from databricks.sdk import AccountClient, WorkspaceClient
 from databricks.sdk.core import Config
 from pydantic import BaseModel
 from requests import request
