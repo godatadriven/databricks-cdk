@@ -3,7 +3,7 @@ import os
 from typing import Any, Dict, Optional
 
 import boto3
-from databricks.sdk import WorkspaceClient
+from databricks.sdk import AccountClient, WorkspaceClient
 from databricks.sdk.core import Config
 from pydantic import BaseModel
 from requests import request
@@ -143,3 +143,17 @@ def get_workspace_client(workspace_url: str, config: Optional[Config] = None) ->
         return WorkspaceClient(config=config)
 
     return WorkspaceClient(username=get_deploy_user(), password=get_password(), host=workspace_url)
+
+
+def get_account_client(
+    config: Optional[Config] = None, host: str = "https://accounts.cloud.databricks.com"
+) -> AccountClient:
+    """Get Databricks AccountClient instance, either from config defaulting to ssm params
+    :param host: Url to account url to, defaults to 'https://accounts.cloud.databricks.com'
+    :param config: Optional config to use, when provided overwrites workspace_url provided,
+        defaults to None
+    """
+    if config:
+        return AccountClient(config=config)
+
+    return AccountClient(username=get_deploy_user(), password=get_password(), host=host, account_id=get_account_id())

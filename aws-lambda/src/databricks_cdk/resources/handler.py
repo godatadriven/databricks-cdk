@@ -229,7 +229,7 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
     """Delete a given resource"""
     action = event.action()
     if action == "credentials":
-        return delete_credentials(CredentialsProperties(**event.ResourceProperties), event.PhysicalResourceId)
+        return delete_credentials(event.PhysicalResourceId)
     elif action == "storage-configurations":
         return delete_storage_configuration(
             StorageConfigProperties(**event.ResourceProperties),
