@@ -48,6 +48,7 @@ export interface CustomDeployLambdaProps {
     readonly databricksAccountParam?: string
     readonly lambdaCode?: aws_lambda.DockerImageCode
     readonly lambdaName?: string
+    readonly lambdaId?: string
 }
 
 export abstract class IDatabricksDeployLambda extends Construct {
@@ -327,7 +328,8 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
             ]
         }));
 
-        this.lambda = new aws_lambda.DockerImageFunction(this, `${id}Lambda`, {
+        const lambdaId = this.props.lambdaId || `${id}Lambda`;
+        this.lambda = new aws_lambda.DockerImageFunction(this, lambdaId, {
             functionName: this.props.lambdaName,
             code: dockerImageCode,
             timeout: Duration.seconds(300),
