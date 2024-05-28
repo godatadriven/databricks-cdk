@@ -1,5 +1,9 @@
 import {Construct} from "constructs";
-import {CustomResource} from "aws-cdk-lib";
+import {
+    CustomResource,
+    custom_resources as cr,
+} from "aws-cdk-lib";
+import { IFunction } from "aws-cdk-lib/aws-lambda";
 
 export interface TokenProperties {
     workspaceUrl: string
@@ -9,13 +13,23 @@ export interface TokenProperties {
 }
 
 export interface TokenProps extends TokenProperties {
-    readonly serviceToken: string
+    readonly databricksDeployLambda: IFunction
 }
 
-export class Token extends CustomResource {
+export class Token extends Construct {
+    readonly customResource: CustomResource;
+    readonly tokenSecretArn: string;
+
     constructor(scope: Construct, id: string, props: TokenProps) {
-        super(scope, id, {
-            serviceToken: props.serviceToken,
+        super(scope, id);
+
+        const cr_provider = new cr.Provider(this, 'Provider',
+        {
+            onEventHandler: props.databricksDeployLambda,
+        });
+
+        this.customResource = new CustomResource(this, 'Resource', {
+            serviceToken: cr_provider.serviceToken,
             properties: {
                 action: "token",
                 token_name: props.tokenName,
@@ -24,12 +38,7 @@ export class Token extends CustomResource {
                 lifetime_seconds: props.lifetimeSeconds,
             }
         });
-    }
-    public tokenSecretArn(): string {
-        /**
-      * Returns the secrets manager ARN. Can only be returned
-      * when creating the token
-      */
-        return this.getAttString("token_secrets_arn");
+
+        this.tokenSecretArn = this.customResource.getAttString("token_secrets_arn");
     }
 }
