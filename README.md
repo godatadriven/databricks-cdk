@@ -87,7 +87,11 @@ Deploy the stack to your AWS account:
 ```shell
 cdk deploy
 ```
-Note: The AWS SSM parameters `/databricks/deploy/user`, `/databricks/deploy/password`, and `/databricks/account-id` are required for the deployment to succeed.
+Note: The AWS SSM parameters `/databricks/deploy/client-id`, `/databricks/deploy/client-secret`, and `/databricks/account-id` are required for the deployment to succeed.
+
+- `/databricks/deploy/client-id` is the client-id of service principal that is account admin and workspace admin
+- `/databricks/deploy/client-secret` is the client-secret of service principal that is account admin and workspace admin
+- `/databricks/account-id` is the id of your databricks account
 
 See also the simple-workspace and multi-stack examples in [examples](examples)
 

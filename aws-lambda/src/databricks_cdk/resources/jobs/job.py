@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Union
 import requests
 from pydantic import BaseModel
 
-from databricks_cdk.utils import CnfResponse, get_auth, post_request
+from databricks_cdk.utils import CnfResponse, get_authorization_headers, post_request
 
 logger = logging.getLogger(__name__)
 
@@ -175,8 +175,11 @@ def get_job_url(workspace_url: str):
 
 def get_job_by_id(job_id: str, workspace_url: str):
     body = {"job_id": job_id}
-    auth = get_auth()
-    resp = requests.get(f"{get_job_url(workspace_url)}/get", json=body, headers={}, auth=auth)
+    resp = requests.get(
+        f"{get_job_url(workspace_url)}/get",
+        json=body,
+        headers=get_authorization_headers(),
+    )
     if resp.status_code == 400 and "does not exist" in resp.text:
         return None
     resp.raise_for_status()

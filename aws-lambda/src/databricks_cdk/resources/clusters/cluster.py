@@ -4,7 +4,7 @@ from typing import Dict, List, Optional
 import requests
 from pydantic import BaseModel
 
-from databricks_cdk.utils import CnfResponse, get_auth, get_request, post_request
+from databricks_cdk.utils import CnfResponse, get_authorization_headers, get_request, post_request
 
 logger = logging.getLogger(__name__)
 
@@ -86,8 +86,11 @@ def get_cluster_by_name(cluster_name: str, workspace_url: str):
 def get_cluster_by_id(cluster_id: str, workspace_url: str) -> Optional[dict]:
     """Getting cluster based on name"""
     body = {"cluster_id": cluster_id}
-    auth = get_auth()
-    resp = requests.get(f"{get_cluster_url(workspace_url)}/get", json=body, headers={}, auth=auth)
+    resp = requests.get(
+        f"{get_cluster_url(workspace_url)}/get",
+        json=body,
+        headers=get_authorization_headers(),
+    )
     if resp.status_code == 400 and "does not exist" in resp.text:
         return None
     resp.raise_for_status()
@@ -100,7 +103,6 @@ def create_or_update_cluster(properties: ClusterProperties, physical_resource_id
     if physical_resource_id is not None:
         current = get_cluster_by_id(physical_resource_id, properties.workspace_url)
     if current is None:
-
         # Json data
         body = properties.cluster.dict()
         response = post_request(f"{get_cluster_url(properties.workspace_url)}/create", body=body)
