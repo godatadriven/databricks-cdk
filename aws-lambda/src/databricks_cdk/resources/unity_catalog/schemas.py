@@ -2,7 +2,6 @@ import json
 import logging
 from typing import Dict, Optional
 
-import requests.exceptions
 from pydantic import BaseModel, Field
 
 from databricks_cdk.utils import CnfResponse, delete_request, get_request, patch_request, post_request

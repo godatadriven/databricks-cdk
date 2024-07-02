@@ -1,6 +1,5 @@
 from unittest.mock import patch
 
-import src.databricks_cdk.resources.tokens.token
 from src.databricks_cdk.resources.tokens.token import (
     TokenInfo,
     TokenProperties,
@@ -37,7 +36,12 @@ def test_create_token_not_exist(
 
     patched__create_token.return_value = {
         "token_value": "some_value",
-        "token_info": {"token_id": "some_id", "creation_time": 1234, "expiry_time": 1234, "comment": "some test token"},
+        "token_info": {
+            "token_id": "some_id",
+            "creation_time": 1234,
+            "expiry_time": 1234,
+            "comment": "some test token",
+        },
     }
     patched_get_existing_tokens.return_value = []
 
@@ -103,7 +107,14 @@ def test_create_token_already_exist(
 @patch("src.databricks_cdk.resources.tokens.token.get_request")
 def test_get_existing_token(patched_get_request):
     patched_get_request.return_value = {
-        "token_infos": [{"token_id": "test", "creation_time": 1, "expiry_time": 2, "comment": "test_comment"}]
+        "token_infos": [
+            {
+                "token_id": "test",
+                "creation_time": 1,
+                "expiry_time": 2,
+                "comment": "test_comment",
+            }
+        ]
     }
 
     token_list = get_existing_tokens(token_url="https://test.cloud.databricks.com/api/2.0/token")
@@ -118,7 +129,11 @@ def test_get_existing_token(patched_get_request):
 
 @patch("src.databricks_cdk.resources.tokens.token.post_request")
 def test__create_token(patched_post_request):
-    _create_token("https://test.cloud.databricks.com/api/2.0/token", comment="test_comment", lifetime_seconds=1)
+    _create_token(
+        "https://test.cloud.databricks.com/api/2.0/token",
+        comment="test_comment",
+        lifetime_seconds=1,
+    )
 
     assert patched_post_request.call_args.kwargs == {"body": {"comment": "test_comment", "lifetime_seconds": 1}}
 

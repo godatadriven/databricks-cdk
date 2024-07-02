@@ -1,5 +1,6 @@
 import logging
 import os
+from functools import lru_cache
 from typing import Any, Dict, Optional
 
 import boto3
@@ -7,17 +8,29 @@ from databricks.sdk import AccountClient, WorkspaceClient
 from databricks.sdk.core import Config
 from pydantic import BaseModel
 from requests import request
-from requests.auth import HTTPBasicAuth
 from requests.exceptions import HTTPError
 from tenacity import retry, retry_if_exception, retry_if_exception_type, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger(__name__)
 
 
-USER_PARAM = os.environ.get("USER_PARAM", "/databricks/deploy/user")
-PASS_PARAM = os.environ.get("PASS_PARAM", "/databricks/deploy/password")
-ACCOUNT_PARAM = os.environ.get("ACCOUNT_PARAM", "/databricks/account-id")
+class UnsupportedAuthMethodError(Exception):
+    pass
 
+
+ACCOUNT_PARAM = os.environ.get("ACCOUNT_PARAM", "/databricks/account-id")
+CLIENT_SECRET_PARAM = os.environ.get("CLIENT_SECRET_PARAM", "/databricks/deploy/client-secret")
+
+# Make sure password based authentication is not used anymore after 10th of July 2024
+if CLIENT_SECRET_PARAM is None:
+    raise UnsupportedAuthMethodError(
+        "Password based authentication is not supported from 10th of July 2024.",
+        "Please set client_id and client_secret of a service principal instead.",
+        "Service principal can be created in account settings in Databricks."
+        "Needs account admin and admin permissions on workspace.",
+    )
+
+CLIENT_ID_PARAM = os.environ.get("CLIENT_ID_PARAM", "/databricks/deploy/client-id")
 ACCOUNTS_BASE_URL = os.environ.get("BASE_URL", "https://accounts.cloud.databricks.com")
 
 
@@ -33,6 +46,26 @@ def get_param(name: str, required: bool = False):
     return result
 
 
+@lru_cache(maxsize=1)
+def get_authentication_config() -> Config:
+    """
+    This config can be used to authenticate with databricks using
+    requests library. Not needed when using WorkspaceClient or AccountClient.
+    Config is cached to avoid multiple calls to get_param
+    """
+    return Config(
+        host=ACCOUNTS_BASE_URL,
+        client_id=get_client_id(),
+        client_secret=get_client_secret(),
+        account_id=get_account_id(),
+    )
+
+
+def get_authorization_headers() -> Dict[str, str]:
+    """Get authorization headers"""
+    return get_authentication_config().authenticate()
+
+
 class CnfResponse(BaseModel):
     physical_resource_id: str
 
@@ -42,19 +75,12 @@ def get_account_id() -> str:
     return get_param(ACCOUNT_PARAM, required=True)
 
 
-def get_deploy_user() -> str:
-    return get_param(USER_PARAM, required=True)
+def get_client_secret() -> str:
+    return get_param(CLIENT_SECRET_PARAM, required=True)
 
 
-def get_password() -> str:
-    return get_param(PASS_PARAM, required=True)
-
-
-def get_auth() -> HTTPBasicAuth:
-    """Get auth from param store"""
-    user = get_deploy_user()
-    password = get_param(PASS_PARAM, required=True)
-    return HTTPBasicAuth(user, password)
+def get_client_id() -> str:
+    return get_param(CLIENT_ID_PARAM, required=True)
 
 
 @retry(
@@ -80,8 +106,13 @@ def _do_request(
     :raises ValueError: If provided method is not supported
     :return: Response data
     """
-    auth = get_auth()
-    resp = request(method=method, url=url, json=body, params=params, auth=auth)
+    resp = request(
+        method=method,
+        url=url,
+        json=body,
+        params=params,
+        headers=get_authorization_headers(),
+    )
 
     # If the response was successful, no Exception will be raised
     if resp.status_code >= 400:
@@ -142,7 +173,7 @@ def get_workspace_client(workspace_url: str, config: Optional[Config] = None) ->
     if config:
         return WorkspaceClient(config=config)
 
-    return WorkspaceClient(username=get_deploy_user(), password=get_password(), host=workspace_url)
+    return WorkspaceClient(client_id=get_client_id(), client_secret=get_client_secret(), host=workspace_url)
 
 
 def get_account_client(
@@ -156,4 +187,9 @@ def get_account_client(
     if config:
         return AccountClient(config=config)
 
-    return AccountClient(username=get_deploy_user(), password=get_password(), host=host, account_id=get_account_id())
+    return AccountClient(
+        client_id=get_client_id(),
+        client_secret=get_client_secret(),
+        host=host,
+        account_id=get_account_id(),
+    )

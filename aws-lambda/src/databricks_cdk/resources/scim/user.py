@@ -1,10 +1,9 @@
 import logging
 from typing import Optional
 
-import requests
 from pydantic import BaseModel
 
-from databricks_cdk.utils import CnfResponse, get_auth, get_request, post_request
+from databricks_cdk.utils import CnfResponse, delete_request, get_request, post_request
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +40,6 @@ def create_or_update_user(properties: UserProperties) -> UserResponse:
 
     current = get_user_by_user_name(properties.user_name, properties.workspace_url)
     if current is None:
-
         # Json data
         body = {
             "schemas": ["urn:ietf:params:scim:schemas:core:2.0:User"],
@@ -58,16 +56,7 @@ def delete_user(properties: UserProperties, physical_resource_id: str) -> CnfRes
     """Deletes user at databricks"""
     current = get_user_by_user_name(properties.user_name, properties.workspace_url)
     if current is not None:
-        auth = get_auth()
-        if auth.username != properties.user_name:
-            resp = requests.delete(
-                f"{get_user_url(properties.workspace_url)}/{current['id']}",
-                headers={},
-                auth=auth,
-            )
-            resp.raise_for_status()
-        else:
-            logger.warning("Can't remove deploy user")
+        delete_request(f"{get_user_url(properties.workspace_url)}/{current['id']}")
     else:
         logger.warning("Already removed")
     return CnfResponse(physical_resource_id=physical_resource_id)
