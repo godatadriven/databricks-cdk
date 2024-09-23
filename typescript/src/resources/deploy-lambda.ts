@@ -43,9 +43,8 @@ export interface CustomDeployLambdaProps {
     readonly accountId: string
     readonly region: string
     readonly lambdaVersion?: string
-    readonly databricksUserParam?: string
-    readonly databricksPassParam?: string
     readonly databricksAccountParam?: string
+    readonly clientSecretParam?: string
     readonly lambdaCode?: aws_lambda.DockerImageCode
     readonly lambdaName?: string
     readonly lambdaId?: string
@@ -337,9 +336,8 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
             memorySize: 512,
             environment: {
                 LAMBDA_METHOD: "cfn-deploy",
-                USER_PARAM: props.databricksUserParam || "/databricks/deploy/user",
-                PASS_PARAM: props.databricksPassParam || "/databricks/deploy/password",
-                ACCOUNT_PARAM: props.databricksAccountParam || "/databricks/account-id"
+                ACCOUNT_PARAM: props.databricksAccountParam || "/databricks/account-id",
+                CLIENT_SECRET_PARAM: props.clientSecretParam || "/databricks/deploy/client-secret"
             },
             logRetention: aws_logs.RetentionDays.THREE_MONTHS,
         });
