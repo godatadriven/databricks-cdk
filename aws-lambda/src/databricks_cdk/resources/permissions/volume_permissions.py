@@ -29,7 +29,9 @@ def create_or_update_volume_permissions(
     permission_changes = get_permission_changes(existing_grants, properties.privilege_assignments)
 
     workspace_client.grants.update(
-        securable_type=SecurableType.VOLUME, full_name=properties.volume_name, changes=permission_changes
+        securable_type=SecurableType.VOLUME,
+        full_name=properties.volume_name,
+        changes=permission_changes,
     )
 
     return CnfResponse(
@@ -47,7 +49,9 @@ def delete_volume_permissions(properties: VolumePermissionsProperties, physical_
     permission_changes = get_permission_changes(existing_grants, [])
 
     workspace_client.grants.update(
-        securable_type=SecurableType.VOLUME, full_name=properties.volume_name, changes=permission_changes
+        securable_type=SecurableType.VOLUME,
+        full_name=properties.volume_name,
+        changes=permission_changes,
     )
 
     return CnfResponse(
