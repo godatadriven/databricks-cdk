@@ -13,7 +13,7 @@ describe("VolumePermissions", () => {
             privilege_assignments: [
                 {
                     principal: "some-principal",
-                    priviliges: [
+                    privileges: [
                         PrivilegeVolume.APPLY_TAG,
                         PrivilegeVolume.READ_VOLUME,
                         PrivilegeVolume.WRITE_VOLUME,
@@ -22,7 +22,7 @@ describe("VolumePermissions", () => {
                 },
                 {
                     principal: "some-other-principal",
-                    priviliges: [
+                    privileges: [
                         PrivilegeVolume.APPLY_TAG,
                         PrivilegeVolume.READ_VOLUME,
                     ]
@@ -46,7 +46,7 @@ describe("VolumePermissions", () => {
                 "privilege_assignments": [
                     {
                         "principal": "some-principal",
-                        "priviliges": [
+                        "privileges": [
                             "APPLY_TAG",
                             "READ_VOLUME",
                             "WRITE_VOLUME",
@@ -55,7 +55,7 @@ describe("VolumePermissions", () => {
                     },
                     {
                         "principal": "some-other-principal",
-                        "priviliges": [
+                        "privileges": [
                             "APPLY_TAG",
                             "READ_VOLUME"
                         ]

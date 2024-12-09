@@ -10,7 +10,7 @@ export enum PrivilegeVolume {
 
 export interface PrivilegeAssignmentVolume {
     principal: string
-    priviliges: Array<PrivilegeVolume>
+    privileges: Array<PrivilegeVolume>
 }
 
 export interface VolumePermissionsProperties {
