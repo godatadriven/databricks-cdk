@@ -1,12 +1,12 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
-import {UserPermission, GroupPermission, ServicePrinicpalPermission} from "./models";
+import {UserPermission, GroupPermission, ServicePrincipalPermission} from "./models";
 
 
 export interface ClusterPolicyPermissionsProperties {
     workspaceUrl: string
     clusterPolicyId: string
-    accessControlList: Array<UserPermission | GroupPermission | ServicePrinicpalPermission>
+    accessControlList: Array<UserPermission | GroupPermission | ServicePrincipalPermission>
 }
 
 export interface ClusterPolicyPermissionsProps extends ClusterPolicyPermissionsProperties {

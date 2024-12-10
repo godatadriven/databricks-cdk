@@ -1,11 +1,11 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
-import {UserPermission, GroupPermission, ServicePrinicpalPermission} from "./models";
+import {UserPermission, GroupPermission, ServicePrincipalPermission} from "./models";
 
 export interface WarehousePermissionsProperties {
     workspaceUrl: string
     endpointId: string
-    accessControlList: Array<UserPermission | GroupPermission | ServicePrinicpalPermission>
+    accessControlList: Array<UserPermission | GroupPermission | ServicePrincipalPermission>
 }
 
 export interface WarehousePermissionsProps extends WarehousePermissionsProperties {

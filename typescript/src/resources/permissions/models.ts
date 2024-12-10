@@ -18,7 +18,7 @@ export interface GroupPermission extends Group {
     permission_level: string
 }
 
-export interface ServicePrinicpalPermission extends ServicePrincipal {
+export interface ServicePrincipalPermission extends ServicePrincipal {
     permission_level: string
 }
 

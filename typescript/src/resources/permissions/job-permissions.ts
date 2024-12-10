@@ -1,12 +1,12 @@
 import {CustomResource} from "aws-cdk-lib";
 import {Construct} from "constructs";
-import {User, ServicePrincipal, UserPermission, GroupPermission, ServicePrinicpalPermission} from "./models";
+import {User, ServicePrincipal, UserPermission, GroupPermission, ServicePrincipalPermission} from "./models";
 
 
 export interface JobPermissionsProperties {
     workspaceUrl: string
     jobId: string
-    accessControlList: Array<UserPermission | GroupPermission | ServicePrinicpalPermission>
+    accessControlList: Array<UserPermission | GroupPermission | ServicePrincipalPermission>
     owner: User | ServicePrincipal
 }
 
