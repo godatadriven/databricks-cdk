@@ -23,11 +23,11 @@ class ServicePrincipalProperties(BaseModel):
     service_principal: ServicePrincipal
 
 
-class ServicePrincipalResponce(CnfResponse):
+class ServicePrincipalResponse(CnfResponse):
     name: str
 
 
-def create_or_update_service_principal(properties: ServicePrincipalProperties) -> ServicePrincipalResponce:
+def create_or_update_service_principal(properties: ServicePrincipalProperties) -> ServicePrincipalResponse:
     """
     Create or update service principal on databricks. If service principal id is provided, it will update the existing service principal
     else it will create a new one.
@@ -56,7 +56,7 @@ def get_service_principal(physical_resource_id: str, workspace_client: Workspace
     return service_principal
 
 
-def create_service_principal(service_principal: ServicePrincipal, workspace_client: WorkspaceClient) -> ServicePrincipalResponce:
+def create_service_principal(service_principal: ServicePrincipal, workspace_client: WorkspaceClient) -> ServicePrincipalResponse:
     """Create service principal on databricks"""
 
     created_service_principal = workspace_client.service_principals.create(
@@ -74,13 +74,13 @@ def create_service_principal(service_principal: ServicePrincipal, workspace_clie
     if created_service_principal.id is None:
         raise ServicePrincipalCreationError("Service principal creation failed, there was no id found")
 
-    return ServicePrincipalResponce(name=created_service_principal.display_name, physical_resource_id=created_service_principal.id)
+    return ServicePrincipalResponse(name=created_service_principal.display_name, physical_resource_id=created_service_principal.id)
 
 
 def update_service_principal(
     service_principal: ServicePrincipal,
     workspace_client: WorkspaceClient,
-) -> ServicePrincipalResponce:
+) -> ServicePrincipalResponse:
     """Update service principal on databricks."""
     workspace_client.service_principals.update(
         id=service_principal.id,
@@ -94,12 +94,12 @@ def update_service_principal(
         schemas=service_principal.schemas,
     )
 
-    return ServicePrincipalResponce(name=service_principal.display_name, physical_resource_id=service_principal.id)
+    return ServicePrincipalResponse(name=service_principal.display_name, physical_resource_id=service_principal.id)
 
 
-def delete_service_principal(physical_resource_id: str, workspace_url: str) -> CnfResponse:
+def delete_service_principal(properties: ServicePrincipalProperties, physical_resource_id: str) -> CnfResponse:
     """Delete a service pricncipal on databricks"""
-    workspace_client = get_workspace_client(workspace_url)
+    workspace_client = get_workspace_client(properties.workspace_url)
     try:
         workspace_client.service_principals.delete(id=physical_resource_id)
     except NotFound:

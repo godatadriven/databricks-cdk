@@ -329,7 +329,7 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
     elif action == "volume":
         return delete_volume(VolumeProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "service-principal":
-        return delete_service_principal(ServicePrincipalProperties(**event.ResourceProperties).service_principal.id, event.PhysicalResourceId)
+        return delete_service_principal(ServicePrincipalProperties(**event.ResourceProperties), event.PhysicalResourceId)
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
