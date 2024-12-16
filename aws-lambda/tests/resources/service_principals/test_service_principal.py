@@ -1,19 +1,19 @@
 from unittest.mock import patch
 
 import pytest
-
-from databricks.sdk.service.iam import ServicePrincipal, ComplexValue
 from databricks.sdk.errors import NotFound
+from databricks.sdk.service.iam import ComplexValue, ServicePrincipal
+
 from databricks_cdk.resources.service_principals.service_principal import (
     ServicePrincipalCreationError,
+    ServicePrincipalNotFoundError,
     ServicePrincipalProperties,
     ServicePrincipalResponse,
-    ServicePrincipalNotFoundError,
     create_or_update_service_principal,
     create_service_principal,
     delete_service_principal,
-    update_service_principal,
     get_service_principal,
+    update_service_principal,
 )
 from databricks_cdk.utils import CnfResponse
 
@@ -24,10 +24,10 @@ from databricks_cdk.utils import CnfResponse
 @patch("databricks_cdk.resources.service_principals.service_principal.get_service_principal")
 def test_create_or_update_service_principal_create(
     patched_get_service_principal,
-    patched_create_service_principal, 
-    patched_update_service_principal, 
-    patched_get_workspace_client, 
-    workspace_client
+    patched_create_service_principal,
+    patched_update_service_principal,
+    patched_get_workspace_client,
+    workspace_client,
 ):
     patched_get_workspace_client.return_value = workspace_client
     mock_properties = ServicePrincipalProperties(
@@ -42,7 +42,7 @@ def test_create_or_update_service_principal_create(
 
     patched_create_service_principal.assert_called_once_with(
         ServicePrincipal(
-            active=True, 
+            active=True,
             display_name="mock_name",
             id=None,
             application_id=None,
@@ -51,8 +51,8 @@ def test_create_or_update_service_principal_create(
             groups=None,
             roles=None,
             schemas=None,
-        ), 
-        workspace_client
+        ),
+        workspace_client,
     )
     patched_get_service_principal.assert_not_called()
     patched_update_service_principal.assert_not_called()
@@ -64,10 +64,10 @@ def test_create_or_update_service_principal_create(
 @patch("databricks_cdk.resources.service_principals.service_principal.get_service_principal")
 def test_create_or_update_service_principal_update(
     patched_get_service_principal,
-    patched_create_service_principal, 
-    patched_update_service_principal, 
-    patched_get_workspace_client, 
-    workspace_client
+    patched_create_service_principal,
+    patched_update_service_principal,
+    patched_get_workspace_client,
+    workspace_client,
 ):
     patched_get_workspace_client.return_value = workspace_client
     mock_physical_resource_id = "some_id"
@@ -101,8 +101,8 @@ def test_create_or_update_service_principal_update(
             external_id=None,
             groups=None,
             schemas=None,
-        ), 
-        workspace_client
+        ),
+        workspace_client,
     )
     patched_create_service_principal.assert_not_called()
 

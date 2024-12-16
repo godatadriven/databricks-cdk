@@ -52,11 +52,13 @@ def get_service_principal(physical_resource_id: str, workspace_client: Workspace
         service_principal = workspace_client.service_principals.get(id=physical_resource_id)
     except NotFound:
         raise ServicePrincipalNotFoundError(f"Service principal with id {physical_resource_id} not found")
-    
+
     return service_principal
 
 
-def create_service_principal(service_principal: ServicePrincipal, workspace_client: WorkspaceClient) -> ServicePrincipalResponse:
+def create_service_principal(
+    service_principal: ServicePrincipal, workspace_client: WorkspaceClient
+) -> ServicePrincipalResponse:
     """Create service principal on databricks"""
 
     created_service_principal = workspace_client.service_principals.create(
@@ -74,7 +76,9 @@ def create_service_principal(service_principal: ServicePrincipal, workspace_clie
     if created_service_principal.id is None:
         raise ServicePrincipalCreationError("Service principal creation failed, there was no id found")
 
-    return ServicePrincipalResponse(name=created_service_principal.display_name, physical_resource_id=created_service_principal.id)
+    return ServicePrincipalResponse(
+        name=created_service_principal.display_name, physical_resource_id=created_service_principal.id
+    )
 
 
 def update_service_principal(
