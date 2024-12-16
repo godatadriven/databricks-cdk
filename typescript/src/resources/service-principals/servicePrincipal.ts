@@ -2,9 +2,9 @@ import { CustomResource } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
 export interface ComplexValue {
+    // TODO: Add more fields according to the actual schema
     value?: string,
 }
-
 
 export interface ServicePrincipalSettings {
     active?: boolean
@@ -15,11 +15,12 @@ export interface ServicePrincipalSettings {
     groups?: ComplexValue[]
     id?: string
     roles?: ComplexValue[]
+    // TODO: Add support for a "schemas" field
 }
 
 export interface ServicePrincipalProperties {
     workspace_url: string
-    service_principal: ServicePrincipalSettings
+    service_principal_settings: ServicePrincipalSettings
 }
 
 export interface ServicePrincipalProps extends ServicePrincipalProperties {
@@ -33,7 +34,7 @@ export class ServicePrincipal extends CustomResource {
             properties: {
                 action: "service-principal",
                 workspace_url: props.workspace_url,
-                service_principal: props.service_principal,
+                service_principal: props.service_principal_settings,
             }
         });
     }

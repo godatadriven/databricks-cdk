@@ -10,7 +10,7 @@ describe("ServicePrincipal", () => {
         const deployLambda = DatabricksDeployLambda.fromServiceToken(databricksStack, "DeployLambda", "some-arn");
         const workspaceUrl = cdk.Fn.importValue("databricks-workspace-url");
         new ServicePrincipal(databricksStack, "ServicePrincipal", {
-            service_principal: {
+            service_principal_settings: {
                 active: true,
                 application_id: "some_id",
                 display_name: "some_name",
