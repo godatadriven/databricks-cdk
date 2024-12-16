@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export * as account from "./account";
 export * as clusterPolicies from "./cluster-policies";
 export * as clusters from "./clusters";
@@ -30,3 +32,4 @@ export * from "./sql-warehouses";
 export * from "./unity-catalog";
 export * from "./tokens";
 export * from "./mlflow";
+export * from "./service-principals";
