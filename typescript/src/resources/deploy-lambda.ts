@@ -37,7 +37,7 @@ import { ClusterPolicyPermissions, ClusterPolicyPermissionsProperties } from "./
 import { Token, TokenProperties } from "./tokens";
 import { Experiment, ExperimentProperties } from "./mlflow";
 import { RegisteredModel, RegisteredModelProps } from "./mlflow/registeredModel";
-import { ServicePrincipal, ServicePrincipalProperties } from "./service-principals";
+import { ServicePrincipal, ServicePrincipalProperties, ServicePrincipalSecrets, ServicePrincipalSecretsProperties } from "./service-principals";
 
 
 export interface CustomDeployLambdaProps {
@@ -281,6 +281,13 @@ export abstract class IDatabricksDeployLambda extends Construct {
 
     public createServicePrincipal(scope: Construct, id: string, props: ServicePrincipalProperties): ServicePrincipal {
         return new ServicePrincipal(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createServicePrincipalSecrets(scope: Construct, id: string, props: ServicePrincipalSecretsProperties): ServicePrincipalSecrets {
+        return new ServicePrincipalSecrets(scope, id, {
             ...props,
             serviceToken: this.serviceToken
         });
