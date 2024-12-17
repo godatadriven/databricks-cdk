@@ -2,6 +2,7 @@ import logging
 from typing import Optional
 
 import cfnresponse
+from databricks_cdk.resources.service_principals.secrets import create_or_update_service_principal_secrets, delete_service_principal_secrets
 from pydantic import BaseModel, ValidationError
 
 from databricks_cdk.resources.account.credentials import (
@@ -228,6 +229,10 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         return create_or_update_volume(VolumeProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "service-principal":
         return create_or_update_service_principal(ServicePrincipalProperties(**event.ResourceProperties))
+    elif action == "service-principal-secrets":
+        return create_or_update_service_principal_secrets(
+            ServicePrincipalProperties(**event.ResourceProperties), event.PhysicalResourceId,
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -334,6 +339,10 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         return delete_volume(VolumeProperties(**event.ResourceProperties), event.PhysicalResourceId)
     elif action == "service-principal":
         return delete_service_principal(
+            ServicePrincipalProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
+    elif action == "service-principal-secrets":
+        return delete_service_principal_secrets(
             ServicePrincipalProperties(**event.ResourceProperties), event.PhysicalResourceId
         )
     else:

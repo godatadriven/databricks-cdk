@@ -77,7 +77,7 @@ def test_create_or_update_service_principal_update(
         id=mock_physical_resource_id,
         roles=[ComplexValue(value="role")],
     )
-    workspace_client.service_principals.get.return_value = existing_service_principal
+    patched_get_service_principal.return_value = existing_service_principal
     mock_properties = ServicePrincipalProperties(
         workspace_url="https://test.cloud.databricks.com",
         service_principal=ServicePrincipal(
@@ -127,7 +127,7 @@ def test_get_service_principal_error(workspace_client):
         get_service_principal("some_id", workspace_client)
 
 
-def test_create_service_principle(workspace_client):
+def test_create_service_principal(workspace_client):
     mock_properties = ServicePrincipalProperties(
         workspace_url="https://test.cloud.databricks.com",
         service_principal=ServicePrincipal(

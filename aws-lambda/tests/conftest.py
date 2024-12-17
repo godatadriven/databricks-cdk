@@ -4,6 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 from databricks.sdk import AccountClient, CredentialsAPI, ExperimentsAPI, ModelRegistryAPI, VolumesAPI, WorkspaceClient
 from databricks.sdk.service.iam import ServicePrincipalsAPI
+from databricks.sdk.service.oauth2 import ServicePrincipalSecretsAPI
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -36,5 +37,6 @@ def account_client():
 
     # mock all of the underlying service api's
     account_client.credentials = MagicMock(spec=CredentialsAPI)
+    account_client.service_principal_secrets = MagicMock(spec=ServicePrincipalSecretsAPI)
 
     return account_client
