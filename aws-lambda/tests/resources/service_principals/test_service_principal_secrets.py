@@ -4,7 +4,7 @@ import pytest
 from databricks.sdk.errors import NotFound
 from databricks.sdk.service.oauth2 import SecretInfo, CreateServicePrincipalSecretResponse
 
-from databricks_cdk.resources.service_principals.secrets import (
+from databricks_cdk.resources.service_principals.service_principal_secrets import (
     ServicePrincipalSecretsCreationError,
     ServicePrincipalSecretsProperties,
     create_service_principal_secrets,

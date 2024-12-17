@@ -3,7 +3,7 @@ import { Construct } from "constructs";
 
 
 export interface ServicePrincipalSecretsProperties {
-    service_principal_id: number
+    service_principal_id: string
 }
 
 export interface ServicePrincipalSecretsProps extends ServicePrincipalSecretsProperties {

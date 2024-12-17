@@ -38,4 +38,12 @@ export class ServicePrincipal extends CustomResource {
             }
         });
     }
+
+    public servicePrincipalId(): string {
+        return this.getAttString("physical_resource_id");
+    }
+
+    public servicePrincipalName(): string {
+        return this.getAttString("name");
+    }
 }
