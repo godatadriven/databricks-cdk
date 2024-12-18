@@ -5,7 +5,7 @@ from databricks.sdk.errors import NotFound
 from databricks.sdk.service.iam import ServicePrincipal
 from pydantic import BaseModel
 
-from databricks_cdk.utils import CnfResponse, get_workspace_client, get_account_client
+from databricks_cdk.utils import CnfResponse, get_account_client, get_workspace_client
 
 logger = logging.getLogger(__name__)
 

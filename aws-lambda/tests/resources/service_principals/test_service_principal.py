@@ -209,8 +209,15 @@ def test_update_service_principal(workspace_client):
 
 
 @patch("databricks_cdk.resources.service_principals.service_principal.get_workspace_client")
-def test_delete_service_principal(patched_get_workspace_client, workspace_client):
+@patch("databricks_cdk.resources.service_principals.service_principal.get_account_client")
+def test_delete_service_principal(
+    patched_get_account_client,
+    patched_get_workspace_client, 
+    workspace_client,
+    account_client,
+):
     patched_get_workspace_client.return_value = workspace_client
+    patched_get_account_client.return_value = account_client
     mock_properties = ServicePrincipalProperties(
         workspace_url="https://test.cloud.databricks.com",
         service_principal=ServicePrincipal(
@@ -223,3 +230,4 @@ def test_delete_service_principal(patched_get_workspace_client, workspace_client
 
     assert response == CnfResponse(physical_resource_id="some_id")
     workspace_client.service_principals.delete.assert_called_once_with(id="some_id")
+    account_client.service_principals.delete.assert_called_once_with(id="some_id")
