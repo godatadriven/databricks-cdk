@@ -338,7 +338,7 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
             effect: aws_iam.Effect.ALLOW,
             actions: ["secretsmanager:CreateSecret", "secretsmanager:DeleteSecret", "secretsmanager:UpdateSecret"],
             resources: [
-                `arn:aws:secretsmanager:${this.props.region}:${this.props.accountId}:secret:/databricks/token/*`,
+                `arn:aws:secretsmanager:${this.props.region}:${this.props.accountId}:secret:/databricks/*`,
             ]
         }));
 

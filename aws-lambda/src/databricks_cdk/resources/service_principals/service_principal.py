@@ -5,7 +5,7 @@ from databricks.sdk.errors import NotFound
 from databricks.sdk.service.iam import ServicePrincipal
 from pydantic import BaseModel
 
-from databricks_cdk.utils import CnfResponse, get_workspace_client
+from databricks_cdk.utils import CnfResponse, get_workspace_client, get_account_client
 
 logger = logging.getLogger(__name__)
 
@@ -104,8 +104,10 @@ def update_service_principal(
 def delete_service_principal(properties: ServicePrincipalProperties, physical_resource_id: str) -> CnfResponse:
     """Delete a service pricncipal on databricks"""
     workspace_client = get_workspace_client(properties.workspace_url)
+    account_client = get_account_client()
     try:
         workspace_client.service_principals.delete(id=physical_resource_id)
+        account_client.service_principals.delete(id=physical_resource_id)
     except NotFound:
         logger.warning("Service principal not found, never existed or already removed")
 
