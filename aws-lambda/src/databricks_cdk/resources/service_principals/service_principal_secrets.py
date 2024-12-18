@@ -116,4 +116,4 @@ def delete_from_secrets_manager(secret_name: str) -> None:
     try:
         client.delete_secret(SecretId=secret_full_name, ForceDeleteWithoutRecovery=True)
     except client.exceptions.ResourceNotFoundException:
-        logger.warning("Secret with name %s not found", secret_full_name)
+        logger.warning("Secrets are not found in secrets manager")
