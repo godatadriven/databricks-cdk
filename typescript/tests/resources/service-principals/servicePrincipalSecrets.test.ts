@@ -9,7 +9,7 @@ describe("ServicePrincipalSecrets", () => {
         const databricksStack = new cdk.Stack(app, "DatabricksStack");
         const deployLambda = DatabricksDeployLambda.fromServiceToken(databricksStack, "DeployLambda", "some-arn");
         new ServicePrincipalSecrets(databricksStack, "ServicePrincipalSecrets", {
-            service_principal_id: 1234,
+            service_principal_id: "1234",
             serviceToken: deployLambda.serviceToken.toString(),
         });
 
@@ -20,7 +20,7 @@ describe("ServicePrincipalSecrets", () => {
 
                 "ServiceToken": "some-arn",
                 "action": "service-principal-secrets",
-                "service_principal_id": 1234,
+                "service_principal_id": "1234",
             });
     });
 });
