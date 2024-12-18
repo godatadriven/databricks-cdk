@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 import pytest
 from databricks.sdk import AccountClient, CredentialsAPI, ExperimentsAPI, ModelRegistryAPI, VolumesAPI, WorkspaceClient
-from databricks.sdk.service.iam import ServicePrincipalsAPI, AccountServicePrincipalsAPI
+from databricks.sdk.service.iam import AccountServicePrincipalsAPI, ServicePrincipalsAPI
 from databricks.sdk.service.oauth2 import ServicePrincipalSecretsAPI
 
 

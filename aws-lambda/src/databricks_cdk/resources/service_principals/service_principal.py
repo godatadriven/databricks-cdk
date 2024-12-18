@@ -102,7 +102,7 @@ def update_service_principal(
 
 
 def delete_service_principal(properties: ServicePrincipalProperties, physical_resource_id: str) -> CnfResponse:
-    """Delete a service pricncipal on databricks"""
+    """Delete a service pricncipal on databricks. It will delete the service principal from workspace and account, because it's duplicated during creation."""
     workspace_client = get_workspace_client(properties.workspace_url)
     account_client = get_account_client()
     try:

@@ -212,7 +212,7 @@ def test_update_service_principal(workspace_client):
 @patch("databricks_cdk.resources.service_principals.service_principal.get_account_client")
 def test_delete_service_principal(
     patched_get_account_client,
-    patched_get_workspace_client, 
+    patched_get_workspace_client,
     workspace_client,
     account_client,
 ):

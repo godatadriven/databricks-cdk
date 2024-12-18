@@ -85,7 +85,7 @@ def create_service_principal_secrets(
 def delete_service_principal_secrets(
     properties: ServicePrincipalSecretsProperties, physical_resource_id: str
 ) -> CnfResponse:
-    """Delete service pricncipal secrets on databricks."""
+    """Delete service pricncipal secrets on databricks. It will delete the service principal secrets from databricks and secrets manager."""
     account_client = get_account_client()
 
     try:

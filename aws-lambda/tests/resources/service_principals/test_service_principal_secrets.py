@@ -115,8 +115,8 @@ def test_create_service_principal_secrets(
         service_principal_id=1,
     )
     patched_add_to_secrets_manager.assert_called_once_with(
-        secret_name="mock_name/1", 
-        client_id="some_client_id", 
+        secret_name="mock_name/1",
+        client_id="some_client_id",
         client_secret="some_secret_id",
     )
 
@@ -135,7 +135,7 @@ def test_create_service_principal_secrets_error(account_client):
 def test_delete_service_principal(
     patched_get_service_principal,
     patched_delete_from_secrets_manager,
-    patched_get_account_client, 
+    patched_get_account_client,
     account_client,
 ):
     patched_get_service_principal.return_value = ServicePrincipal(
