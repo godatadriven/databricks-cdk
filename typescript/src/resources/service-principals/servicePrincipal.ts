@@ -2,7 +2,7 @@ import { CustomResource } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
 export interface ComplexValue {
-    // TODO: Add more fields according to the actual schema
+    // TODO: Add more fields according to the actual schema, refert to https://databricks-sdk-py.readthedocs.io/en/latest/dbdataclasses/iam.html#databricks.sdk.service.iam.ComplexValue
     value?: string,
 }
 
@@ -15,7 +15,7 @@ export interface ServicePrincipalSettings {
     groups?: ComplexValue[]
     id?: string
     roles?: ComplexValue[]
-    // TODO: Add support for a "schemas" field
+    // TODO: Add support for a "schemas" field, refer to https://databricks-sdk-py.readthedocs.io/en/latest/dbdataclasses/iam.html#databricks.sdk.service.iam.ServicePrincipalSchema
 }
 
 export interface ServicePrincipalProperties {

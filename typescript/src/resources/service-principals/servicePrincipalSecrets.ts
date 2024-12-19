@@ -20,4 +20,12 @@ export class ServicePrincipalSecrets extends CustomResource {
             }
         });
     }
+
+    public secretsManagerArn(): string {
+        return this.getAttString("secrets_manager_arn");
+    }
+
+    public secretsManagerName(): string {
+        return this.getAttString("secrets_manager_name");
+    }
 }
