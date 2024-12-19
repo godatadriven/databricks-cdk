@@ -66,7 +66,7 @@ def get_authorization_headers() -> Dict[str, str]:
     return get_authentication_config().authenticate()
 
 
-class CnfResponse(BaseModel):
+class CnfResponse(BaseModel):  # TODO: rename to CfnResponse
     physical_resource_id: str
 
 

@@ -13,8 +13,8 @@ databricks-cdk is an open source library that allows you to deploy Databricks wo
 - AWS CDK v2
 - Databricks account
 - AWS Systems Manager (SSM) parameters:
-  - `/databricks/deploy/user`
-  - `/databricks/deploy/password` (secure parameter)
+  - `/databricks/deploy/client-id`
+  - `/databricks/deploy/client-secret` (secure parameter)
   - `/databricks/account-id` (not AWS account ID)
 
 ## Installation
