@@ -11,6 +11,8 @@ from pydantic import BaseModel
 from databricks_cdk.resources.service_principals.service_principal import get_service_principal
 from databricks_cdk.utils import CnfResponse, get_account_client
 
+SECRETS_MANAGER_RESOURCE_PREFIX = "/databricks/service_principal/secrets"
+
 logger = logging.getLogger(__name__)
 
 
@@ -22,9 +24,14 @@ class ServicePrincipalSecretsProperties(BaseModel):
     service_principal_id: int
 
 
+class ServicePrincipalSecretsResponse(CnfResponse):
+    secrets_manager_arn: str
+    secrets_manager_name: str
+
+
 def create_or_update_service_principal_secrets(
     properties: ServicePrincipalSecretsProperties, physical_resource_id: Optional[str] = None
-) -> CnfResponse:
+) -> ServicePrincipalSecretsResponse:
     """
     Create or update service principal secrets on databricks.
     If service principal secrets already exist, it will return the existing service principal secrets.
@@ -33,12 +40,7 @@ def create_or_update_service_principal_secrets(
     account_client = get_account_client()
 
     if physical_resource_id:
-        existing_service_principal_secrets = get_service_principal_secrets(
-            service_principal_id=properties.service_principal_id,
-            physical_resource_id=physical_resource_id,
-            account_client=account_client,
-        )
-        return CnfResponse(physical_resource_id=existing_service_principal_secrets.id)
+        return update_service_principal_secrets(properties, physical_resource_id, account_client)
 
     return create_service_principal_secrets(properties, account_client)
 
@@ -60,7 +62,7 @@ def get_service_principal_secrets(
 
 def create_service_principal_secrets(
     properties: ServicePrincipalSecretsProperties, account_client: AccountClient
-) -> CnfResponse:
+) -> ServicePrincipalSecretsResponse:
     """
     Create service principal secrets on databricks.
     It will create a new service principal secrets and store it in secrets manager.
@@ -73,13 +75,41 @@ def create_service_principal_secrets(
     if created_service_principal_secrets.id is None:
         raise ServicePrincipalSecretsCreationError("Failed to create service principal secrets")
 
-    secret_name = f"{service_principal.display_name}/{service_principal.id}"
-    add_to_secrets_manager(
+    secret_name = f"{SECRETS_MANAGER_RESOURCE_PREFIX}/{service_principal.display_name}/{service_principal.id}"
+    secrets_manager_resource = add_to_secrets_manager(
         secret_name=secret_name,
         client_id=service_principal.application_id,
         client_secret=created_service_principal_secrets.secret,
     )
-    return CnfResponse(physical_resource_id=created_service_principal_secrets.id)
+    return ServicePrincipalSecretsResponse(
+        physical_resource_id=created_service_principal_secrets.id,
+        secrets_manager_arn=secrets_manager_resource["ARN"],
+        secrets_manager_name=secrets_manager_resource["Name"],
+    )
+
+
+def update_service_principal_secrets(
+    properties: ServicePrincipalSecretsProperties,
+    physical_resource_id: str,
+    account_client: AccountClient,
+) -> ServicePrincipalSecretsResponse:
+    """
+    Update service principal secrets on databricks.
+    It will fetch the existing service principal secrets and secrets manager resource.
+    """
+    service_principal = get_service_principal(properties.service_principal_id, account_client)
+    existing_service_principal_secrets = get_service_principal_secrets(
+        service_principal_id=properties.service_principal_id,
+        physical_resource_id=physical_resource_id,
+        account_client=account_client,
+    )
+    secret_name = f"{SECRETS_MANAGER_RESOURCE_PREFIX}/{service_principal.display_name}/{service_principal.id}"
+    secrets_manager_resource = get_from_secrets_manager(secret_name)
+    return ServicePrincipalSecretsResponse(
+        physical_resource_id=existing_service_principal_secrets.id,
+        secrets_manager_arn=secrets_manager_resource["ARN"],
+        secrets_manager_name=secrets_manager_resource["Name"],
+    )
 
 
 def delete_service_principal_secrets(
@@ -96,24 +126,31 @@ def delete_service_principal_secrets(
         logger.warning("Service principal secrets with id %s not found", physical_resource_id)
 
     service_principal = get_service_principal(properties.service_principal_id, account_client)
-    secret_name = f"{service_principal.display_name}/{service_principal.id}"
+    secret_name = f"{SECRETS_MANAGER_RESOURCE_PREFIX}/{service_principal.display_name}/{service_principal.id}"
     delete_from_secrets_manager(secret_name)
     return CnfResponse(physical_resource_id=physical_resource_id)
 
 
-def add_to_secrets_manager(secret_name: str, client_id: str, client_secret: str) -> None:
-    """Adds credentials to secrets manager at /databricks/service_principal/secrets/{{secret_name}}"""
+def get_from_secrets_manager(secret_name: str) -> dict:
+    """
+    Get information from secrets manager at /{{SECRETS_MANAGER_RESOURCE_PREFIX}}/{{secret_name}}.
+    This will only retrieve general information about the secret, not the actual secret value.
+    """
     client = boto3.client("secretsmanager")
-    secret_full_name = f"/databricks/service_principal/secrets/{secret_name}"
+    return client.describe_secret(SecretId=secret_name)
+
+
+def add_to_secrets_manager(secret_name: str, client_id: str, client_secret: str) -> dict:
+    """Adds credentials to secrets manager at /{{SECRETS_MANAGER_RESOURCE_PREFIX}}/{{secret_name}}"""
+    client = boto3.client("secretsmanager")
     secret_string = {"client_id": client_id, "client_secret": client_secret}
-    client.create_secret(Name=secret_full_name, SecretString=json.dumps(secret_string))["ARN"]
+    return client.create_secret(Name=secret_name, SecretString=json.dumps(secret_string))
 
 
 def delete_from_secrets_manager(secret_name: str) -> None:
-    """Removes credentials from secrets manager at /databricks/service_principal/secrets/{{secret_name}}"""
+    """Removes credentials from secrets manager at /{{SECRETS_MANAGER_RESOURCE_PREFIX}}/{{secret_name}}"""
     client = boto3.client("secretsmanager")
-    secret_full_name = f"/databricks/service_principal/secrets/{secret_name}"
     try:
-        client.delete_secret(SecretId=secret_full_name, ForceDeleteWithoutRecovery=True)
+        client.delete_secret(SecretId=secret_name, ForceDeleteWithoutRecovery=True)
     except client.exceptions.ResourceNotFoundException:
         logger.warning("Secrets are not found in secrets manager")
