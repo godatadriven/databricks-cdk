@@ -48,7 +48,7 @@
         "testEnvironment": "node"
     },
     "dependencies": {
-        "aws-cdk-lib": "^2.173.1",
-        "constructs": "^10.4.2"
+        "aws-cdk-lib": "^2.96.0",
+        "constructs": "^10.1.22"
     }
 }
