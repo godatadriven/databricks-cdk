@@ -50,8 +50,6 @@ def test_create_or_update_service_principal_secrets_update(
 ):
     patched_get_account_client.return_value = account_client
     mock_physical_resource_id = "some_id"
-    # existing_service_principal_secrets = SecretInfo(id=mock_physical_resource_id)
-    # patched_get_service_principal_secrets.return_value = existing_service_principal_secrets
     mock_properties = ServicePrincipalSecretsProperties(service_principal_id=1)
 
     create_or_update_service_principal_secrets(
@@ -149,9 +147,7 @@ def test_update_service_principal_secrets(
         display_name="mock_name",
         id=1,
     )
-    patched_get_service_principal_secrets.return_value = SecretInfo(
-        id="some_id",
-    )
+    patched_get_service_principal_secrets.return_value = SecretInfo(id="some_id")
     patched_get_from_secrets_manager.return_value = {"ARN": "mock_arn", "Name": "mock_secrets_manager_name"}
     mock_properties = ServicePrincipalSecretsProperties(service_principal_id=1)
 
