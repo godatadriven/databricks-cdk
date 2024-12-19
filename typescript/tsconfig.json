@@ -13,7 +13,6 @@
     "outDir": "./dist"
   },
   "include": [
-    "src/**/*",
-    "tests/**/*"
+    "src/**/*"
   ]
 }
