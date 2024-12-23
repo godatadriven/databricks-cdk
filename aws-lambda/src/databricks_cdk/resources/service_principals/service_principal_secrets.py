@@ -5,6 +5,7 @@ from typing import Optional
 import boto3
 from databricks.sdk import AccountClient
 from databricks.sdk.errors import NotFound
+from databricks.sdk.service.iam import ServicePrincipal
 from databricks.sdk.service.oauth2 import SecretInfo
 from pydantic import BaseModel
 
@@ -75,7 +76,7 @@ def create_service_principal_secrets(
     if created_service_principal_secrets.id is None:
         raise ServicePrincipalSecretsCreationError("Failed to create service principal secrets")
 
-    secret_name = f"{SECRETS_MANAGER_RESOURCE_PREFIX}/{service_principal.display_name}/{service_principal.id}"
+    secret_name = _construct_secret_name(service_principal, created_service_principal_secrets.id)
     secrets_manager_resource = add_to_secrets_manager(
         secret_name=secret_name,
         client_id=service_principal.application_id,
@@ -103,7 +104,7 @@ def get_existing_service_principal_secrets_response(
         physical_resource_id=physical_resource_id,
         account_client=account_client,
     )
-    secret_name = f"{SECRETS_MANAGER_RESOURCE_PREFIX}/{service_principal.display_name}/{service_principal.id}"
+    secret_name = _construct_secret_name(service_principal, existing_service_principal_secrets.id)
     secrets_manager_resource = get_from_secrets_manager(secret_name)
     return ServicePrincipalSecretsResponse(
         physical_resource_id=existing_service_principal_secrets.id,
@@ -126,7 +127,7 @@ def delete_service_principal_secrets(
         logger.warning("Service principal secrets with id %s not found", physical_resource_id)
 
     service_principal = get_service_principal(properties.service_principal_id, account_client)
-    secret_name = f"{SECRETS_MANAGER_RESOURCE_PREFIX}/{service_principal.display_name}/{service_principal.id}"
+    secret_name = _construct_secret_name(service_principal, physical_resource_id)
     delete_from_secrets_manager(secret_name)
     return CnfResponse(physical_resource_id=physical_resource_id)
 
@@ -154,3 +155,7 @@ def delete_from_secrets_manager(secret_name: str) -> None:
         client.delete_secret(SecretId=secret_name, ForceDeleteWithoutRecovery=True)
     except client.exceptions.ResourceNotFoundException:
         logger.warning("Secrets are not found in secrets manager")
+
+
+def _construct_secret_name(service_principal: ServicePrincipal, secrets_id: str) -> str:
+    return f"{SECRETS_MANAGER_RESOURCE_PREFIX}/{service_principal.display_name}/{service_principal.id}/{secrets_id}"
