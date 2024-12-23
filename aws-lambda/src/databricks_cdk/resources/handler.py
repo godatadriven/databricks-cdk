@@ -91,6 +91,16 @@ from databricks_cdk.resources.secrets.secret_scope import (
     create_or_update_secret_scope,
     delete_secret_scope,
 )
+from databricks_cdk.resources.service_principals.service_principal import (
+    ServicePrincipalProperties,
+    create_or_update_service_principal,
+    delete_service_principal,
+)
+from databricks_cdk.resources.service_principals.service_principal_secrets import (
+    ServicePrincipalSecretsProperties,
+    create_or_update_service_principal_secrets,
+    delete_service_principal_secrets,
+)
 from databricks_cdk.resources.sql_warehouses.sql_warehouses import (
     SQLWarehouseProperties,
     create_or_update_warehouse,
@@ -221,6 +231,13 @@ def create_or_update_resource(event: DatabricksEvent) -> CnfResponse:
         )
     elif action == "volume":
         return create_or_update_volume(VolumeProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "service-principal":
+        return create_or_update_service_principal(ServicePrincipalProperties(**event.ResourceProperties))
+    elif action == "service-principal-secrets":
+        return create_or_update_service_principal_secrets(
+            ServicePrincipalSecretsProperties(**event.ResourceProperties),
+            event.PhysicalResourceId,
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 
@@ -325,6 +342,14 @@ def delete_resource(event: DatabricksEvent) -> CnfResponse:
         )
     elif action == "volume":
         return delete_volume(VolumeProperties(**event.ResourceProperties), event.PhysicalResourceId)
+    elif action == "service-principal":
+        return delete_service_principal(
+            ServicePrincipalProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
+    elif action == "service-principal-secrets":
+        return delete_service_principal_secrets(
+            ServicePrincipalSecretsProperties(**event.ResourceProperties), event.PhysicalResourceId
+        )
     else:
         raise RuntimeError(f"Unknown action: {action}")
 

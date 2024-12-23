@@ -1,23 +1,23 @@
-import {Duration} from "aws-cdk-lib";
-import {aws_lambda, aws_logs, aws_iam} from "aws-cdk-lib";
-import {AccountCredentials, AccountCredentialsProperties} from "./account/accountCredentials";
-import {AccountStorageConfig, AccountStorageConfigProperties} from "./account/account-storage-config";
-import {AccountNetwork, AccountNetworkProperties} from "./account/accountNetwork";
-import {Workspace, WorkspaceProperties} from "./account/workspace";
-import {InstanceProfile, InstanceProfileProperties} from "./instance-profiles/instance-profile";
-import {Cluster, ClusterProperties} from "./clusters/cluster";
-import {ClusterPermissions, ClusterPermissionsProperties} from "./permissions/cluster-permissions";
-import {VolumePermissions, VolumePermissionsProperties} from "./permissions/volumePermissions";
-import {DbfsFile, DbfsFileProperties} from "./dbfs/dbfs-file";
-import {SecretScope, SecretScopeProperties} from "./secrets/secret-scope";
-import {Job, JobProperties} from "./jobs/job";
-import {Group, GroupProperties} from "./groups/group";
-import {ScimUser, ScimUserProperties} from "./scim/scimUser";
-import {InstancePool, InstancePoolProperties} from "./instance-pools/instance-pools";
-import {Warehouse, WarehouseProperties} from "./sql-warehouses/sql-warehouses";
-import {WarehousePermissions, WarehousePermissionsProperties} from "./permissions/sql-warehouse-permissions";
-import {Construct} from "constructs";
-import {DockerImage} from "../docker-image";
+import { Duration } from "aws-cdk-lib";
+import { aws_lambda, aws_logs, aws_iam } from "aws-cdk-lib";
+import { AccountCredentials, AccountCredentialsProperties } from "./account/accountCredentials";
+import { AccountStorageConfig, AccountStorageConfigProperties } from "./account/account-storage-config";
+import { AccountNetwork, AccountNetworkProperties } from "./account/accountNetwork";
+import { Workspace, WorkspaceProperties } from "./account/workspace";
+import { InstanceProfile, InstanceProfileProperties } from "./instance-profiles/instance-profile";
+import { Cluster, ClusterProperties } from "./clusters/cluster";
+import { ClusterPermissions, ClusterPermissionsProperties } from "./permissions/cluster-permissions";
+import { VolumePermissions, VolumePermissionsProperties } from "./permissions/volumePermissions";
+import { DbfsFile, DbfsFileProperties } from "./dbfs/dbfs-file";
+import { SecretScope, SecretScopeProperties } from "./secrets/secret-scope";
+import { Job, JobProperties } from "./jobs/job";
+import { Group, GroupProperties } from "./groups/group";
+import { ScimUser, ScimUserProperties } from "./scim/scimUser";
+import { InstancePool, InstancePoolProperties } from "./instance-pools/instance-pools";
+import { Warehouse, WarehouseProperties } from "./sql-warehouses/sql-warehouses";
+import { WarehousePermissions, WarehousePermissionsProperties } from "./permissions/sql-warehouse-permissions";
+import { Construct } from "constructs";
+import { DockerImage } from "../docker-image";
 import {
     UnityCatalogVolume, UnityCatalogVolumeProperties,
     UnityCatalogCatalog,
@@ -31,12 +31,13 @@ import {
     UnityCatalogSchema,
     UnityCatalogSchemaProperties, UnityCatalogStorageCredential, UnityCatalogStorageCredentialProperties
 } from "./unity-catalog";
-import {JobPermissions, JobPermissionsProperties, RegisteredModelPermissions, RegisteredModelPermissionsProperties, ExperimentPermissions, ExperimentPermissionsProperties} from "./permissions";
-import {ClusterPolicy, ClusterPolicyProperties} from "./cluster-policies";
-import {ClusterPolicyPermissions, ClusterPolicyPermissionsProperties} from "./permissions/cluster-policy-permissions";
-import {Token, TokenProperties} from "./tokens";
-import {Experiment, ExperimentProperties} from "./mlflow";
-import {RegisteredModel, RegisteredModelProps} from "./mlflow/registeredModel";
+import { JobPermissions, JobPermissionsProperties, RegisteredModelPermissions, RegisteredModelPermissionsProperties, ExperimentPermissions, ExperimentPermissionsProperties } from "./permissions";
+import { ClusterPolicy, ClusterPolicyProperties } from "./cluster-policies";
+import { ClusterPolicyPermissions, ClusterPolicyPermissionsProperties } from "./permissions/cluster-policy-permissions";
+import { Token, TokenProperties } from "./tokens";
+import { Experiment, ExperimentProperties } from "./mlflow";
+import { RegisteredModel, RegisteredModelProps } from "./mlflow/registeredModel";
+import { ServicePrincipal, ServicePrincipalProperties, ServicePrincipalSecrets, ServicePrincipalSecretsProperties } from "./service-principals";
 
 
 export interface CustomDeployLambdaProps {
@@ -278,6 +279,20 @@ export abstract class IDatabricksDeployLambda extends Construct {
         });
     }
 
+    public createServicePrincipal(scope: Construct, id: string, props: ServicePrincipalProperties): ServicePrincipal {
+        return new ServicePrincipal(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
+    public createServicePrincipalSecrets(scope: Construct, id: string, props: ServicePrincipalSecretsProperties): ServicePrincipalSecrets {
+        return new ServicePrincipalSecrets(scope, id, {
+            ...props,
+            serviceToken: this.serviceToken
+        });
+    }
+
 }
 
 export class DatabricksDeployLambdaImport extends IDatabricksDeployLambda {
@@ -323,7 +338,7 @@ export class DatabricksDeployLambda extends IDatabricksDeployLambda {
             effect: aws_iam.Effect.ALLOW,
             actions: ["secretsmanager:CreateSecret", "secretsmanager:DeleteSecret", "secretsmanager:UpdateSecret"],
             resources: [
-                `arn:aws:secretsmanager:${this.props.region}:${this.props.accountId}:secret:/databricks/token/*`,
+                `arn:aws:secretsmanager:${this.props.region}:${this.props.accountId}:secret:/databricks/*`,
             ]
         }));
 
