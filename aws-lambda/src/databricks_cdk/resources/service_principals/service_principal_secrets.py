@@ -40,7 +40,7 @@ def create_or_update_service_principal_secrets(
     account_client = get_account_client()
 
     if physical_resource_id:
-        return update_service_principal_secrets(properties, physical_resource_id, account_client)
+        return get_existing_service_principal_secrets_response(properties, physical_resource_id, account_client)
 
     return create_service_principal_secrets(properties, account_client)
 
@@ -88,13 +88,13 @@ def create_service_principal_secrets(
     )
 
 
-def update_service_principal_secrets(
+def get_existing_service_principal_secrets_response(
     properties: ServicePrincipalSecretsProperties,
     physical_resource_id: str,
     account_client: AccountClient,
 ) -> ServicePrincipalSecretsResponse:
     """
-    Update service principal secrets on databricks.
+    Get existing service principal secrets response.
     It will fetch the existing service principal secrets and secrets manager resource.
     """
     service_principal = get_service_principal(properties.service_principal_id, account_client)

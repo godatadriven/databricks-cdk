@@ -13,16 +13,16 @@ from databricks_cdk.resources.service_principals.service_principal_secrets impor
     create_service_principal_secrets,
     delete_service_principal_secrets,
     get_service_principal_secrets,
-    update_service_principal_secrets,
+    get_existing_service_principal_secrets_response,
 )
 from databricks_cdk.utils import CnfResponse
 
 
 @patch("databricks_cdk.resources.service_principals.service_principal_secrets.get_account_client")
 @patch("databricks_cdk.resources.service_principals.service_principal_secrets.create_service_principal_secrets")
-@patch("databricks_cdk.resources.service_principals.service_principal_secrets.update_service_principal_secrets")
+@patch("databricks_cdk.resources.service_principals.service_principal_secrets.get_existing_service_principal_secrets_response")
 def test_create_or_update_service_principal_secrets_create(
-    patched_update_service_principal_secrets,
+    patched_get_existing_service_principal_secrets_response,
     patched_create_service_principal_secrets,
     patched_get_account_client,
     account_client,
@@ -36,14 +36,14 @@ def test_create_or_update_service_principal_secrets_create(
         mock_properties,
         account_client,
     )
-    patched_update_service_principal_secrets.assert_not_called()
+    patched_get_existing_service_principal_secrets_response.assert_not_called()
 
 
 @patch("databricks_cdk.resources.service_principals.service_principal_secrets.get_account_client")
 @patch("databricks_cdk.resources.service_principals.service_principal_secrets.create_service_principal_secrets")
-@patch("databricks_cdk.resources.service_principals.service_principal_secrets.update_service_principal_secrets")
+@patch("databricks_cdk.resources.service_principals.service_principal_secrets.get_existing_service_principal_secrets_response")
 def test_create_or_update_service_principal_secrets_update(
-    patched_update_service_principal_secrets,
+    patched_get_existing_service_principal_secrets_response,
     patched_create_service_principal_secrets,
     patched_get_account_client,
     account_client,
@@ -56,7 +56,7 @@ def test_create_or_update_service_principal_secrets_update(
         properties=mock_properties, physical_resource_id=mock_physical_resource_id
     )
 
-    patched_update_service_principal_secrets.assert_called_once_with(
+    patched_get_existing_service_principal_secrets_response.assert_called_once_with(
         mock_properties,
         mock_physical_resource_id,
         account_client,
@@ -136,7 +136,7 @@ def test_create_service_principal_secrets_error(account_client):
 @patch("databricks_cdk.resources.service_principals.service_principal_secrets.get_service_principal")
 @patch("databricks_cdk.resources.service_principals.service_principal_secrets.get_service_principal_secrets")
 @patch("databricks_cdk.resources.service_principals.service_principal_secrets.get_from_secrets_manager")
-def test_update_service_principal_secrets(
+def test_get_existing_service_principal_response(
     patched_get_from_secrets_manager,
     patched_get_service_principal_secrets,
     patched_get_service_principal,
@@ -151,7 +151,7 @@ def test_update_service_principal_secrets(
     patched_get_from_secrets_manager.return_value = {"ARN": "mock_arn", "Name": "mock_secrets_manager_name"}
     mock_properties = ServicePrincipalSecretsProperties(service_principal_id=1)
 
-    response = update_service_principal_secrets(mock_properties, "some_id", account_client)
+    response = get_existing_service_principal_secrets_response(mock_properties, "some_id", account_client)
 
     assert response == ServicePrincipalSecretsResponse(
         physical_resource_id="some_id",
